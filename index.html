@@ -176,4 +176,39 @@ footer{margin-top:4.5rem;color:var(--muted);font-size:.85rem}
     '<text x="'+(P.l-10)+'" y="'+(y(v)+4)+'" text-anchor="end" font-size="12" fill="var(--muted)">$'+v+'</text>'}
   var yrs={};D.d.forEach(function(d,i){var yr=d.slice(0,4);if(!(yr in yrs)&&yr%(sm?4:2)===0)yrs[yr]=i});
   for(var k in yrs){g+='<text x="'+x(yrs[k])+'" y="'+(H-8)+'" text-anchor="middle" font-size="12" fill="var(--muted)">'+k+'</text>'}
-  var
+    var last=n-1;
+  g+='<path d="'+path(D.b)+'" fill="none" stroke="var(--bench)" stroke-width="2" stroke-linejoin="round"/>';
+  g+='<path class="draw" d="'+path(D.s)+'" fill="none" stroke="var(--accent)" stroke-width="2.5" stroke-linejoin="round"/>';
+  g+='<text x="'+(x(last)+8)+'" y="'+(y(D.b[last])+4)+'" font-size="13" fill="var(--muted)">SPY $'+D.b[last].toFixed(2)+'</text>';
+  g+='<text x="'+(x(last)+8)+'" y="'+(y(D.s[last])+4)+'" font-size="13" font-weight="600" fill="var(--accent)">'+(sm?'Strat. $':'Strategy $')+D.s[last].toFixed(2)+'</text>';
+  g+='<line id="hx" y1="'+P.t+'" y2="'+(H-P.b)+'" stroke="var(--muted)" stroke-width="1" opacity="0"/>';
+  g+='<circle id="hb" r="4" fill="var(--bench)" opacity="0"/><circle id="hs" r="4" fill="var(--accent)" opacity="0"/>';
+  g+='<rect id="hit" x="'+P.l+'" y="0" width="'+(W-P.l-P.r)+'" height="'+H+'" fill="transparent"/>';
+  svg.innerHTML=g; el.appendChild(svg);
+  var ro=document.createElement('div');ro.className='readout';ro.setAttribute('aria-live','polite');el.appendChild(ro);
+  var dp=svg.querySelector('.draw'), L=dp.getTotalLength();
+  if(!window.matchMedia('(prefers-reduced-motion: reduce)').matches){
+    dp.style.strokeDasharray=L;dp.style.strokeDashoffset=L;
+    var io=new IntersectionObserver(function(e){if(e[0].isIntersecting){dp.style.animation='draw 1.6s ease-out forwards';io.disconnect()}},{threshold:.4});
+    io.observe(svg);
+  }
+  var M=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  var hx=svg.querySelector('#hx'),hb=svg.querySelector('#hb'),hs=svg.querySelector('#hs');
+  function show(cx){
+    var r=svg.getBoundingClientRect(), px=(cx-r.left)*W/r.width;
+    var i=Math.round((px-P.l)/(W-P.l-P.r)*(n-1)); i=Math.max(0,Math.min(n-1,i));
+    var X=x(i); hx.setAttribute('x1',X);hx.setAttribute('x2',X);hx.setAttribute('opacity',1);
+    hb.setAttribute('cx',X);hb.setAttribute('cy',y(D.b[i]));hb.setAttribute('opacity',1);
+    hs.setAttribute('cx',X);hs.setAttribute('cy',y(D.s[i]));hs.setAttribute('opacity',1);
+    var p=D.d[i].split('-');
+    ro.textContent=M[+p[1]-1]+' '+p[0]+'   SPY $'+D.b[i].toFixed(2)+'   Strategy $'+D.s[i].toFixed(2);
+  }
+  function hide(){[hx,hb,hs].forEach(function(e){e.setAttribute('opacity',0)});ro.textContent=''}
+  var hit=svg.querySelector('#hit');
+  hit.addEventListener('pointermove',function(e){show(e.clientX)});
+  hit.addEventListener('pointerdown',function(e){show(e.clientX)});
+  hit.addEventListener('pointerleave',hide);
+})();
+</script>
+</body>
+</html>
