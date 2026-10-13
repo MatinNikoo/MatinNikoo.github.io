@@ -192,18 +192,34 @@ footer{padding-block:2rem 3rem;border-top:1px solid var(--line);color:var(--mute
 .cue i::after{content:"";position:absolute;left:0;top:-40%;width:1px;height:40%;background:var(--accent);animation:cue 1.8s cubic-bezier(.6,0,.4,1) infinite}
 @keyframes cue{to{top:100%}}
 html.lenis-on{scroll-behavior:auto}
-/* a Windows 11 style title bar around the widget mockup */
-.win{border-radius:12px;overflow:hidden;border:1px solid color-mix(in srgb,var(--ink) 14%,transparent);box-shadow:0 18px 40px -26px rgba(10,15,30,.55)}
-.win-bar{display:flex;align-items:center;justify-content:space-between;height:2rem;background:#1b1f2a;color:#d7dbe3;font-size:.72rem;user-select:none}
-.win-title{display:flex;align-items:center;gap:.45rem;padding-left:.7rem}
-.win-title i{width:.75rem;height:.75rem;border-radius:3px;background:conic-gradient(from 200deg,#5b7cff,#c86bff,#ff7a9a,#5b7cff)}
+/* window frame that blends into the wallpaper, with a floating dock */
+.win{position:relative;background:radial-gradient(90% 80% at 10% 0%,#2b3a67 0%,transparent 60%),radial-gradient(90% 80% at 100% 100%,#3a1f4d 0%,transparent 60%),#0d1018;transform:perspective(1100px) rotateX(var(--rx,0deg)) rotateY(var(--ry,0deg));transition:transform .35s cubic-bezier(.2,.8,.2,1),box-shadow .35s;will-change:transform}
+.win:hover{box-shadow:0 28px 60px -30px rgba(10,15,30,.65)}
+.win .desk{background:none}
+.taskbar{display:flex;justify-content:center;padding:.1rem 0 .75rem}
+.dock{display:flex;align-items:center;gap:.2rem;padding:.3rem .45rem;border-radius:14px;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.1);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);box-shadow:0 10px 24px -14px rgba(0,0,0,.6)}
+.dock>b{display:grid;place-items:center;width:1.9rem;height:1.9rem;border-radius:8px;position:relative;transition:background .15s,transform .2s}
+.dock>b:hover{background:rgba(255,255,255,.1);transform:translateY(-2px)}
+.tb-start{grid-template-columns:repeat(2,.38rem);gap:.08rem;place-content:center}
+.tb-start i{width:.38rem;height:.38rem;border-radius:1.5px;background:linear-gradient(135deg,#7cc0ff,#3a82f2)}
+.tb-app svg{width:1.05rem;height:1.05rem}
+.tb-app.on::after{content:"";position:absolute;bottom:.05rem;left:50%;width:.28rem;height:.15rem;border-radius:99px;translate:-50% 0;background:rgba(255,255,255,.55)}
+.tb-sep{width:1px;height:1.1rem;background:rgba(255,255,255,.14);margin:0 .3rem}
+.tb-time{font-family:var(--body);font-size:.68rem;color:rgba(255,255,255,.82);padding-right:.35rem;font-variant-numeric:tabular-nums}
+@media (prefers-reduced-motion:reduce){.win{transform:none!important}}
+
+/* a quiet Windows style title bar */
+.win{border-radius:14px;overflow:hidden;border:1px solid rgba(255,255,255,.08);box-shadow:0 18px 40px -26px rgba(10,15,30,.55)}
+.win-bar{display:flex;align-items:center;justify-content:space-between;height:1.9rem;color:rgba(255,255,255,.55);font-size:.7rem;user-select:none}
+.win-title{display:flex;align-items:center;gap:.45rem;padding-left:.8rem}
+.win-title i{width:.65rem;height:.65rem;border-radius:3px;background:conic-gradient(from 200deg,#5b7cff,#c86bff,#ff7a9a,#5b7cff);opacity:.9}
 .win-ctl{display:flex;height:100%}
-.win-ctl b{display:grid;place-items:center;width:2.6rem;height:100%;transition:background .15s}
-.win-ctl svg{width:.62rem;height:.62rem;fill:none;stroke:#d7dbe3;stroke-width:1;vector-effect:non-scaling-stroke}
-.win-ctl b:hover{background:rgba(255,255,255,.1)}
+.win-ctl b{display:grid;place-items:center;width:2.4rem;height:100%;transition:background .15s}
+.win-ctl svg{width:.58rem;height:.58rem;fill:none;stroke:rgba(255,255,255,.6);stroke-width:1;vector-effect:non-scaling-stroke}
+.win-ctl b:hover{background:rgba(255,255,255,.08)}
 .win-ctl b.cls:hover{background:#c42b1c}
 .win-ctl b.cls:hover svg{stroke:#fff}
-.win .desk{border-radius:0}
+.win .desk{border-radius:0;padding-top:.4rem}
 
 /* make the lab hard to miss */
 .nav-lab{color:var(--accent)!important;font-weight:600;position:relative;padding-right:.6rem}
@@ -593,6 +609,13 @@ html,body{overflow-x:clip}
         </nav>
         <div class="gif wide" data-key="wide"><span>GIF</span></div>
       </div>
+        <div class="taskbar" aria-hidden="true"><span class="dock">
+          <b class="tb-start"><i></i><i></i><i></i><i></i></b>
+          <b class="tb-app on"><svg viewBox="0 0 24 24"><path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" fill="#f7cf5c"/></svg></b>
+          <b class="tb-app on"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9" fill="#3c7bf0"/><path d="M3 12h18M12 3c3 3.5 3 14.5 0 18M12 3c-3 3.5-3 14.5 0 18" stroke="#d6e4ff" stroke-width="1.2" fill="none"/></svg></b>
+          <b class="tb-app on"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="5" fill="#1db97a"/><path d="M10 16.5V8l6-1.5v8" stroke="#fff" stroke-width="1.6" fill="none"/><circle cx="8.6" cy="16.6" r="1.6" fill="#fff"/><circle cx="14.6" cy="15" r="1.6" fill="#fff"/></svg></b>
+          <em class="tb-sep"></em><span class="tb-time" id="tb-t">--:--</span>
+        </span>        </div>
       </div>
       <figcaption id="desk-cap">A mockup of my desktop. The player picks its colors from the album art, and the icons open the real files.</figcaption>
     </figure>
@@ -1107,6 +1130,19 @@ var AURA_LASTFM={user:'',key:''};
   }
   btn.addEventListener('click',go); sel.addEventListener('change',go);
   if('IntersectionObserver' in window){var io=new IntersectionObserver(function(es){if(es[0].isIntersecting){io.disconnect();go()}},{threshold:.3});io.observe(ca)}else go();
+})();
+</script>
+<script>
+// taskbar clock, and a gentle tilt toward the cursor on the desktop window
+(function(){
+  var t=document.getElementById('tb-t'),d=document.getElementById('tb-d');
+  function tick(){if(!t)return;var n=new Date();t.textContent=n.toLocaleTimeString([], {hour:'numeric',minute:'2-digit'})}
+  tick();setInterval(tick,15000);
+  var w=document.querySelector('.win');
+  if(!w||!matchMedia('(hover:hover)').matches||matchMedia('(prefers-reduced-motion: reduce)').matches)return;
+  w.addEventListener('pointermove',function(e){var r=w.getBoundingClientRect(),x=(e.clientX-r.left)/r.width-.5,y=(e.clientY-r.top)/r.height-.5;
+    w.style.setProperty('--ry',(x*5).toFixed(2)+'deg');w.style.setProperty('--rx',(-y*4).toFixed(2)+'deg')});
+  w.addEventListener('pointerleave',function(){w.style.setProperty('--ry','0deg');w.style.setProperty('--rx','0deg')});
 })();
 </script>
 <script>
