@@ -192,6 +192,19 @@ footer{padding-block:2rem 3rem;border-top:1px solid var(--line);color:var(--mute
 .cue i::after{content:"";position:absolute;left:0;top:-40%;width:1px;height:40%;background:var(--accent);animation:cue 1.8s cubic-bezier(.6,0,.4,1) infinite}
 @keyframes cue{to{top:100%}}
 html.lenis-on{scroll-behavior:auto}
+/* a Windows 11 style title bar around the widget mockup */
+.win{border-radius:12px;overflow:hidden;border:1px solid color-mix(in srgb,var(--ink) 14%,transparent);box-shadow:0 18px 40px -26px rgba(10,15,30,.55)}
+.win-bar{display:flex;align-items:center;justify-content:space-between;height:2rem;background:#1b1f2a;color:#d7dbe3;font-size:.72rem;user-select:none}
+.win-title{display:flex;align-items:center;gap:.45rem;padding-left:.7rem}
+.win-title i{width:.75rem;height:.75rem;border-radius:3px;background:conic-gradient(from 200deg,#5b7cff,#c86bff,#ff7a9a,#5b7cff)}
+.win-ctl{display:flex;height:100%}
+.win-ctl b{display:grid;place-items:center;width:2.6rem;height:100%;transition:background .15s}
+.win-ctl svg{width:.62rem;height:.62rem;fill:none;stroke:#d7dbe3;stroke-width:1;vector-effect:non-scaling-stroke}
+.win-ctl b:hover{background:rgba(255,255,255,.1)}
+.win-ctl b.cls:hover{background:#c42b1c}
+.win-ctl b.cls:hover svg{stroke:#fff}
+.win .desk{border-radius:0}
+
 /* make the lab hard to miss */
 .nav-lab{color:var(--accent)!important;font-weight:600;position:relative;padding-right:.6rem}
 .nav-lab::after{content:"";position:absolute;right:0;top:.05rem;width:.38rem;height:.38rem;border-radius:50%;background:var(--accent);animation:ping 1.8s ease-out infinite}
@@ -321,7 +334,7 @@ body::before{content:"";position:fixed;inset:0;z-index:100;pointer-events:none;o
 @media (max-width:640px){.cue{display:none}}
 
 /* story: the project told in five scroll steps */
-.story{position:relative;height:300vh;width:100vw;margin-left:calc(50% - 50vw);border-top:1px solid var(--line)}
+.story{position:relative;height:230vh;width:100vw;margin-left:calc(50% - 50vw);border-top:1px solid var(--line)}
 .story-stick{position:sticky;top:0;height:100vh;height:100svh;overflow:hidden}
 .story canvas{position:absolute;inset:0;width:100%;height:100%;display:block}
 .story-in{position:relative;height:100%;max-width:72rem;margin:0 auto;padding-inline:clamp(1rem,4vw,2.5rem);pointer-events:none}
@@ -339,7 +352,7 @@ body::before{content:"";position:fixed;inset:0;z-index:100;pointer-events:none;o
 .cap a{pointer-events:auto}
 .js-story .cap{opacity:0;will-change:opacity,transform}
 @media (max-width:760px){
-  .story{height:290vh}
+  .story{height:230vh}
   .cap{top:calc(3.6rem + 4.2rem);width:auto;right:clamp(1rem,4vw,2.5rem);transform:none}
   .cap .big{font-size:clamp(2.6rem,13vw,3.6rem);margin-bottom:.5rem}
   .cap p{font-size:1rem}
@@ -437,9 +450,8 @@ html,body{overflow-x:clip}
       <p class="feat mono">Featured project</p>
       <h3>What actually gets an app to 100K installs</h3>
       <ul class="tags"><li>Python</li><li>pandas</li><li>scikit-learn</li><li>2.2M rows</li></ul>
-      <p>I went through 2.2 million Google Play apps from 2021 to see what the ones that make it have in common. I mostly looked at the 815K apps released in 2018 and 2019, since they had time to grow. Only 6% of them reached 100K installs.</p>
-      <p>The ads plus in-app purchases gap held up in all 48 categories, though part of it is apps adding purchases after they already have users. The model only uses things you'd know at launch, and its top 10% of picks caught 54% of the real hits.</p>
-      <p>Then I turned it into the simulator here, so anyone can use the findings without reading the analysis.</p>
+      <p>The scroll story above is the short version. The full analysis checks that the ads plus in-app purchases gap isn't just a games thing (it held in all 48 categories), and admits part of it runs backwards, since apps often add purchases after they already have users.</p>
+      <p>Then I turned the model into the simulator here.</p>
       <div class="links"><a href="simulator.html">Full simulator</a><a href="https://github.com/MatinNikoo/play-store-analysis" target="_blank" rel="noopener">Code and write-up</a></div>
     </div>
   <aside class="sim reveal" id="sim" aria-labelledby="sim-title">
@@ -492,8 +504,8 @@ html,body{overflow-x:clip}
     <div>
       <h3>A/B testing library, checked by simulation</h3>
       <ul class="tags"><li>Python</li><li>SciPy</li><li>pytest</li><li>GitHub Actions</li><li>CLI</li></ul>
-      <p>Most A/B test tutorials stop at a t test. Real experiments break it in a few predictable ways. People check results every day, metrics are noisy, some are ratios, the split between groups comes out wrong, and dashboards track twenty metrics at once. I built a Python library that handles each one with the methods big experimentation teams use, like CUPED and always valid sequential tests.</p>
-      <p>I didn't want to just trust the methods, so I tested every one on thousands of simulated experiments where I knew the right answer. Then I ran it on a real mobile game experiment with 90K players. Moving the first level gate later cut 7 day retention by 4.3%, but the library also caught that the groups were split unevenly, so that result needs a closer look before anyone acts on it.</p>
+      <p>Most A/B test tutorials stop at a t test, but real experiments break it in predictable ways. People check results every day, metrics are noisy, splits come out wrong, and dashboards track twenty metrics at once. I built a Python library that handles each one, with methods like CUPED and always valid sequential tests.</p>
+      <p>I tested every method on thousands of simulated experiments, then ran it on a real 90K player game test. It found a 4.3% drop in 7 day retention, and also caught that the groups were split unevenly.</p>
       <a class="lab-cta" href="lab.html">
         <span class="lab-cta-k mono">Experiment Lab</span>
         <span class="lab-cta-t">Run a real 90K player A/B test in your browser</span>
@@ -511,7 +523,7 @@ html,body{overflow-x:clip}
         <div><span class="peek-t">normal p value</span><canvas id="peek-a" aria-hidden="true"></canvas><b id="peek-ra">&nbsp;</b></div>
         <div><span class="peek-t">always valid p value</span><canvas id="peek-b" aria-hidden="true"></canvas><b id="peek-rb">&nbsp;</b></div>
       </div>
-      <figcaption>Each line is an experiment where nothing actually changed. Someone checks it after every batch of users and stops the first time it dips under 0.05 (the dashed line). Red lines are false alarms. With a normal p value they pile up the more you check. The always valid test the library uses stays under 5%.</figcaption>
+      <figcaption>Each line is a test where nothing changed, checked after every batch of users. Red ones dipped under 0.05 at some point, a false alarm. With a normal p value they pile up the more you check. The always valid test stays under 5%.</figcaption>
     </figure>
   </article>
 
@@ -519,15 +531,15 @@ html,body{overflow-x:clip}
     <div>
       <h3>Trend following backtest</h3>
       <ul class="tags"><li>Python</li><li>pandas</li><li>SciPy</li><li>bootstrap</li><li>unit tests</li></ul>
-      <p>A backtest of the 50/200 day moving average crossover on SPY, written from scratch in Python. Trades go through the day after a signal, every trade has a cost, and the engine has unit tests. I picked the parameters on 2000 to 2017 and tested on 2018 to 2026.</p>
-      <p>It didn't beat buy and hold on the test years. Then I checked whether picking the windows was just luck. Only 3 of 89 window pairs beat buy and hold on the test years, and the probability of backtest overfitting came out around 0.57, so picking the best looking pair from history was basically a coin flip.</p>
+      <p>A backtest of the 50/200 day moving average crossover on SPY, written from scratch with next day trades, trading costs and unit tests. I tuned it on 2000 to 2017 and tested on 2018 to 2026.</p>
+      <p>It didn't beat buy and hold. Then I checked whether picking the windows was just luck. Only 3 of 89 pairs beat buy and hold, and the probability of backtest overfitting came out around 0.57, basically a coin flip.</p>
       <div class="links"><a href="https://matinnikoo.github.io/momentum-backtest/" target="_blank" rel="noopener">Full report</a><a href="https://github.com/MatinNikoo/momentum-backtest" target="_blank" rel="noopener">Code</a></div>
     </div>
     <figure class="visual">
       <div class="chart" id="chart"></div>
       <label class="pick"><span>Start in</span><input type="range" id="bt-start" min="0" value="0" aria-label="Pick the month you start investing"><output id="bt-out">Jan 2018</output></label>
       <p class="bt-res" id="bt-res" aria-live="polite"></p>
-      <figcaption>$1 invested at the start you pick, after costs. Drag the slider to change when you start, hover the chart to read values.</figcaption>
+      <figcaption>$1 invested from the month you pick, after costs. Drag to change the start, hover to read values.</figcaption>
       <div class="stats">
         <div><b>9.2% / 14.3%</b>yearly return, strategy vs SPY</div>
         <div><b>0.63 / 0.79</b>Sharpe ratio</div>
@@ -540,8 +552,8 @@ html,body{overflow-x:clip}
     <div>
       <h3>Household size prediction</h3>
       <ul class="tags"><li>Python</li><li>LightGBM</li><li>R</li><li>team of three</li></ul>
-      <p>Class Kaggle competition where we predicted how many people live in a household from their Amazon purchases, scored on RMSE. Since the answer is a small capped count, we treated it as classification and used the expected value of the predicted probabilities, which did better than regressing on it directly.</p>
-      <p>TF-IDF on the product titles worked much better than our hand picked keywords. There were more features than rows, so ridge regression was solved in dual form. The final model was a stack of seven and placed 3rd out of 23 teams.</p>
+      <p>A class Kaggle competition, predicting how many people live in a household from their Amazon purchases. Since the answer is a small count, we treated it as classification and used the expected value of the predicted probabilities, which beat regressing on it directly.</p>
+      <p>TF-IDF on product titles beat our hand picked keywords, and with more features than rows we solved ridge in dual form. A stack of seven models placed 3rd of 23 teams.</p>
     </div>
     <figure class="visual">
       <svg class="lb" viewBox="0 0 520 350" role="img" aria-label="Final private leaderboard RMSE for the top 12 of 23 teams. Our team placed 3rd with 1.01661, behind 1.00881 and 1.01277."><line x1="74.0" x2="74.0" y1="6" y2="324" stroke="var(--line)" stroke-width="1"/><text x="74.0" y="342" text-anchor="middle" font-size="13" fill="var(--muted)">1.00</text><line x1="198.7" x2="198.7" y1="6" y2="324" stroke="var(--line)" stroke-width="1"/><text x="198.7" y="342" text-anchor="middle" font-size="13" fill="var(--muted)">1.02</text><line x1="323.3" x2="323.3" y1="6" y2="324" stroke="var(--line)" stroke-width="1"/><text x="323.3" y="342" text-anchor="middle" font-size="13" fill="var(--muted)">1.04</text><line x1="448.0" x2="448.0" y1="6" y2="324" stroke="var(--line)" stroke-width="1"/><text x="448.0" y="342" text-anchor="middle" font-size="13" fill="var(--muted)">1.06</text><text x="64" y="25.5" text-anchor="end" font-size="13.5" fill="var(--muted)">1st</text><line x1="74.0" x2="128.9" y1="21.0" y2="21.0" stroke="var(--bench)" stroke-width="2"/><circle cx="128.9" cy="21.0" r="4.5" fill="var(--bench)"/><text x="138.9" y="25.5" font-size="13.5" fill="var(--muted)">1.00881</text><text x="64" y="51.5" text-anchor="end" font-size="13.5" fill="var(--muted)">2nd</text><line x1="74.0" x2="153.6" y1="47.0" y2="47.0" stroke="var(--bench)" stroke-width="2"/><circle cx="153.6" cy="47.0" r="4.5" fill="var(--bench)"/><text x="64" y="77.5" text-anchor="end" font-size="13.5" fill="var(--accent)" font-weight="600">3rd (us)</text><line x1="74.0" x2="177.5" y1="73.0" y2="73.0" stroke="var(--accent)" stroke-width="3"/><circle cx="177.5" cy="73.0" r="6" fill="var(--accent)"/><text x="187.5" y="77.5" font-size="13.5" fill="var(--accent)" font-weight="600">1.01661</text><text x="64" y="103.5" text-anchor="end" font-size="13.5" fill="var(--muted)">4th</text><line x1="74.0" x2="272.7" y1="99.0" y2="99.0" stroke="var(--bench)" stroke-width="2"/><circle cx="272.7" cy="99.0" r="4.5" fill="var(--bench)"/><text x="64" y="129.5" text-anchor="end" font-size="13.5" fill="var(--muted)">5th</text><line x1="74.0" x2="298.0" y1="125.0" y2="125.0" stroke="var(--bench)" stroke-width="2"/><circle cx="298.0" cy="125.0" r="4.5" fill="var(--bench)"/><text x="64" y="155.5" text-anchor="end" font-size="13.5" fill="var(--muted)">6th</text><line x1="74.0" x2="304.4" y1="151.0" y2="151.0" stroke="var(--bench)" stroke-width="2"/><circle cx="304.4" cy="151.0" r="4.5" fill="var(--bench)"/><text x="64" y="181.5" text-anchor="end" font-size="13.5" fill="var(--muted)">7th</text><line x1="74.0" x2="308.7" y1="177.0" y2="177.0" stroke="var(--bench)" stroke-width="2"/><circle cx="308.7" cy="177.0" r="4.5" fill="var(--bench)"/><text x="64" y="207.5" text-anchor="end" font-size="13.5" fill="var(--muted)">8th</text><line x1="74.0" x2="309.9" y1="203.0" y2="203.0" stroke="var(--bench)" stroke-width="2"/><circle cx="309.9" cy="203.0" r="4.5" fill="var(--bench)"/><text x="64" y="233.5" text-anchor="end" font-size="13.5" fill="var(--muted)">9th</text><line x1="74.0" x2="319.2" y1="229.0" y2="229.0" stroke="var(--bench)" stroke-width="2"/><circle cx="319.2" cy="229.0" r="4.5" fill="var(--bench)"/><text x="64" y="259.5" text-anchor="end" font-size="13.5" fill="var(--muted)">10th</text><line x1="74.0" x2="338.8" y1="255.0" y2="255.0" stroke="var(--bench)" stroke-width="2"/><circle cx="338.8" cy="255.0" r="4.5" fill="var(--bench)"/><text x="64" y="285.5" text-anchor="end" font-size="13.5" fill="var(--muted)">11th</text><line x1="74.0" x2="354.4" y1="281.0" y2="281.0" stroke="var(--bench)" stroke-width="2"/><circle cx="354.4" cy="281.0" r="4.5" fill="var(--bench)"/><text x="64" y="311.5" text-anchor="end" font-size="13.5" fill="var(--muted)">12th</text><line x1="74.0" x2="408.9" y1="307.0" y2="307.0" stroke="var(--bench)" stroke-width="2"/><circle cx="408.9" cy="307.0" r="4.5" fill="var(--bench)"/></svg>
@@ -553,10 +565,15 @@ html,body{overflow-x:clip}
     <div>
       <h3>Aura desktop widgets</h3>
       <ul class="tags"><li>Python</li><li>PyQt6</li><li>NumPy</li><li>Windows APIs</li></ul>
-      <p>Desktop widgets for Windows. The main one shows the song that's playing and recolors itself from the album art, and the chrome text is rendered with NumPy. It runs all day so I tried to keep it light. It only redraws what changed and pauses when something is fullscreen, so idle CPU is close to zero.</p>
+      <p>Desktop widgets for Windows. The main one shows the song that's playing and recolors itself from the album art, and the chrome text is rendered with NumPy. It only redraws what changed and pauses during fullscreen games, so idle CPU is close to zero.</p>
       <div class="links"><a href="https://github.com/MatinNikoo/aura-widgets" target="_blank" rel="noopener">Code</a></div>
     </div>
     <figure class="visual">
+      <div class="win">
+        <div class="win-bar" aria-hidden="true">
+          <span class="win-title"><i></i>Desktop</span>
+          <span class="win-ctl"><b class="min"><svg viewBox="0 0 10 10"><path d="M1 5h8"/></svg></b><b class="max"><svg viewBox="0 0 10 10"><rect x="1.5" y="1.5" width="7" height="7" rx="1"/></svg></b><b class="cls"><svg viewBox="0 0 10 10"><path d="M1.5 1.5l7 7M8.5 1.5l-7 7"/></svg></b></span>
+        </div>
       <div class="desk" id="desk">
         <div class="gif tall" data-key="tall"><span>GIF</span></div>
         <div class="clock" aria-hidden="true"><canvas id="clk-c"></canvas></div>
@@ -576,7 +593,8 @@ html,body{overflow-x:clip}
         </nav>
         <div class="gif wide" data-key="wide"><span>GIF</span></div>
       </div>
-      <figcaption id="desk-cap">A mockup of my desktop with the widgets: a clock, the now playing card and two GIF boxes. The player picks its colors from the album art. The icons open the real files.</figcaption>
+      </div>
+      <figcaption id="desk-cap">A mockup of my desktop. The player picks its colors from the album art, and the icons open the real files.</figcaption>
     </figure>
   </article>
 </section>

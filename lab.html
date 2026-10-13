@@ -79,7 +79,7 @@ input[type=checkbox]{accent-color:var(--accent)}
 .tbl .m{font-weight:600}
 .tbl .neg{color:var(--bad)}.tbl .pos{color:var(--good)}
 .scroll{overflow-x:auto;-webkit-overflow-scrolling:touch}
-.forest{display:block;width:100%;min-width:9rem;height:26px}
+.forest{display:block;width:100%;min-width:5.5rem;height:22px}
 canvas{display:block;width:100%;height:auto}
 #seq{aspect-ratio:16/8}
 @media (max-width:560px){#seq{aspect-ratio:4/3}}
@@ -96,7 +96,7 @@ footer{padding-block:2rem 3rem;color:var(--muted);font-size:.85rem}
 <header>
   <p class="note">try it with real data</p>
   <h1>Experiment <em>Lab</em></h1>
-  <p class="lede">This is the browser version of abkit, my A/B testing library. Load a real test with 90,189 mobile game players, or drop in your own CSV, and it walks through the analysis the way an experimentation team would, one step at a time. Everything runs on your device, so your file never gets uploaded anywhere.</p>
+  <p class="lede">The browser version of abkit, my A/B testing library. Load a real test with 90,189 mobile game players or your own CSV, and it walks through the analysis step by step. Nothing gets uploaded.</p>
 </header>
 
 <section class="card" aria-labelledby="h-data">
@@ -118,8 +118,8 @@ footer{padding-block:2rem 3rem;color:var(--muted);font-size:.85rem}
       </div>
     </div>
     <div class="why">
-      <p><b>Cookie Cats</b> is a puzzle game. New players were randomly given the first gate (where you wait or pay to keep playing) at level 30 or level 40. Did moving it later change whether people came back?</p>
-      <p><b>Your own file</b> needs one row per user, a column saying which group they were in, and numbers or true/false for each outcome.</p>
+      <p><b>Cookie Cats</b> is a puzzle game. New players got the first gate at level 30 or level 40. Did moving it later change whether they came back?</p>
+      <p><b>Your own file</b> needs one row per user, a group column, and numbers or true/false for each outcome.</p>
     </div>
   </div>
 </section>
@@ -133,8 +133,7 @@ footer{padding-block:2rem 3rem;color:var(--muted);font-size:.85rem}
       <div class="nums" id="srm-nums"></div>
     </div>
     <div class="why">
-      <p><b>Check this first.</b> If you meant to split users 50/50, random chance only moves the counts a little. A bigger gap usually means a bug, like some users getting assigned but never logged.</p>
-      <p>When that happens, every result below can be off, because the users you're missing might not be random.</p>
+      <p><b>Check this first.</b> A split that's further from 50/50 than chance allows usually means a bug, and then every result below can be off too.</p>
     </div>
   </div>
 </section>
@@ -144,12 +143,12 @@ footer{padding-block:2rem 3rem;color:var(--muted);font-size:.85rem}
     <div>
       <h2 id="h-res"><i>02</i>What happened?</h2>
       <div class="scroll"><table class="tbl" id="res"></table></div>
-      <p class="small" style="margin:.7rem 0 0">Bars show the 95% interval for the relative lift. The line in the middle is zero.</p>
+      <p class="small" style="margin:.7rem 0 0" id="res-note">Bars show the 95% interval. The middle line is zero.</p>
     </div>
     <div class="why">
-      <p><b>Lift and interval.</b> The interval is the range of effects that fit the data. If it crosses zero, the data can't rule out "no change".</p>
-      <p><b>Adjusted p.</b> Testing several metrics at once makes a fake win more likely, so the p values are corrected for how many you looked at (Benjamini Hochberg).</p>
-      <p><b>Chance better.</b> The same data read the Bayesian way, as a plain chance that the new version is better. Most people find that easier to act on. It can be a bit overconfident when real effects are tiny, and the library fixes that with a prior from past tests.</p>
+      <p><b>Interval.</b> If it crosses zero, the data can't rule out "no change".</p>
+      <p><b>Adjusted p.</b> Corrected for testing several metrics at once.</p>
+      <p><b>Chance better.</b> The same data as a plain chance the new version wins.</p>
     </div>
   </div>
 </section>
@@ -161,8 +160,7 @@ footer{padding-block:2rem 3rem;color:var(--muted);font-size:.85rem}
       <div id="cuped"></div>
     </div>
     <div class="why">
-      <p><b>CUPED</b> uses something you measured before the test, like activity last month, to explain away part of each user's randomness. So you get a tighter answer from the same number of users.</p>
-      <p>It only works with things measured <em>before</em> the test started. Anything the change itself could affect would bias the answer.</p>
+      <p><b>CUPED</b> uses something measured before the test to remove noise, so you need fewer users. It can't use anything the change itself could affect.</p>
     </div>
   </div>
 </section>
@@ -181,9 +179,8 @@ footer{padding-block:2rem 3rem;color:var(--muted);font-size:.85rem}
       <p id="seq-text" style="margin:.8rem 0 0"></p>
     </div>
     <div class="why">
-      <p><b>The peeking problem.</b> A normal 95% interval is only right if you look once. Check it every day and stop when it clears zero, and you'll get fake wins far more than 5% of the time.</p>
-      <p><b>The always valid interval</b> (a confidence sequence from the mSPRT) stays right no matter how often you look. It starts wider and tightens as data comes in.</p>
-      <p>This replays the test in a shuffled order, since the data doesn't say when each player joined.</p>
+      <p>A normal 95% interval is only right if you look once. The <b>always valid</b> one stays right however often you check.</p>
+      <p>The data has no timestamps, so this replays it in a shuffled order.</p>
     </div>
   </div>
 </section>
@@ -201,8 +198,7 @@ footer{padding-block:2rem 3rem;color:var(--muted);font-size:.85rem}
       <p class="small" id="plan-text" style="margin:0"></p>
     </div>
     <div class="why">
-      <p><b>Decide the size before you start.</b> Small changes need a lot of users to see. Picking the sample size up front, from the smallest change worth acting on, is what keeps a normal test honest.</p>
-      <p>Uses this test's control group as the baseline.</p>
+      <p>Small changes need a lot of users. Picking the size up front is what keeps a normal test honest.</p>
     </div>
   </div>
 </section>
@@ -277,8 +273,8 @@ function unbits(b64,n){var s=atob(b64),o=new Float64Array(n);for(var i=0;i<n;i++
 function loadCC(){
   var n=CC.n,v=unbits(CC.v,n),s=atob(CC.g),g=new Float64Array(n),grp=new Array(n),i;
   for(i=0;i<n;i++){g[i]=Math.min(493,s.charCodeAt(2*i)|(s.charCodeAt(2*i+1)<<8));grp[i]=v[i]?"gate_40":"gate_30"}
-  D={n:n,label:"Cookie Cats, 90,189 players",cols:{version:grp,retention_1:unbits(CC.r1,n),retention_7:unbits(CC.r7,n),"rounds played (capped at 493)":g}};
-  setup({group:"version",control:"gate_30",treatment:"gate_40",metrics:["retention_1","retention_7","rounds played (capped at 493)"],cov:""});
+  D={n:n,label:"Cookie Cats, 90,189 players",cols:{version:grp,retention_1:unbits(CC.r1,n),retention_7:unbits(CC.r7,n),"rounds played":g}};
+  setup({group:"version",control:"gate_30",treatment:"gate_40",metrics:["retention_1","retention_7","rounds played"],cov:""});
   analyze();
 }
 function parseCSV(text){
@@ -332,17 +328,18 @@ function analyze(){
   var g=D.cols[$("col-group").value],nc=0,nt=0,c=$("ctl").value,t=$("trt").value;for(var i=0;i<D.n;i++){var k=String(g[i]);if(k===c)nc++;else if(k===t)nt++}
   var p=srm(nc,nt,0.5),bad=p<0.01;
   $("srm").innerHTML='<div class="verdict '+(bad?"bad":"ok")+'"><span class="dot"></span><div><b>'+(bad?"Sample ratio mismatch":"The split looks fine")+'</b>'+
-    (bad?"The groups are further from 50/50 than chance would explain (p = "+p.toFixed(4)+"). In a real company you'd pause here and find out why before trusting anything below. The results still show, but read them with that in mind."
+    (bad?"The groups are further from 50/50 than chance would explain (p = "+p.toFixed(4)+"). A real team would stop here and find the cause before trusting anything below."
         :"The group sizes are within what random chance would give (p = "+p.toFixed(3)+").")+'</div></div>';
   $("srm-nums").innerHTML="<span>"+esc(c)+": "+nc.toLocaleString()+"</span><span>"+esc(t)+": "+nt.toLocaleString()+"</span><span>share in "+esc(t)+": "+(nt/(nc+nt)*100).toFixed(2)+"%</span>";
   // 2. results
   var R=metrics.map(function(m){var s=split(m);return{m:m,r:test(s.c,s.t),b:bayes(s.c,s.t)}}),adj=bh(R.map(function(x){return x.r.p}));
   var span=Math.max(0.02,Math.max.apply(null,R.map(function(x){return Math.max(Math.abs(x.r.rlo),Math.abs(x.r.rhi))}))*1.1);
-  $("res").innerHTML='<thead><tr><th>Metric</th><th>'+esc(c)+'</th><th>'+esc(t)+'</th><th>Lift</th><th style="min-width:9rem">95% interval</th><th>p</th><th>Adjusted p</th><th>Chance better</th></tr></thead><tbody>'+
+  $("res").innerHTML='<thead><tr><th>Metric</th><th>'+esc(c)+'</th><th>'+esc(t)+'</th><th>Lift</th><th style="min-width:6rem">95% interval</th><th>p</th><th>Adjusted p</th><th>Chance better</th></tr></thead><tbody>'+
     R.map(function(x,i){var r=x.r,cls=adj[i]<0.05?(r.rel<0?"neg":"pos"):"";return'<tr><td class="m">'+esc(x.m)+'</td><td>'+fmt(r.c)+'</td><td>'+fmt(r.t)+'</td><td class="'+cls+'">'+pct(r.rel)+'</td><td>'+forest(r.rlo,r.rhi,r.rel,span,cls)+'<span class="small">'+pct(r.rlo)+" to "+pct(r.rhi)+'</span></td><td>'+pv(r.p)+'</td><td class="'+cls+'">'+pv(adj[i])+'</td><td>'+(x.b.chance*100).toFixed(1)+'%</td></tr>'}).join("")+'</tbody>';
+  $("res-note").textContent="Bars show the 95% interval. The middle line is zero."+(D.label.indexOf("Cookie Cats")===0?" Rounds played is capped at 493, since one player logged almost 50,000.":"");
   // 3. cuped
   var cov=$("cov").value;
-  if(!cov){$("cuped").innerHTML=(D.label.indexOf("Cookie Cats")===0?'<p style="margin:0">This dataset has nothing measured <em>before</em> the test, so CUPED can\'t be used here. Rounds played happened during the test, and the gate change could have affected it, so using it would bias the answer.</p>':'<p style="margin:0">Pick a column measured before the test in step 00 to see how much noise it removes.</p>')}
+  if(!cov){$("cuped").innerHTML=(D.label.indexOf("Cookie Cats")===0?'<p style="margin:0">Nothing in this data was measured <em>before</em> the test, so CUPED can\'t be used. Rounds played happened during the test, and using it would bias the answer.</p>':'<p style="margin:0">Pick a column measured before the test in step 00 to see how much noise it removes.</p>')}
   else{var rows=metrics.filter(function(m){return m!==cov}).map(function(m){var s=split(m),x=split(cov),a=cuped(s.c,s.t,x.c,x.t),r0=test(s.c,s.t),r1=test(a.c,a.t),cut=1-Math.pow(r1.se/r0.se,2),bal=test(x.c,x.t).p;
       return'<tr><td class="m">'+esc(m)+'</td><td>'+pct(r0.rel)+' ('+pct(r0.rlo)+' to '+pct(r0.rhi)+')</td><td>'+(r0.c?pct(r1.lift/r0.c):"")+' ('+(r0.c?pct(r1.lo/r0.c)+' to '+pct(r1.hi/r0.c):"")+')</td><td>'+Math.round(cut*100)+'%</td><td>'+(bal<0.001?'<span class="neg">unbalanced, may be biased</span>':"balanced")+'</td></tr>'});
     $("cuped").innerHTML='<div class="scroll"><table class="tbl"><thead><tr><th>Metric</th><th>Plain lift and interval</th><th>With CUPED</th><th>Noise removed</th><th>'+esc(cov)+' check</th></tr></thead><tbody>'+rows.join("")+'</tbody></table></div>'}
