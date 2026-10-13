@@ -18,6 +18,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Geist:wght@400;500;600&family=Geist+Mono:wght@400;500&family=Instrument+Serif:ital@0;1&family=Caveat:wght@500;700&family=Unbounded:wght@300;700&display=swap" rel="stylesheet">
+<script>try{var t=localStorage.getItem("theme");if(t==="light"||t==="dark")document.documentElement.setAttribute("data-theme",t)}catch(e){}</script>
 <style>
 /* Layout: sticky slim nav; hero splits into intro (left) and a live simulator card (right);
    projects are wide rows of text beside a visual; experience reads as a dated list. */
@@ -33,12 +34,12 @@
   padding-top:env(safe-area-inset-top,0px); padding-bottom:env(safe-area-inset-bottom,0px);
 }
 @media (prefers-color-scheme:dark){
-  :root:not([data-theme="light"]){
+  :root:where(:not([data-theme="light"])){
     --bg:#0B1017; --surface:#121923; --ink:#E9EDF3; --muted:#97A1B0; --line:#232D3B;
     --accent:#8FA3FF; --accent-soft:#1D2646; --bench:#5D6878; --good:#5CC48F; color-scheme:dark;
   }
 }
-:root[data-theme="dark"]{
+:root:where([data-theme="dark"]){
   --bg:#0B1017; --surface:#121923; --ink:#E9EDF3; --muted:#97A1B0; --line:#232D3B;
   --accent:#8FA3FF; --accent-soft:#1D2646; --bench:#5D6878; --good:#5CC48F; color-scheme:dark;
 }
@@ -56,11 +57,13 @@ a:hover{color:var(--accent);text-decoration-color:var(--accent)}
 .nav{position:sticky;top:env(safe-area-inset-top,0px);z-index:10;background:color-mix(in srgb,var(--bg) 82%,transparent);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border-bottom:1px solid var(--line)}
 .nav .wrap{display:flex;align-items:center;justify-content:space-between;gap:1rem;height:3.6rem}
 .mark{white-space:nowrap;font-family:var(--display);font-weight:700;font-size:1.05rem;text-decoration:none;letter-spacing:-.01em}
-.nav ul{display:flex;gap:1.4rem;list-style:none;margin:0;padding:0;font-size:.92rem}
+.nav ul{display:flex;align-items:center;gap:1.4rem;list-style:none;margin:0;padding:0;font-size:.92rem}
 .nav ul a{text-decoration:none;color:var(--muted)}
 .nav ul a:hover{color:var(--ink)}
 @media (max-width:640px){.nav ul li.hide-sm{display:none}.nav ul{gap:1rem}}
-@media (max-width:420px){.nav ul li.hide-xs{display:none}}
+@media (max-width:520px){.nav ul li.hide-xs{display:none}}
+@media (max-width:440px){.mark .ln{display:none}.nav ul{gap:.85rem}}
+@media (max-width:350px){.nav ul{gap:.6rem;font-size:.86rem}}
 
 /* hero */
 .hero{display:grid;grid-template-columns:minmax(0,1fr);gap:clamp(2rem,5vw,4.5rem);align-items:center;padding-block:clamp(3rem,8vw,6rem) clamp(3rem,7vw,5rem)}
@@ -351,7 +354,7 @@ body::before{content:"";position:fixed;inset:0;z-index:100;pointer-events:none;o
 
 /* story: the project told in five scroll steps */
 .story{position:relative;height:230vh;width:100vw;margin-left:calc(50% - 50vw);border-top:1px solid var(--line)}
-.story-stick{position:sticky;top:0;height:100vh;height:100svh;overflow:hidden}
+.story-stick{position:sticky;top:env(safe-area-inset-top,0px);height:100vh;height:calc(100svh - env(safe-area-inset-top,0px));overflow:hidden}
 .story canvas{position:absolute;inset:0;width:100%;height:100%;display:block}
 .story-in{position:relative;height:100%;max-width:72rem;margin:0 auto;padding-inline:clamp(1rem,4vw,2.5rem);pointer-events:none}
 .story-k{position:absolute;top:calc(3.6rem + clamp(1.2rem,4vh,2.5rem));left:clamp(1rem,4vw,2.5rem);color:var(--muted);display:flex;align-items:center;gap:.8rem}
@@ -369,6 +372,9 @@ body::before{content:"";position:fixed;inset:0;z-index:100;pointer-events:none;o
 .js-story .cap{opacity:0;will-change:opacity,transform}
 @media (max-width:760px){
   .story{height:230vh}
+  .story-k{white-space:nowrap;gap:.6rem}
+  .story-k>span:first-child{display:none}
+  .story-k .skip{margin-left:auto}
   .cap{top:calc(3.6rem + 4.2rem);width:auto;right:clamp(1rem,4vw,2.5rem);transform:none}
   .cap .big{font-size:clamp(2.6rem,13vw,3.6rem);margin-bottom:.5rem}
   .cap p{font-size:1rem}
@@ -389,7 +395,7 @@ html:not(.js-story) .cap{position:static;transform:none;width:auto;max-width:34r
 @media (hover:none){.hint .t1{display:none}.hint .t2{display:inline}}
 @media (max-width:900px){.lab{width:auto;right:0}}
 @media (max-width:640px){.lab{top:auto;bottom:.4rem;left:0;right:auto;align-items:flex-start}.lab .fit{display:none}}
-@media (max-width:640px){.hero h1 .ch{font-weight:inherit;display:inline-block;overflow:hidden;vertical-align:top;padding:.06em 0 .1em;margin:-.06em 0 -.1em}
+.hero h1 .ch{font-weight:inherit;display:inline-block;overflow:hidden;vertical-align:top;padding:.06em 0 .1em;margin:-.06em 0 -.1em}
 .hero h1 .ch>b{display:inline-block;font-weight:inherit;animation:chr .95s cubic-bezier(.2,.85,.1,1) both;animation-delay:var(--d,0s)}
 @keyframes chr{from{transform:translateY(115%) rotate(10deg);opacity:0}60%{opacity:1}to{transform:none;opacity:1}}
 @media (prefers-reduced-motion:reduce){.lab .hint i{animation:none}.hero h1 .ch>b{animation:none}}
@@ -403,20 +409,75 @@ html,body{overflow-x:clip}
 .proj.featured{perspective:1400px}
 @media (prefers-reduced-motion:reduce){.cue i::after{animation:none}}
 
+
+/* the page types part of its own stylesheet */
+.src{margin-top:2.5rem;perspective:1100px}
+@media (min-width:1000px){.contact{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(0,1fr);column-gap:3rem;align-items:center}.contact>*{grid-column:1}.contact>.src{grid-column:2;grid-row:1/span 3;margin:0}}
+.src-box{max-width:44rem;background:#10151E;color:#D6DCE6;border-radius:14px;box-shadow:0 1px 0 rgba(255,255,255,.04) inset,0 24px 50px -24px rgba(10,15,30,.55);overflow:hidden;transition:box-shadow .4s ease}
+.src-box:hover{box-shadow:0 0 0 1px rgba(255,255,255,.08) inset,0 0 44px 2px color-mix(in srgb,var(--accent) 30%,transparent)}
+.src-bar{display:flex;align-items:center;gap:.7rem;padding:.6rem .9rem;border-bottom:1px solid rgba(255,255,255,.07);color:#8D97A8;font-size:.76rem}
+.src-bar .dots{display:flex;gap:.35rem}.src-bar .dots i{width:.6rem;height:.6rem;border-radius:50%;background:#2A3240}
+.src-bar .st{margin-left:auto}
+.src-bar button{font:inherit;color:#C9D1DD;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);border-radius:999px;padding:.15rem .65rem;cursor:pointer}
+.src-bar button:hover{background:rgba(255,255,255,.12)}
+.src pre{margin:0;padding:1rem 1.1rem 1.2rem;height:clamp(15rem,40vh,21rem);overflow:auto;font-family:var(--mono);font-size:.8rem;line-height:1.6;white-space:pre-wrap;overflow-wrap:anywhere;outline:0;tab-size:2;caret-color:#F0A35E}
+.src pre:empty::before{content:"\200b"}
+.src pre .c{color:#7A8496;font-style:italic}.src pre .s{color:#E9A84A}.src pre .k{color:#6FC6E6}.src pre .v{color:#C79BF0}.src pre .p{color:#8D97A8}
+.src pre .cur{display:inline-block;width:.5em;height:1.1em;vertical-align:-.2em;background:#F0A35E;animation:blink 1s steps(1) infinite}
+@keyframes blink{50%{opacity:0}}
+.src pre[contenteditable]{cursor:text}
+
+.theme{display:grid;place-items:center;width:1.9rem;height:1.9rem;margin:0 -.3rem 0 0;padding:0;border:0;border-radius:50%;background:none;color:var(--muted);cursor:pointer;transition:color .2s ease,rotate .5s cubic-bezier(.3,1.4,.5,1)}
+.theme:hover{color:var(--ink);rotate:180deg}
+.theme svg{width:1.05rem;height:1.05rem}
+::view-transition-old(root),::view-transition-new(root){animation:none;mix-blend-mode:normal}
+::view-transition-old(root){z-index:1}::view-transition-new(root){z-index:2}
+@media (max-width:480px){.src-bar .st{display:none}}
+
+
+.labm{position:relative}
+button.nav-lab{font:inherit;font-size:.92rem;background:none;border:0;padding:0 .6rem 0 0;cursor:pointer;line-height:inherit}
+.lab-menu{position:absolute;top:calc(100% + 1.05rem);left:50%;width:17rem;translate:-50% 0;display:grid;gap:.15rem;padding:.4rem;background:var(--surface);border:1px solid var(--line);border-radius:14px;box-shadow:0 18px 40px -18px rgba(10,15,30,.35);opacity:0;transform:translateY(-6px);transition:opacity .2s ease,transform .25s cubic-bezier(.2,.8,.2,1)}
+.lab-menu.on{opacity:1;transform:none}
+.lab-menu a{display:grid;gap:.05rem;padding:.55rem .7rem;border-radius:10px;text-decoration:none;color:var(--ink)!important}
+.lab-menu a:hover,.lab-menu a:focus-visible{background:var(--accent-soft)}
+.lab-menu b{font-weight:600;font-size:.92rem}
+.lab-menu span{font-size:.8rem;color:var(--muted)}
+@media (max-width:640px){.lab-menu{position:fixed;top:3.75rem;left:1rem;right:1rem;width:auto;translate:none}}
+
+.visual.sd canvas{display:block;width:100%;aspect-ratio:16/10.5;touch-action:pan-y}
+.sd-head{display:flex;align-items:center;justify-content:space-between;gap:.6rem;flex-wrap:wrap;margin-bottom:.4rem}
+.sd-pick{display:inline-flex;border:1px solid var(--line);border-radius:999px;padding:.15rem;background:var(--bg)}
+.sd-pick button{white-space:nowrap;font:inherit;font-size:.78rem;border:0;background:none;color:var(--muted);padding:.28rem .7rem;border-radius:999px;cursor:pointer;transition:background .2s,color .2s}
+.sd-pick button[aria-pressed="true"]{background:var(--surface);color:var(--ink);box-shadow:0 1px 3px rgba(10,15,30,.12)}
+.sd-big{transition:opacity .3s ease;font-family:var(--serif);font-weight:400;font-size:2.4rem;line-height:1;color:var(--hot);min-height:2.4rem;min-width:3.6ch;text-align:right;font-variant-numeric:tabular-nums}
+@media (max-width:420px){.sd-head{flex-wrap:nowrap}.sd-pick button{padding:.3rem .48rem;font-size:.72rem}.sd-big{font-size:1.75rem;min-height:1.75rem}}
+.sd-hov{display:inline}@media (hover:none){.sd-hov{display:none}}
+.sd-wrap{position:relative}
+.sd-tip{position:absolute;left:2.6rem;top:.2rem;margin:0;font-size:.74rem;color:var(--ink);opacity:0;transition:opacity .15s;pointer-events:none}
+.sd-tip.on{opacity:1}.sd-tip i{font-style:normal;color:var(--muted);margin-left:.4rem}
+:root{--hot:#C2410C;--hot-soft:#F6E6DD}
+@media (prefers-color-scheme:dark){:root:where(:not([data-theme="light"])){--hot:#F08A5D;--hot-soft:#2A1A14}}
+:root:where([data-theme="dark"]){--hot:#F08A5D;--hot-soft:#2A1A14}
 </style>
 </head>
 <body>
 
 <nav class="nav" aria-label="Main">
   <div class="wrap">
-    <a class="mark" href="#top">Matin Nikoomanzar</a>
+    <a class="mark" href="#top">Matin<span class="ln"> Nikoomanzar</span></a>
     <span class="prog" id="prog" aria-hidden="true"></span>
     <ul>
       <li><a href="#projects">Projects</a></li>
-      <li><a class="nav-lab" href="lab.html">Lab</a></li>
+      <li class="labm"><button class="nav-lab" id="lab-btn" type="button" aria-expanded="false" aria-controls="lab-menu">Lab</button>
+        <div class="lab-menu" id="lab-menu" hidden>
+          <a href="lab.html"><b>Experiment Lab</b><span>Run a real 90K player A/B test</span></a>
+          <a href="shutdowns.html"><b>Internet shutdowns</b><span>Build a country's twin, see the gap</span></a>
+        </div></li>
       <li class="hide-xs"><a href="#experience">Experience</a></li>
       <li class="hide-sm"><a href="#education">Education</a></li>
       <li><a href="resume.pdf" target="_blank" rel="noopener">Resume</a></li>
+      <li><button class="theme" id="theme" type="button" aria-label="Switch between light and dark" title="Light or dark"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9" fill="none" stroke="currentColor" stroke-width="2"/><path d="M12 3a9 9 0 0 1 0 18z" fill="currentColor"/></svg></button></li>
     </ul>
   </div>
 </nav>
@@ -545,6 +606,30 @@ html,body{overflow-x:clip}
 
   <article class="proj reveal">
     <div>
+      <h3>What it costs to turn off the internet</h3>
+      <ul class="tags"><li>SQL</li><li>DuckDB</li><li>causal inference</li><li>Python</li><li>pytest</li></ul>
+      <p>When a government shuts off a country's internet, there's no A/B test to run. So I built each country a synthetic twin out of 106 countries that stayed online, using GitHub's public data on how much code every country pushes.</p>
+      <p>Iran's blackouts in early 2026 cut its coding by 69%. Across six full shutdowns, every day offline cost about 1.3 days of work, so people didn't catch up after. To make sure the methods actually work, I first planted 1,500 fake shutdowns and checked they got caught.</p>
+      <a class="lab-cta" href="shutdowns.html">
+        <span class="lab-cta-k mono">Interactive</span>
+        <span class="lab-cta-t">Build a country's twin and see what simple comparisons get wrong</span>
+        <span class="lab-cta-s">Nine shutdowns from Myanmar to Iran, and how long one has to be before the data can see it.</span>
+        <span class="lab-cta-go" aria-hidden="true">Open it <svg viewBox="0 0 16 16"><path d="M3 8h9M8.5 4.5 12 8l-3.5 3.5"/></svg></span>
+      </a>
+      <div class="links"><a href="https://github.com/MatinNikoo/internet-shutdowns" target="_blank" rel="noopener">Code and tests</a><a href="https://github.com/MatinNikoo/internet-shutdowns/blob/main/memo/memo.pdf" target="_blank" rel="noopener">One page memo</a></div>
+    </div>
+    <figure class="visual sd">
+      <div class="sd-head">
+        <div class="sd-pick" id="sd-pick" role="group" aria-label="Pick a shutdown"><button type="button" data-id="IR-2026" aria-pressed="true">Iran 2026</button><button type="button" data-id="MM-2021" aria-pressed="false">Myanmar 2021</button><button type="button" data-id="SD-2021" aria-pressed="false">Sudan 2021</button></div>
+        <b class="sd-big" id="sd-big" aria-live="polite"></b>
+      </div>
+      <div class="sd-wrap"><canvas id="sd-c" aria-label="Git pushes compared with the country's synthetic twin, 2020 to 2026"></canvas><p class="sd-tip mono" id="sd-tip"></p></div>
+      <figcaption>Pushes per quarter vs the country's twin, a mix of countries that stayed online and moved like it before. Shaded quarters are the shutdown.<span class="sd-hov"> Hover to read any quarter.</span></figcaption>
+    </figure>
+  </article>
+
+  <article class="proj reveal">
+    <div>
       <h3>Trend following backtest</h3>
       <ul class="tags"><li>Python</li><li>pandas</li><li>SciPy</li><li>bootstrap</li><li>unit tests</li></ul>
       <p>A backtest of the 50/200 day moving average crossover on SPY, written from scratch with next day trades, trading costs and unit tests. I tuned it on 2000 to 2017 and tested on 2018 to 2026.</p>
@@ -649,7 +734,14 @@ html,body{overflow-x:clip}
     <button class="btn" type="button" id="copy">Copy</button>
     <a class="btn" href="mailto:Matinnekoomanzar@gmail.com">Open email</a>
   </div>
+  <div class="src" id="src" aria-label="A box where this page writes part of its own CSS">
+    <div class="src-box">
+      <div class="src-bar mono"><span class="dots"><i></i><i></i><i></i></span><span>style.css</span><span class="st" id="src-st">waiting for you</span><button type="button" id="src-btn">skip</button></div>
+      <pre id="src-pre" spellcheck="false" autocapitalize="off" autocorrect="off" data-lenis-prevent></pre>
+    </div>
+  </div>
 </section>
+
 
 <footer><span>Matin Nikoomanzar, Los Angeles</span><span class="mono">Thanks for scrolling this far</span></footer>
 </main>
@@ -723,7 +815,7 @@ html,body{overflow-x:clip}
   if('IntersectionObserver' in window)new IntersectionObserver(function(es){visible=es[0].isIntersecting}).observe(c);
   window.addEventListener('resize',function(){size();if(reduce)draw(performance.now())});
   if('ResizeObserver' in window)new ResizeObserver(function(){size();if(reduce)draw(performance.now())}).observe(c);
-  var mq=matchMedia('(prefers-color-scheme: dark)');if(mq.addEventListener)mq.addEventListener('change',function(){colors();if(reduce)draw(performance.now())});
+  var mq=matchMedia('(prefers-color-scheme: dark)');if(mq.addEventListener)mq.addEventListener('change',function(){colors();if(reduce)draw(performance.now())});addEventListener('themechange',function(){colors();if(reduce)draw(performance.now())});
   new MutationObserver(function(){colors();if(reduce)draw(performance.now())}).observe(document.documentElement,{attributes:true,attributeFilter:['data-theme']});
   if(reduce){hero.addEventListener('click',function(){draw(performance.now())});draw(performance.now())}else requestAnimationFrame(loop);
 })();
@@ -896,10 +988,12 @@ html,body{overflow-x:clip}
   function mix(a,b,t){return a+(b-a)*t}
   function sm(t){t=t<0?0:t>1?1:t;return t*t*(3-2*t)}
   function prog(){var r=sec.getBoundingClientRect(),tot=sec.offsetHeight-innerHeight;return Math.max(0,Math.min(1,-r.top/Math.max(1,tot)))}
-  var lastQ=-1, visible=true;
+  var lastQ=-1, lastOut=-1, visible=true;
   function draw(){
     var p=prog(), q=p*4.3-.15; q=Math.max(0,Math.min(4,q));
-    if(Math.abs(q-lastQ)<1e-4&&lastQ>=0) return; lastQ=q;
+    // fade the words out as the story lets go, so they don't slide up under the nav
+    var rb=sec.getBoundingClientRect().bottom, vh=innerHeight, out=Math.max(0,Math.min(1,(rb-vh*.9)/(vh*.14)));
+    if(Math.abs(q-lastQ)<1e-4&&lastQ>=0&&Math.abs(out-lastOut)<1e-3) return; lastQ=q; lastOut=out;
     var s=Math.min(3,Math.floor(q)), t=q-s;
     ctx.clearRect(0,0,W,H);
     var A=L[s],B=L[s+1];
@@ -919,7 +1013,7 @@ html,body{overflow-x:clip}
       if(l.box){ctx.strokeStyle=col[l.c];ctx.lineWidth=1.2;ctx.setLineDash(l.c==='a'?[]:[4,4]);ctx.beginPath();if(ctx.roundRect)ctx.roundRect(l.box[0],l.box[1],l.box[2],l.box[3],10);else ctx.rect(l.box[0],l.box[1],l.box[2],l.box[3]);ctx.stroke();ctx.setLineDash([])}
       ctx.fillStyle=col[l.c];ctx.textAlign=l.al;ctx.fillText(l.t,l.x,l.y)})});
     ctx.globalAlpha=1;
-    caps.forEach(function(cp,k){var d=q-k,o=sm(1-Math.abs(d)*2.4);cp.style.opacity=o.toFixed(3);cp.style.visibility=o<.01?'hidden':'visible';
+    caps.forEach(function(cp,k){var d=q-k,o=sm(1-Math.abs(d)*2.4)*out;cp.style.opacity=o.toFixed(3);cp.style.visibility=o<.01?'hidden':'visible';
       var base=matchMedia('(max-width:760px)').matches?'':'translateY(-50%) ';cp.style.transform=base+'translateY('+(reduce?0:(-d*40).toFixed(1))+'px)'});
     ticks.forEach(function(tk,k){tk.style.setProperty('--f',Math.max(0,Math.min(1,q-k+.5)).toFixed(3))});
   }
@@ -927,7 +1021,7 @@ html,body{overflow-x:clip}
   colors();build();
   if('IntersectionObserver' in window)new IntersectionObserver(function(es){visible=es[0].isIntersecting;lastQ=-1}).observe(sec);
   var rt;addEventListener('resize',function(){clearTimeout(rt);rt=setTimeout(function(){build();lastQ=-1},120)});
-  var mq=matchMedia('(prefers-color-scheme: dark)');if(mq.addEventListener)mq.addEventListener('change',function(){colors();lastQ=-1});
+  var mq=matchMedia('(prefers-color-scheme: dark)');if(mq.addEventListener)mq.addEventListener('change',function(){colors();lastQ=-1});addEventListener('themechange',function(){colors();lastQ=-1});
   if(document.fonts&&document.fonts.ready)document.fonts.ready.then(function(){lastQ=-1});
   requestAnimationFrame(loop);
 })();
@@ -1200,6 +1294,219 @@ var AURA_LASTFM={user:'',key:''};
   if('ResizeObserver' in window){var pend=false;new ResizeObserver(function(){if(pend)return;pend=true;requestAnimationFrame(function(){pend=false;measure()})}).observe(document.body)}
   addEventListener('resize',measure); addEventListener('load',measure);
   requestAnimationFrame(frame);
+})();
+
+// the page types part of its own CSS and applies it as it goes; editable at the end
+(function(){
+  var pre=document.getElementById('src-pre'), st=document.getElementById('src-st'), btn=document.getElementById('src-btn'), box=document.getElementById('src');
+  if(!pre) return;
+  var TXT=["/* Hi again. You made it all the way down.",
+" * This box is typing real CSS, and the page",
+" * uses it as it goes. Watch. */",
+"",
+".src-box {",
+"  transform: rotateY(-7deg) rotate(-1deg);",
+"}",
+"",
+"/* The blue was starting to feel a little safe. */",
+"",
+":root {",
+"  --accent: #EE6A3C;",
+"}",
+"",
+"/* Better. One more thing for that headline. */",
+"",
+".contact h2 span {",
+"  text-decoration: underline wavy 2px;",
+"  text-underline-offset: 0.2em;",
+"}",
+"",
+"/* Okay, your turn. Click in here and change",
+" * anything. It only changes your copy of the page. */",
+""].join("\n");
+  var live=document.createElement('style'); live.id='live-css'; document.head.appendChild(live);
+  function esc(t){return t.replace(/&/g,'&amp;').replace(/</g,'&lt;')}
+  function hl(t){
+    var out='',i=0,n=t.length,inB=false;
+    while(i<n){
+      if(t.substr(i,2)==='/*'){var e=t.indexOf('*/',i+2);e=e<0?n:e+2;out+='<span class="c">'+esc(t.slice(i,e))+'</span>';i=e;continue}
+      var ch=t[i];
+      if(ch==='{'||ch==='}'){inB=ch==='{';out+='<span class="p">'+ch+'</span>';i++;continue}
+      if(!inB){var j=i;while(j<n&&t[j]!=='{'&&t.substr(j,2)!=='/*')j++;out+='<span class="s">'+esc(t.slice(i,j))+'</span>';i=j;continue}
+      var k=i;while(k<n&&t[k]!==':'&&t[k]!=='}'&&t.substr(k,2)!=='/*')k++;
+      out+='<span class="k">'+esc(t.slice(i,k))+'</span>';i=k;
+      if(t[i]===':'){out+='<span class="p">:</span>';i++;var v=i;while(v<n&&t[v]!==';'&&t[v]!=='}')v++;out+='<span class="v">'+esc(t.slice(i,v))+'</span>';i=v;if(t[i]===';'){out+='<span class="p">;</span>';i++}}
+    }
+    return out;
+  }
+  var pos=0, timer=0, state='idle';
+  function apply(t){live.textContent=t}
+  function show(){pre.innerHTML=hl(TXT.slice(0,pos))+'<span class="cur"></span>';pre.scrollTop=pre.scrollHeight}
+  function step(){
+    var ch=TXT[pos++]; show();
+    if(ch==='}') apply(TXT.slice(0,pos));
+    if(pos>=TXT.length){finish();return}
+    var inC=TXT.lastIndexOf('/*',pos)>TXT.lastIndexOf('*/',pos-1), nx=TXT[pos];
+    var d=inC?15:9;
+    if(ch==='.'&&(nx===' '||nx==='\n')) d=320;
+    if(ch==='}'||(ch==='/'&&TXT[pos-2]==='*')) d=480;
+    if(ch==='\n'&&nx==='\n') d=120;
+    d*=0.75+Math.random()*0.5;
+    timer=setTimeout(step,d);
+  }
+  function finish(){
+    clearTimeout(timer); pos=TXT.length; state='done';
+    pre.innerHTML=hl(TXT); apply(TXT);
+    try{pre.contentEditable='plaintext-only'}catch(e){} if(pre.contentEditable!=='plaintext-only') pre.contentEditable='true';
+    st.textContent="your turn, it's editable"; btn.textContent='replay';
+  }
+  function start(){
+    if(state!=='idle') return; state='typing'; st.textContent='typing'; btn.textContent='skip'; pos=0; step();
+  }
+  btn.addEventListener('click',function(){
+    if(state==='done'){pre.removeAttribute('contenteditable');apply('');pre.scrollTop=0;state='idle';start()}
+    else finish();
+  });
+  var deb=0;
+  pre.addEventListener('input',function(){if(state!=='done')return;clearTimeout(deb);deb=setTimeout(function(){apply(pre.textContent)},120)});
+  pre.addEventListener('blur',function(){if(state==='done')pre.innerHTML=hl(pre.textContent)});
+  pre.addEventListener('keydown',function(e){if(e.key==='Tab'){e.preventDefault();document.execCommand('insertText',false,'  ')}});
+  if(matchMedia('(prefers-reduced-motion: reduce)').matches||!('IntersectionObserver' in window)){finish();return}
+  pre.innerHTML='<span class="cur"></span>';
+  var io=new IntersectionObserver(function(es){es.forEach(function(e){if(e.isIntersecting){io.disconnect();setTimeout(start,350)}})},{threshold:.45});
+  io.observe(box);
+})();
+
+// light or dark, remembered per visitor
+(function(){
+  var b=document.getElementById('theme'), root=document.documentElement, meta=document.querySelector('meta[name="theme-color"]');
+  if(!b) return;
+  function cur(){var t=root.getAttribute('data-theme');return t||(matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light')}
+  function sync(){if(meta)meta.setAttribute('content',cur()==='dark'?'#0B1017':'#F3F4F8')}
+  sync();
+  b.addEventListener('click',function(){
+    var t=cur()==='dark'?'light':'dark';
+    function go(){root.setAttribute('data-theme',t);try{localStorage.setItem('theme',t)}catch(e){}sync();dispatchEvent(new Event('themechange'))}
+    // new theme spreads out in a circle from the button; plain switch where that isn't supported
+    if(!document.startViewTransition||matchMedia('(prefers-reduced-motion: reduce)').matches){go();return}
+    var r=b.getBoundingClientRect(),x=r.left+r.width/2,y=r.top+r.height/2,R=Math.hypot(Math.max(x,innerWidth-x),Math.max(y,innerHeight-y));
+    document.startViewTransition(go).ready.then(function(){
+      root.animate({clipPath:['circle(0px at '+x+'px '+y+'px)','circle('+R+'px at '+x+'px '+y+'px)']},{duration:650,easing:'cubic-bezier(.65,0,.35,1)',pseudoElement:'::view-transition-new(root)'});
+    }).catch(function(){});
+  });
+})();
+
+// shutdowns card: a country vs its twin. Both lines draw up to the shutdown, the band
+// switches on with an "internet off" tag, the twin carries on where the country would
+// have been, then the real line drops and the gap fills in. Hover to read any quarter.
+(function(){
+  var c=document.getElementById('sd-c'); if(!c||!c.getContext) return;
+  var root=document.documentElement, reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var D={"l":["2020Q1","2020Q2","2020Q3","2020Q4","2021Q1","2021Q2","2021Q3","2021Q4","2022Q1","2022Q2","2022Q3","2022Q4","2023Q1","2023Q2","2023Q3","2023Q4","2024Q1","2024Q2","2024Q3","2024Q4","2025Q1","2025Q2","2025Q3","2025Q4","2026Q1"],"e":{"SD-2021":{"a":[5482,7599,7717,8964,9786,8723,9902,7191,14414,13259,19338,56701,39229,12295,88450,40485,14865,13943,13668,8831,11024,13858,19579,27156,36558],"w":[5797,7544,7715,8555,9260,9607,9675,10648,11901,13599,13886,15149,16639,17111,16741,18012,17720,18536,17916,20247,20997,26812,26878,33324,44045],"q":[7],"pct":-0.3246,"c":"Sudan","y":"2021"},"IR-2026":{"a":[148536,176080,190556,219516,227874,251212,314655,325208,335784,355711,424187,310890,432451,502595,550631,500107,538364,506752,568093,527387,565809,628498,806458,798320,331042],"w":[140263,179679,187150,198472,220310,259488,276356,284531,319392,362317,388041,396439,447190,467522,487656,473113,479850,501782,509359,531556,553181,694587,732687,825453,1067233],"q":[24],"pct":-0.6898,"c":"Iran","y":"2026"},"MM-2021":{"a":[42148,51434,57173,60893,32835,27333,42119,41611,48639,52485,59529,69555,90299,99621,114784,113778,121804,93155,77085,75209,77745,94234,117815,122028,174641],"w":[42362,52584,56705,60680,64064,73764,73022,76243,88187,103452,107537,112808,125438,130762,129920,132633,132781,143542,141214,153603,158684,202665,209409,246751,313380],"q":[4,5],"pct":-0.5642,"c":"Myanmar","y":"2021"}}}, root=document.documentElement, reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var cur='IR-2026', pa=0, pw=0, band=0, shown=0, flick=0, done=false, hover=-1, started=false;
+  var tip=document.getElementById('sd-tip'), big=document.getElementById('sd-big');
+  function col(n){return getComputedStyle(root).getPropertyValue(n).trim()}
+  function fmt(v){return v>=1e6?(v/1e6).toFixed(2)+'M':Math.round(v/1000)+'k'}
+  function ease(t){return t<.5?2*t*t:1-Math.pow(-2*t+2,2)/2}
+  var G={};
+  function draw(){
+    var r=c.getBoundingClientRect(); if(!r.width) return; var dpr=Math.min(devicePixelRatio||1,2);
+    c.width=Math.round(r.width*dpr); c.height=Math.round(r.height*dpr); var g=c.getContext('2d'); g.setTransform(dpr,0,0,dpr,0,0);
+    var E=D.e[cur], A=E.a, T=E.w, n=A.length, W=r.width, H=r.height, q0=E.q[0], q1=E.q[E.q.length-1];
+    var tEnd=Math.min(n-1,q1+3);
+    var padL=38,padR=14,padT=30,padB=24,w=W-padL-padR,h=H-padT-padB;
+    var top=Math.max(Math.max.apply(null,A),Math.max.apply(null,T.slice(0,tEnd+1)))*1.08;
+    var X=function(i){return padL+w*i/(n-1)},Y=function(v){return padT+h*(1-v/top)};
+    G={X:X,n:n,padL:padL,w:w};
+    var step=Math.pow(10,Math.floor(Math.log10(top/3)));if(top/step>8)step*=2.5;if(top/step>8)step*=2;
+    g.font='500 10px '+col('--mono'); g.fillStyle=col('--muted'); g.textAlign='right'; g.textBaseline='middle';
+    for(var v=0;v<top;v+=step){g.strokeStyle=col('--line');g.lineWidth=1;g.beginPath();g.moveTo(padL,Y(v));g.lineTo(W-padR,Y(v));g.stroke();g.fillText(v?fmt(v):'0',padL-6,Y(v))}
+    g.textAlign='center'; g.textBaseline='top'; for(var i=0;i<n;i+=8) g.fillText(D.l[i].slice(0,4),X(i),H-padB+7);
+    var bw=w/(n-1), bx0=X(q0)-bw/2, bx1=X(q1)+bw/2;
+    // the shutdown band switches on
+    if(band>0){
+      g.save();g.globalAlpha=band;g.fillStyle=col('--hot-soft');g.fillRect(bx0,padT,bx1-bx0,h);
+      g.strokeStyle=col('--hot');g.globalAlpha=band*.55;g.lineWidth=1;g.setLineDash([3,3]);
+      g.beginPath();g.moveTo(bx0,padT);g.lineTo(bx0,padT+h);g.stroke();g.setLineDash([]);g.restore();
+      // the tag
+      var label='internet off';g.font='600 10px '+col('--mono');var tw=g.measureText(label).width+14,th=18;
+      var cx=Math.min(W-padR-tw/2,Math.max(padL+tw/2,(bx0+bx1)/2)), ty=padT-th-4+(1-band)*-6;
+      g.save();g.globalAlpha=band;g.fillStyle=col('--hot');if(flick>0||band<1){g.shadowColor=col('--hot');g.shadowBlur=14}
+      g.beginPath();if(g.roundRect)g.roundRect(cx-tw/2,ty,tw,th,9);else g.rect(cx-tw/2,ty,tw,th);g.fill();
+      g.fillStyle=col('--surface');g.textAlign='center';g.textBaseline='middle';g.fillText(label,cx,ty+th/2+.5);g.restore();
+    }
+    // the gap between where it was and where it would have been
+    if(shown>0){g.save();g.globalAlpha=.28*shown;g.fillStyle=col('--hot');g.beginPath();
+      var t0=Math.max(0,q0-1);g.moveTo(X(t0),Y(T[t0]));for(var i=t0;i<=q1;i++)g.lineTo(X(i),Y(T[i]));
+      for(var i=q1;i>=t0;i--)g.lineTo(X(i),Y(A[i]));g.closePath();g.fill();g.restore()}
+    function line(arr,upto,dash,color,lw){if(upto<=0)return;g.setLineDash(dash);g.strokeStyle=color;g.lineWidth=lw;g.lineJoin='round';g.lineCap='round';g.beginPath();g.moveTo(X(0),Y(arr[0]));
+      for(var i=1;i<n;i++){if(i>upto){var f=upto-(i-1);if(f>0)g.lineTo(X(i-1+f),Y(arr[i-1]+(arr[i]-arr[i-1])*f));break}g.lineTo(X(i),Y(arr[i]))}g.stroke();g.setLineDash([])}
+    line(T,Math.min(pw,tEnd),[5,4],col('--bench'),1.8);
+    line(A,pa,[],col('--accent'),2.5);
+    // pen tip on the live line
+    if(!done&&pa>0){var li=Math.floor(pa),lf=pa-li,yy=li<n-1?A[li]+(A[li+1]-A[li])*lf:A[n-1];g.fillStyle=col('--accent');g.beginPath();g.arc(X(pa),Y(yy),3.4,0,7);g.fill()}
+    if(pw>q0){g.font='500 10px '+col('--mono');g.fillStyle=col('--muted');g.textBaseline='bottom';var tl=Math.min(tEnd,Math.floor(pw));g.textAlign=tl>n-3?'right':'left';g.fillText('twin',X(tl)+(tl>n-3?-8:6),Y(T[tl])-4)}
+    // the power cut: the chart flickers like a failing light, with a little static in the band
+    if(flick>0){
+      g.save();g.fillStyle='rgba(6,9,14,'+(.82*flick).toFixed(3)+')';g.fillRect(padL-4,padT,w+8,h);
+      g.fillStyle=col('--hot');for(var z=0;z<70*flick;z++){g.globalAlpha=.15+Math.random()*.45;g.fillRect(bx0+Math.random()*(bx1-bx0),padT+Math.random()*h,1+Math.random()*3,1)}
+      g.globalAlpha=.18*flick;var sy=padT+Math.random()*h;g.fillRect(padL,sy,w,1+Math.random()*2);g.restore();
+    }
+    if(flick>0&&band>0){var label2='internet off';g.font='600 10px '+col('--mono');var tw2=g.measureText(label2).width+14,th2=18,cx2=Math.min(W-padR-tw2/2,Math.max(padL+tw2/2,(bx0+bx1)/2)),ty2=padT-th2-4;
+      g.save();g.globalAlpha=band;g.shadowColor=col('--hot');g.shadowBlur=18;g.fillStyle=col('--hot');g.beginPath();if(g.roundRect)g.roundRect(cx2-tw2/2,ty2,tw2,th2,9);else g.rect(cx2-tw2/2,ty2,tw2,th2);g.fill();
+      g.shadowBlur=0;g.fillStyle='#fff';g.textAlign='center';g.textBaseline='middle';g.fillText(label2,cx2,ty2+th2/2+.5);g.restore()}
+    // hover readout
+    if(hover>=0&&done){var x=X(hover);g.strokeStyle=col('--ink');g.globalAlpha=.35;g.lineWidth=1;g.beginPath();g.moveTo(x,padT);g.lineTo(x,padT+h);g.stroke();g.globalAlpha=1;
+      (hover<=tEnd?[[T,col('--bench')],[A,col('--accent')]]:[[A,col('--accent')]]).forEach(function(s){g.fillStyle=col('--surface');g.strokeStyle=s[1];g.lineWidth=2;g.beginPath();g.arc(x,Y(s[0][hover]),4,0,7);g.fill();g.stroke()})}
+  }
+  function readout(){
+    var E=D.e[cur], tEnd=Math.min(E.a.length-1,E.q[E.q.length-1]+3);
+    if(hover>=0&&done){tip.innerHTML='<b>'+D.l[hover]+'</b> actual '+fmt(E.a[hover])+(hover<=tEnd?' <i>twin '+fmt(E.w[hover])+'</i>':'');tip.classList.add('on')}else tip.classList.remove('on');
+  }
+  var shownPct=0, runId=0;
+  function count(to,my){big.style.opacity='1';var from=shownPct,t0=performance.now();(function f(now){if(my!==runId)return;var k=Math.min(1,(now-t0)/800);k=1-Math.pow(1-k,3);shownPct=from+(to-from)*k;big.textContent='−'+Math.round(-shownPct*100)+'%';if(k<1)requestAnimationFrame(f)})(t0)}
+  function play(){
+    var my=++runId, E=D.e[cur], n=E.a.length, q0=E.q[0], q1=E.q[E.q.length-1], tEnd=Math.min(n-1,q1+3), pre=Math.max(0,q0-1);
+    done=false; band=0; shown=0; flick=0; big.style.opacity=shownPct?'.25':'1';
+    if(reduce){pa=pw=n-1;band=1;shown=1;done=true;draw();shownPct=E.pct;big.textContent='−'+Math.round(-E.pct*100)+'%';return}
+    // each step: [duration ms, update(k)]
+    var steps=[
+      [Math.max(350,1100*pre/(n-1)), function(k){pa=pw=pre*k}],
+      [760, function(k){ // on, off, on, off, on: a light that can't decide, then the cut holds
+        var ks=[0,.08,.16,.26,.34,.46,.56,.72,1], fv=[0,.9,.1,.85,.2,.7,.05,.35,0];
+        for(var z=1;z<ks.length;z++)if(k<=ks[z]){var u=(k-ks[z-1])/(ks[z]-ks[z-1]);flick=fv[z-1]+(fv[z]-fv[z-1])*u;break}
+        band=k<.56?(flick>.45?1:.25):Math.min(1,.6+(k-.56)/.44*.4);if(k>=1){flick=0;band=1}}],
+      [Math.max(450,160*(tEnd-pre)), function(k){pw=pre+(tEnd-pre)*ease(k)}],
+      [520, function(k){pa=pre+(q1-pre)*ease(k)}],
+      [Math.max(500,90*(n-1-q1)), function(k){shown=ease(k);pa=q1+(n-1-q1)*ease(k)}]
+    ];
+    var si=0, t0=performance.now();
+    (function f(now){
+      if(my!==runId)return;
+      var st=steps[si], k=Math.min(1,(now-t0)/st[0]); st[1](k);
+      if(k>=1){ if(si===3)count(E.pct,my); si++; t0=now; if(si>=steps.length){done=true;draw();return} }
+      draw();requestAnimationFrame(f)})(t0);
+  }
+  [].forEach.call(document.querySelectorAll('#sd-pick button'),function(btn){btn.addEventListener('click',function(){cur=btn.dataset.id;[].forEach.call(document.querySelectorAll('#sd-pick button'),function(x){x.setAttribute('aria-pressed',x===btn)});hover=-1;readout();play()})});
+  c.addEventListener('pointermove',function(e){if(!G.X||e.pointerType!=='mouse')return;var r=c.getBoundingClientRect(),i=Math.round((e.clientX-r.left-G.padL)/G.w*(G.n-1));hover=i>=0&&i<G.n?i:-1;readout();draw()});
+  c.addEventListener('pointerleave',function(){hover=-1;readout();draw()});
+  function start(){if(started)return;started=true;play()}
+  function check(){if(started)return;var r=c.getBoundingClientRect();if(r.top<innerHeight*.8&&r.bottom>innerHeight*.15)start()}
+  addEventListener('scroll',check,{passive:true});setTimeout(check,300);
+  draw();
+  var rt;addEventListener('resize',function(){clearTimeout(rt);rt=setTimeout(draw,120)});
+  addEventListener('themechange',draw); var mq=matchMedia('(prefers-color-scheme: dark)'); if(mq.addEventListener)mq.addEventListener('change',draw);
+  if(document.fonts&&document.fonts.ready)document.fonts.ready.then(draw);
+})();
+
+// Lab menu in the nav: both interactive pages live here
+(function(){
+  var b=document.getElementById('lab-btn'),m=document.getElementById('lab-menu'); if(!b||!m) return;
+  function set(open){b.setAttribute('aria-expanded',open);if(open){m.hidden=false;requestAnimationFrame(function(){m.classList.add('on')})}else{m.classList.remove('on');setTimeout(function(){if(!m.classList.contains('on'))m.hidden=true},220)}}
+  b.addEventListener('click',function(e){e.stopPropagation();set(b.getAttribute('aria-expanded')!=='true')});
+  document.addEventListener('click',function(e){if(!m.contains(e.target))set(false)});
+  document.addEventListener('keydown',function(e){if(e.key==='Escape'){set(false);b.focus()}});
+  addEventListener('scroll',function(){if(b.getAttribute('aria-expanded')==='true')set(false)},{passive:true});
 })();
 </script>
 <script src="https://cdn.jsdelivr.net/npm/lenis@1.1.13/dist/lenis.min.js"></script>

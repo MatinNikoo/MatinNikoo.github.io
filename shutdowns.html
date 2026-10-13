@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Internet Shutdowns</title>
+<meta name="description" content="What happens to a country's coding when its government turns off the internet. Synthetic twins built from GitHub data for nine shutdowns.">
+<meta property="og:title" content="What does it cost to turn off the internet?">
+<meta property="og:description" content="Nine shutdowns, measured with GitHub data and synthetic twins.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%232F4BC4'/%3E%3Ctext x='32' y='46' font-family='Georgia,serif' font-style='italic' font-size='40' text-anchor='middle' fill='%23fff'%3EM%3C/text%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,700;12..96,800&family=Geist:wght@400;500;600&family=Geist+Mono:wght@400;500&family=Instrument+Serif:ital@0;1&family=Caveat:wght@500;600&display=swap" rel="stylesheet">
+<script>try{var t=localStorage.getItem("theme");if(t==="light"||t==="dark")document.documentElement.setAttribute("data-theme",t)}catch(e){}</script>
+<style>
+:root{
+  --bg:#F3F5F8; --surface:#FFFFFF; --ink:#0E1726; --muted:#596476; --line:#DCE1E9;
+  --accent:#2F4BC4; --accent-soft:#E2E7FF; --bench:#8E97A6; --hot:#C2410C; --hot-soft:#F6E6DD;
+  --display:"Bricolage Grotesque","Avenir Next","Segoe UI",system-ui,sans-serif;
+  --body:"Geist",system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+  --serif:"Instrument Serif","Iowan Old Style","Palatino Linotype",Georgia,serif;
+  --hand:"Caveat","Bradley Hand","Segoe Print",cursive;
+  --mono:"Geist Mono",ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#0B1017; --surface:#121923; --ink:#E9EDF3; --muted:#97A1B0; --line:#232D3B;
+  --accent:#8FA3FF; --accent-soft:#1D2646; --bench:#6B7688; --hot:#F08A5D; --hot-soft:#2A1A14; color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#0B1017; --surface:#121923; --ink:#E9EDF3; --muted:#97A1B0; --line:#232D3B;
+  --accent:#8FA3FF; --accent-soft:#1D2646; --bench:#6B7688; --hot:#F08A5D; --hot-soft:#2A1A14; color-scheme:dark}
+*,*::before,*::after{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%;overflow-x:clip}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--body);font-size:16.5px;line-height:1.6;overflow-x:clip}
+a{color:inherit;text-decoration-color:var(--line);text-underline-offset:3px}
+a:hover{color:var(--accent)}
+:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border-radius:4px}
+.wrap{max-width:62rem;margin:0 auto;padding-inline:clamp(1rem,4vw,2.5rem)}
+.mono{font-family:var(--mono);font-size:.8rem}
+.nav{position:sticky;top:0;z-index:10;background:color-mix(in srgb,var(--bg) 85%,transparent);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border-bottom:1px solid var(--line)}
+.nav .wrap{display:flex;justify-content:space-between;align-items:center;height:3.4rem;gap:1rem}
+.nav a{text-decoration:none;font-size:.92rem;color:var(--muted)}
+.nav a.mark{font-family:var(--display);font-weight:700;color:var(--ink);font-size:1rem}
+.nav .row{display:flex;gap:1.1rem}
+header{padding-block:clamp(2.5rem,7vw,4.5rem) 1.5rem}
+.note{font-family:var(--hand);font-weight:600;font-size:1.45rem;color:var(--accent);rotate:-2deg;display:inline-block;margin:0}
+h1{font-family:var(--serif);font-weight:400;font-size:clamp(2.6rem,7.5vw,4.6rem);line-height:.98;letter-spacing:-.01em;margin:.4rem 0 1rem;max-width:15ch}
+h1 em{color:var(--accent)}
+.lede{font-size:1.12rem;max-width:41rem;margin:0}
+.facts{display:grid;grid-template-columns:repeat(auto-fit,minmax(12rem,1fr));gap:1rem;margin:1.8rem 0 .4rem}
+.fact{border-top:2px solid var(--ink);padding-top:.6rem}
+.fact b{display:block;font-family:var(--serif);font-weight:400;font-size:2.3rem;line-height:1;color:var(--accent)}
+.fact span{font-size:.88rem;color:var(--muted)}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:clamp(1rem,3vw,1.6rem);margin-bottom:1.2rem}
+.card h2{font-family:var(--display);font-weight:700;font-size:1.25rem;letter-spacing:-.01em;margin:0 0 .5rem;display:flex;gap:.6rem;align-items:baseline}
+.card h2 i{font-style:normal;font-family:var(--mono);font-size:.78rem;color:var(--accent)}
+.card p{margin:.2rem 0 .8rem;max-width:44rem}
+.small{font-size:.84rem;color:var(--muted)}
+.chips{display:flex;flex-wrap:wrap;gap:.4rem;margin:.6rem 0 .9rem}
+.chip{font:inherit;font-size:.84rem;border:1px solid var(--line);background:var(--bg);color:var(--ink);border-radius:999px;padding:.28rem .75rem;cursor:pointer}
+.chip:hover{border-color:var(--accent)}
+.chip[aria-pressed="true"]{background:var(--accent);border-color:var(--accent);color:var(--bg)}
+.chip small{opacity:.7;margin-left:.25rem}
+.seg{display:inline-flex;border:1px solid var(--line);border-radius:10px;overflow:hidden;margin:.2rem 0 .6rem}
+.seg button{font:inherit;font-size:.82rem;border:0;background:none;color:var(--muted);padding:.4rem .75rem;cursor:pointer}
+.seg button[aria-pressed="true"]{background:var(--accent-soft);color:var(--ink)}
+.read{display:flex;flex-wrap:wrap;align-items:baseline;gap:.3rem 1.2rem;margin:.2rem 0 .4rem}
+.read .big{font-family:var(--serif);font-size:clamp(2.4rem,7vw,3.3rem);line-height:1;color:var(--hot)}
+.read .big.flat{color:var(--muted)}
+canvas{display:block;width:100%;height:auto}
+#c-twin{aspect-ratio:16/7.2}
+#c-forest{aspect-ratio:16/8.6}
+#c-dose{aspect-ratio:16/9}
+#c-power{aspect-ratio:16/6.5}
+@media (max-width:600px){#c-twin{aspect-ratio:4/3}#c-forest{aspect-ratio:4/4.2}#c-dose{aspect-ratio:4/3.3}#c-power{aspect-ratio:4/2.6}}
+.what{font-size:.86rem;color:var(--muted);border-left:2px solid var(--line);padding-left:.9rem;margin:.9rem 0 0}
+.made{font-size:.84rem;color:var(--muted);margin-top:.6rem}
+.made b{color:var(--ink);font-weight:500}
+.legend{display:flex;flex-wrap:wrap;gap:.3rem 1.2rem;font-size:.78rem;color:var(--muted);margin-top:.5rem}
+.legend span::before{content:"";display:inline-block;width:.9rem;height:.55rem;border-radius:2px;margin-right:.35rem;vertical-align:middle;background:var(--c)}
+.slider{display:flex;align-items:center;gap:1rem;flex-wrap:wrap;margin:.4rem 0 .6rem}
+.slider input{flex:1;min-width:12rem;accent-color:var(--accent)}
+.slider output{font-family:var(--serif);font-size:2.2rem;line-height:1;color:var(--accent);min-width:5ch}
+.bars{display:grid;gap:.35rem;margin-top:.6rem}
+.bar{display:grid;grid-template-columns:9.5rem minmax(0,1fr) 3.5rem;align-items:center;gap:.6rem;font-size:.86rem}
+.bar .track{position:relative;height:.7rem;background:var(--bg);border-radius:4px}
+.bar .track i{position:absolute;top:0;bottom:0;right:50%;background:var(--accent);border-radius:4px 0 0 4px}
+.bar .track::after{content:"";position:absolute;left:50%;top:-.2rem;bottom:-.2rem;width:1px;background:var(--ink)}
+.bar span:last-child{font-family:var(--mono);font-size:.78rem;color:var(--muted);text-align:right}
+@media (max-width:520px){.bar{grid-template-columns:7rem minmax(0,1fr) 3.2rem}}
+.links{display:flex;flex-wrap:wrap;gap:.6rem;margin-top:.4rem}
+.btn{display:inline-flex;align-items:center;gap:.4rem;font:inherit;font-size:.92rem;font-weight:500;border-radius:10px;padding:.55rem .95rem;border:1px solid var(--line);background:var(--surface);color:var(--ink);text-decoration:none}
+.btn:hover{border-color:var(--accent);color:var(--accent)}
+.btn.primary{background:var(--accent);border-color:var(--accent);color:var(--bg)}
+.btn.primary:hover{color:var(--bg);filter:brightness(1.08)}
+footer{padding-block:2rem 3rem;color:var(--muted);font-size:.85rem}
+</style>
+</head>
+<body>
+<nav class="nav"><div class="wrap"><a class="mark" href="index.html">Matin Nikoomanzar</a><div class="row"><a href="index.html#projects">Projects</a><a href="https://github.com/MatinNikoo/internet-shutdowns" target="_blank" rel="noopener">Code</a></div></div></nav>
+<main class="wrap">
+<header>
+  <p class="note">a test nobody would ever run</p>
+  <h1>What does it cost to <em>turn off</em> the internet?</h1>
+  <p class="lede">When a government cuts the internet, you can't compare that country to itself with the internet on. So I built each country a twin out of countries that stayed online, using GitHub's public data on how much code every country pushes each quarter.</p>
+  <div class="facts" id="facts"></div>
+</header>
+
+<section class="card" aria-labelledby="h1-twin">
+  <h2 id="h1-twin"><i>01</i>Build the twin</h2>
+  <p>The twin is a weighted mix of countries that moved like this one before the shutdown. The gap after is the effect. Try the simple comparisons too, they can point the wrong way.</p>
+  <div class="chips" id="chips" role="group" aria-label="Pick a shutdown"></div>
+  <div class="seg" role="group" aria-label="Compare against">
+    <button type="button" data-mode="twin" aria-pressed="true">Synthetic twin</button>
+    <button type="button" data-mode="last">Last quarter</button>
+    <button type="button" data-mode="yoy">Same quarter last year</button>
+  </div>
+  <div class="read"><span class="big" id="r-big"></span><span class="small" id="r-sub"></span></div>
+  <canvas id="c-twin" aria-label="Pushes over time for the chosen country and what it is compared against"></canvas>
+  <div class="legend"><span style="--c:var(--accent)">Actual</span><span style="--c:var(--bench)" id="lg-cmp">Twin</span><span style="--c:var(--hot-soft)">Shutdown quarter</span></div>
+  <p class="made" id="made"></p>
+  <p class="what" id="what"></p>
+</section>
+
+<section class="card" aria-labelledby="h2-all">
+  <h2 id="h2-all"><i>02</i>All nine shutdowns</h2>
+  <p>Long shutdowns show up clearly. Short ones get lost in the noise, part 05 shows why. The diamond is where the country would land if every day offline cost exactly one day of work.</p>
+  <canvas id="c-forest" aria-label="Estimated effect of each shutdown with 95 percent intervals"></canvas>
+  <div class="legend"><span style="--c:var(--accent)">Full shutdown</span><span style="--c:var(--bench)">Partial, mobile only or curfews</span><span style="--c:var(--hot)">A day offline costs a day</span></div>
+</section>
+
+<section class="card" aria-labelledby="h3-dose">
+  <h2 id="h3-dose"><i>03</i>Does a day offline cost a day?</h2>
+  <p id="dose-text"></p>
+  <canvas id="c-dose" aria-label="Measured drop against share of the quarter offline"></canvas>
+</section>
+
+<section class="card" aria-labelledby="h4-drift">
+  <h2 id="h4-drift"><i>04</i>Where did the activity go?</h2>
+  <p>GitHub places each account where its connections come from. The number of developers placed in a country almost never falls, it just keeps growing. In the two longest shutdowns it fell, which is what you'd see if people switched to VPNs or left. So some of the drop is people still coding, just showing up somewhere else on the map.</p>
+  <div class="bars" id="bars"></div>
+  <p class="small" style="margin-top:.7rem">Developers placed in the country vs the twin, in the shutdown quarter.</p>
+</section>
+
+<section class="card" aria-labelledby="h5-power">
+  <h2 id="h5-power"><i>05</i>Can quarterly data even see it?</h2>
+  <p>I planted fake shutdowns of known size in countries that never had one, 250 times per size, and checked how often each method caught them. Slide to pick a length.</p>
+  <div class="slider"><input type="range" id="days" min="0" max="45" value="10" step="1" aria-label="Days offline"><output id="pw"></output><span class="small" id="pw-sub"></span></div>
+  <canvas id="c-power" aria-label="Chance of detecting a shutdown by its length"></canvas>
+</section>
+
+<section class="card" aria-labelledby="h6-limits">
+  <h2 id="h6-limits"><i>06</i>What this can't tell you</h2>
+  <p>Shutdowns come with coups, protests and war, so these numbers are the cost of everything happening at once. Part 03 is my way around that, it checks whether the days offline explain the drop on their own. Quarterly data also hides how fast things bounced back within a quarter. And the twin assumes the country would have kept moving like its donors, which matters most for Iran in early 2026, when most of the world jumped about 30%.</p>
+  <div class="links"><a class="btn primary" href="https://github.com/MatinNikoo/internet-shutdowns" target="_blank" rel="noopener">Code and tests</a><a class="btn" href="https://github.com/MatinNikoo/internet-shutdowns/blob/main/memo/memo.pdf" target="_blank" rel="noopener">One page memo</a></div>
+</section>
+</main>
+<footer class="wrap">Data from GitHub's Innovation Graph (CC0). Event dates from Internet Society Pulse, OONI, NetBlocks reporting and others, linked in the repo.</footer>
+
+<script>
+var D={"labels":["2020Q1","2020Q2","2020Q3","2020Q4","2021Q1","2021Q2","2021Q3","2021Q4","2022Q1","2022Q2","2022Q3","2022Q4","2023Q1","2023Q2","2023Q3","2023Q4","2024Q1","2024Q2","2024Q3","2024Q4","2025Q1","2025Q2","2025Q3","2025Q4","2026Q1"],"n_donors":106,"events":[{"id":"KZ-2022","country":"Kazakhstan","kind":"full","quarters":["2022Q1"],"what":"Nationwide shutdown from 5 Jan 2022 to 10 Jan 2022, with short windows of access each day","source":"https://pulse.internetsociety.org/en/shutdowns/kazakhstan-cuts-off-internet-access/","pre":8,"actual":[82177,118134,104045,128691,151440,147595,119638,142696,141964,192475,171653,305750,329189,325435,262587,283066,309807,304576,247131,333940,398972,446086,408091,560275,747326],"twin":[85192,112850,101923,123703,139963,145624,120552,141333,156272,177241,165750,188058,212708,221253,198032,234136,238969,242771,217506,246470,264582,311656,300661,374940,492718],"sdid":{"pct":-0.0916,"lo":-0.3853,"hi":0.3425,"p":0.3925},"sc":-0.1474,"naive":{"vs_last_clean_quarter":-0.0051,"vs_same_quarter_last_year":-0.0626},"full_stop":-0.0583,"share":[0.05,0.0667],"days":[4.5,6.0],"made_of":[{"name":"Lebanon","w":0.104},{"name":"Puerto Rico","w":0.093},{"name":"T\u00fcrkiye","w":0.05},{"name":"Hungary","w":0.046},{"name":"Bosnia and Herzegovina","w":0.043},{"name":"Morocco","w":0.04}],"drift":{"developers":{"pct":0.0059,"lo":-0.026,"hi":0.0389},"repositories":{"pct":-0.0144,"lo":-0.0628,"hi":0.0366}}},{"id":"SD-2021","country":"Sudan","kind":"full","quarters":["2021Q4"],"what":"Fixed and mobile internet cut on 25 Oct 2021 after the coup, services began returning 18 Nov 2021","source":"https://pulse.internetsociety.org/en/shutdowns/internet-disruption-in-sudan/","pre":7,"actual":[5482,7599,7717,8964,9786,8723,9902,7191,14414,13259,19338,56701,39229,12295,88450,40485,14865,13943,13668,8831,11024,13858,19579,27156,36558],"twin":[5797,7544,7715,8555,9260,9607,9675,10648,11901,13599,13886,15149,16639,17111,16741,18012,17720,18536,17916,20247,20997,26812,26878,33324,44045],"sdid":{"pct":-0.3246,"lo":-0.474,"hi":-0.1329,"p":0.0187},"sc":-0.3843,"naive":{"vs_last_clean_quarter":-0.2738,"vs_same_quarter_last_year":-0.1978},"full_stop":-0.2609,"share":[0.25,0.2717],"days":[23.0,25.0],"made_of":[{"name":"Cyprus","w":0.065},{"name":"Puerto Rico","w":0.065},{"name":"Latvia","w":0.054},{"name":"Palestine","w":0.053},{"name":"Moldova","w":0.047},{"name":"Saudi Arabia","w":0.045}],"drift":{"developers":{"pct":-0.0226,"lo":-0.0427,"hi":-0.002},"repositories":{"pct":-0.0516,"lo":-0.0934,"hi":-0.0078}}},{"id":"BD-2024","country":"Bangladesh","kind":"full","quarters":["2024Q3"],"what":"Nationwide shutdown from 18 Jul 2024, broadband back 24 Jul, mobile back 28 Jul, second nationwide cut 4 to 5 Aug","source":"https://en.wikipedia.org/wiki/2024_Bangladesh_internet_blackouts","pre":18,"actual":[295222,390126,506514,463426,617631,617469,867496,721604,951775,841838,1170835,972713,1178079,1083550,1522648,1357990,1597239,1248660,1573666,1758248,1874593,1995526,2565398,2577601,3026760],"twin":[315995,399232,445057,445548,549225,651120,722836,690672,860932,942631,1035926,983202,1173209,1129314,1294212,1261024,1366619,1357917,1420286,1477360,1691615,2153195,2347875,2725261,3815599],"sdid":{"pct":0.108,"lo":-0.2361,"hi":0.6072,"p":0.1495},"sc":0.061,"naive":{"vs_last_clean_quarter":0.2603,"vs_same_quarter_last_year":0.0335},"full_stop":-0.0978,"share":[0.0761,0.1196],"days":[7.0,11.0],"made_of":[{"name":"Saudi Arabia","w":0.149},{"name":"Madagascar","w":0.109},{"name":"Jordan","w":0.103},{"name":"Uzbekistan","w":0.093},{"name":"India","w":0.08},{"name":"Ecuador","w":0.075}],"drift":{"developers":{"pct":-0.0279,"lo":-0.1037,"hi":0.0543},"repositories":{"pct":0.0028,"lo":-0.0792,"hi":0.0922}}},{"id":"TZ-2025","country":"Tanzania","kind":"full","quarters":["2025Q4"],"what":"Nationwide shutdown from 29 Oct 2025, general access restored 3 Nov 2025","source":"https://globalnetworkinitiative.org/wp-content/uploads/GNI-Statement-on-the-Nationwide-Internet-Shutdown-in-Tanzania-During-the-2025-Elections-3.pdf","pre":23,"actual":[17487,21415,21427,17801,23129,28023,30566,25471,35673,47828,49379,44718,51012,49685,54269,41798,54756,58218,66819,62276,78186,117144,116052,131748,225751],"twin":[17806,23462,22718,21928,25507,30759,33705,30951,40074,46692,55135,48873,57629,54926,61348,54480,62035,66030,69898,70944,84611,113959,120359,138850,196250],"sdid":{"pct":-0.0511,"lo":-0.2217,"hi":0.1568,"p":0.4299},"sc":0.041,"naive":{"vs_last_clean_quarter":0.1352,"vs_same_quarter_last_year":1.1156},"full_stop":-0.0543,"share":[0.0543,0.0543],"days":[5.0,5.0],"made_of":[{"name":"Iraq","w":0.117},{"name":"Cambodia","w":0.11},{"name":"Nepal","w":0.088},{"name":"Senegal","w":0.077},{"name":"Ecuador","w":0.069},{"name":"Palestine","w":0.067}],"drift":{"developers":{"pct":-0.0117,"lo":-0.0472,"hi":0.0251},"repositories":{"pct":-0.0158,"lo":-0.0649,"hi":0.0359}}},{"id":"IR-2025","country":"Iran","kind":"full","quarters":["2025Q2"],"what":"Connectivity fell sharply on 17 Jun 2025 and was almost completely blocked from 18 Jun, services restored 25 Jun 2025","source":"https://en.wikipedia.org/wiki/2025_Internet_blackout_in_Iran","pre":19,"actual":[148536,176080,190556,219516,227874,251212,314655,325208,335784,355711,424187,310890,432451,502595,550631,500107,538364,506752,568093,527387,565809,628498,806458,798320,331042],"twin":[146080,187519,195390,208295,230601,270306,289427,301668,333580,375461,404190,414506,464991,490649,515147,499919,500900,524457,535640,564938,584923,764417,802136,948344,1210202],"sdid":{"pct":-0.1778,"lo":-0.3536,"hi":0.0457,"p":0.0748},"sc":-0.2036,"naive":{"vs_last_clean_quarter":0.1108,"vs_same_quarter_last_year":0.2402},"full_stop":-0.0879,"share":[0.0769,0.0989],"days":[7.0,9.0],"made_of":[{"name":"Uzbekistan","w":0.084},{"name":"Azerbaijan","w":0.078},{"name":"Saudi Arabia","w":0.076},{"name":"South Korea","w":0.057},{"name":"Palestine","w":0.048},{"name":"Jordan","w":0.044}],"drift":{"developers":{"pct":-0.0116,"lo":-0.035,"hi":0.0123},"repositories":{"pct":-0.0059,"lo":-0.0408,"hi":0.0302}}},{"id":"IR-2026","country":"Iran","kind":"full","quarters":["2026Q1"],"what":"Blackout from 8 Jan 2026 with partial return in late January, then a cut of more than 99 percent from 28 Feb 2026 that lasted past the end of the quarter","source":"https://www.thenationalnews.com/future/technology/2026/05/07/iran-internet-blackout/","pre":21,"actual":[148536,176080,190556,219516,227874,251212,314655,325208,335784,355711,424187,310890,432451,502595,550631,500107,538364,506752,568093,527387,565809,628498,806458,798320,331042],"twin":[140263,179679,187150,198472,220310,259488,276356,284531,319392,362317,388041,396439,447190,467522,487656,473113,479850,501782,509359,531556,553181,694587,732687,825453,1067233],"sdid":{"pct":-0.6898,"lo":-0.7557,"hi":-0.6061,"p":0.0093},"sc":-0.7038,"naive":{"vs_last_clean_quarter":-0.5853,"vs_same_quarter_last_year":-0.4149},"full_stop":-0.5889,"share":[0.5333,0.6444],"days":[48.0,58.0],"made_of":[{"name":"Uzbekistan","w":0.091},{"name":"South Korea","w":0.078},{"name":"Sri Lanka","w":0.054},{"name":"Saudi Arabia","w":0.049},{"name":"Ukraine","w":0.047},{"name":"Azerbaijan","w":0.047}],"drift":{"developers":{"pct":-0.064,"lo":-0.0901,"hi":-0.0372},"repositories":{"pct":-0.0938,"lo":-0.129,"hi":-0.057}}},{"id":"IR-2022","country":"Iran","kind":"partial","quarters":["2022Q4"],"what":"Mobile networks cut 4pm to midnight from 21 Sep to 3 Oct 2022 and again on 8, 12 and 15 Oct, regional outages, app stores and messaging apps blocked. Fixed line mostly stayed up","source":"https://ooni.org/post/2022-iran-technical-multistakeholder-report/","pre":10,"actual":[148536,176080,190556,219516,227874,251212,314655,325208,335784,355711,424187,310890,432451,502595,550631,500107,538364,506752,568093,527387,565809,628498,806458,798320,331042],"twin":[141476,177591,183373,202724,220449,255658,280676,297981,319391,355711,373950,398736,419940,430169,441419,466166,456592,491531,490926,560157,572719,743723,777539,936557,1203080],"sdid":{"pct":-0.2203,"lo":-0.4313,"hi":0.069,"p":0.0748},"sc":-0.2381,"naive":{"vs_last_clean_quarter":-0.126,"vs_same_quarter_last_year":-0.044},"full_stop":null,"share":null,"days":null,"made_of":[{"name":"Saudi Arabia","w":0.087},{"name":"Uzbekistan","w":0.086},{"name":"Sri Lanka","w":0.063},{"name":"Indonesia","w":0.059},{"name":"Jamaica","w":0.053},{"name":"Singapore","w":0.045}],"drift":{"developers":{"pct":0.0058,"lo":-0.0296,"hi":0.0425},"repositories":{"pct":-0.0513,"lo":-0.1232,"hi":0.0266}}},{"id":"MM-2021","country":"Myanmar","kind":"partial","quarters":["2021Q1","2021Q2"],"what":"Coup on 1 Feb 2021, 30 hour nationwide cut on 6 to 7 Feb, nightly cuts from 15 Feb to 28 Apr, all mobile data off from 15 Mar, then whitelisting","source":"https://www.article19.org/resources/myanmar-must-immediately-reinstate-internet-access/","pre":4,"actual":[42148,51434,57173,60893,32835,27333,42119,41611,48639,52485,59529,69555,90299,99621,114784,113778,121804,93155,77085,75209,77745,94234,117815,122028,174641],"twin":[42362,52584,56705,60680,64064,73764,73022,76243,88187,103452,107537,112808,125438,130762,129920,132633,132781,143542,141214,153603,158684,202665,209409,246751,313380],"sdid":{"pct":-0.5642,"lo":-0.6865,"hi":-0.3941,"p":0.0187},"sc":-0.5675,"naive":{"vs_last_clean_quarter":-0.4608,"vs_same_quarter_last_year":-0.221},"full_stop":null,"share":null,"days":null,"made_of":[{"name":"Madagascar","w":0.046},{"name":"Lebanon","w":0.04},{"name":"Rwanda","w":0.038},{"name":"Jamaica","w":0.031},{"name":"Uzbekistan","w":0.029},{"name":"Palestine","w":0.029}],"drift":{"developers":{"pct":-0.1167,"lo":-0.1428,"hi":-0.0899},"repositories":{"pct":-0.1935,"lo":-0.2502,"hi":-0.1324}}},{"id":"PK-2023","country":"Pakistan","kind":"partial","quarters":["2023Q2"],"what":"Mobile internet suspended from 9 May 2023, restored 12 May 2023. Fixed line stayed up","source":"https://pulse.internetsociety.org/shutdowns/pakistan-blocks-mobile-internet-access-in-some-regions-amidst-protests","pre":13,"actual":[235987,389032,380776,389724,392588,469927,493800,517595,570533,582099,755331,732949,839263,895306,1139050,1121678,1323587,1331617,1716373,1730917,1872816,2157303,2770560,2870837,3523185],"twin":[257765,383383,377416,383138,399471,485841,497256,520734,562987,651315,745274,744388,834775,865915,911749,883751,865331,929267,973108,1029462,1078637,1469913,1599840,1889629,2471093],"sdid":{"pct":0.0339,"lo":-0.1732,"hi":0.293,"p":0.7383},"sc":0.069,"naive":{"vs_last_clean_quarter":0.0668,"vs_same_quarter_last_year":0.5381},"full_stop":null,"share":null,"days":null,"made_of":[{"name":"Saudi Arabia","w":0.074},{"name":"India","w":0.067},{"name":"Iraq","w":0.064},{"name":"Panama","w":0.048},{"name":"United Arab Emirates","w":0.042},{"name":"Morocco","w":0.04}],"drift":{"developers":{"pct":0.0033,"lo":-0.0255,"hi":0.033},"repositories":{"pct":0.0073,"lo":-0.0835,"hi":0.1071}}}],"dose":{"beta":1.3099,"se":0.1291,"lo":1.057,"hi":1.5629,"beta_days_low":1.5107,"beta_days_high":1.1357,"without":"IR-2026","beta_without":1.2561,"se_without":0.3814},"power":[{"drop":0.0,"sdid":0.016,"sc":0.028,"coverage":0.984},{"drop":0.05,"sdid":0.044,"sc":0.032,"coverage":0.976},{"drop":0.1,"sdid":0.064,"sc":0.032,"coverage":0.988},{"drop":0.2,"sdid":0.412,"sc":0.256,"coverage":0.968},{"drop":0.35,"sdid":0.88,"sc":0.808,"coverage":0.988},{"drop":0.5,"sdid":0.952,"sc":0.932,"coverage":0.976}]};
+(function(){
+  var $=function(s){return document.querySelector(s)}, root=document.documentElement;
+  var reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
+  function col(n){return getComputedStyle(root).getPropertyValue(n).trim()}
+  function pct(x,d){return (x>0?'+':x<0?'−':'')+Math.abs(x*100).toFixed(d==null?0:d)+'%'}
+  function setup(c){var r=c.getBoundingClientRect(),dpr=Math.min(devicePixelRatio||1,2);c.width=Math.round(r.width*dpr);c.height=Math.round(r.height*dpr);var g=c.getContext('2d');g.setTransform(dpr,0,0,dpr,0,0);return {g:g,W:r.width,H:r.height}}
+  var EV={};D.events.forEach(function(e){EV[e.id]=e});
+  var L=D.labels;
+  var narrow=function(){return innerWidth<600};
+  function font(px,w){return (w||400)+' '+px+'px '+col('--body')}
+  function mono(px){return '500 '+px+'px '+col('--mono')}
+
+  // facts
+  var ir=EV['IR-2026'];
+  $('#facts').innerHTML=
+    '<div class="fact"><b>'+pct(ir.sdid.pct)+'</b><span>Iran\'s coding activity in early 2026, the quarter of its two blackouts</span></div>'+
+    '<div class="fact"><b>'+D.dose.beta.toFixed(2)+'</b><span>days of work lost for every day offline</span></div>'+
+    '<div class="fact"><b>'+D.n_donors+'</b><span>countries that never had a shutdown, used to build the twins</span></div>';
+
+  // 01 twin
+  var order=['IR-2026','MM-2021','SD-2021','IR-2022','IR-2025','KZ-2022','BD-2024','TZ-2025','PK-2023'];
+  var cur='IR-2026', mode='twin', anim=1, from=null;
+  $('#chips').innerHTML=order.map(function(id){var e=EV[id];return '<button class="chip" type="button" data-id="'+id+'" aria-pressed="'+(id===cur)+'">'+e.country+' <small>'+id.slice(3)+'</small></button>'}).join('');
+  [].forEach.call(document.querySelectorAll('.chip'),function(b){b.addEventListener('click',function(){cur=b.dataset.id;[].forEach.call(document.querySelectorAll('.chip'),function(x){x.setAttribute('aria-pressed',x===b)});go()})});
+  [].forEach.call(document.querySelectorAll('.seg button'),function(b){b.addEventListener('click',function(){mode=b.dataset.mode;[].forEach.call(document.querySelectorAll('.seg button'),function(x){x.setAttribute('aria-pressed',x===b)});go()})});
+  function cmpSeries(e){
+    var t=L.indexOf(e.quarters[0]), a=e.actual, s=e.twin.slice();
+    if(mode==='twin') return s;
+    var ref=mode==='last'?(e.actual[t]/(1+e.naive.vs_last_clean_quarter)):a[t-4];
+    var refT=mode==='last'?L.indexOf(refQ(e)):t-4;
+    return a.map(function(v,i){return i<refT?null:i<=t?ref:null});
+  }
+  function refQ(e){var t=L.indexOf(e.quarters[0]),r=e.actual[t]/(1+e.naive.vs_last_clean_quarter),best=t-1,bd=1e18;for(var i=0;i<t;i++){var d=Math.abs(e.actual[i]-r);if(d<bd){bd=d;best=i}}return L[best]}
+  var prevCmp=null,prevAct=null;
+  function go(){
+    var e=EV[cur], t=L.indexOf(e.quarters[0]);
+    var val=mode==='twin'?e.sdid.pct:mode==='last'?e.naive.vs_last_clean_quarter:e.naive.vs_same_quarter_last_year;
+    $('#r-big').textContent=pct(val);
+    $('#r-big').className='big'+(val>-0.02?' flat':'');
+    var q=e.quarters.join(' and ');
+    $('#r-sub').innerHTML=mode==='twin'?'vs its twin in '+q+'. 95% interval '+pct(e.sdid.lo)+' to '+pct(e.sdid.hi)+'. Plain synthetic control says '+pct(e.sc)
+      :mode==='last'?'vs the last quarter before it. This ignores that most countries were growing'
+      :'vs the same quarter a year earlier. This ignores a year of growth';
+    $('#lg-cmp').textContent=mode==='twin'?'Twin':mode==='last'?'Last quarter':'A year earlier';
+    $('#made').innerHTML=mode==='twin'?'<b>The twin is made of</b> '+e.made_of.slice(0,5).map(function(d){return d.name+' '+Math.round(d.w*100)+'%'}).join(', ')+' and '+(D.n_donors-5)+' others with smaller weights.':'';
+    $('#what').innerHTML=e.what+'. <a href="'+e.source+'" target="_blank" rel="noopener">Source</a>';
+    from={c:prevCmp,a:prevAct}; anim=reduce||!prevCmp?1:0; prevCmp=cmpSeries(e); prevAct=e.actual.slice();
+    if(!reduce&&from.c) tick(); else drawTwin(1);
+  }
+  function tick(){anim=Math.min(1,anim+0.06);drawTwin(anim);if(anim<1)requestAnimationFrame(tick)}
+  function ease(x){return 1-Math.pow(1-x,3)}
+  function drawTwin(p){
+    var c=$('#c-twin'),S=setup(c),g=S.g,W=S.W,H=S.H,e=EV[cur],tq=e.quarters.map(function(q){return L.indexOf(q)});
+    var k=ease(p), A=e.actual, C=prevCmp;
+    function mix(a,b,i){if(!from||!from[a]||from[a][i]==null||b[i]==null)return b[i];return from[a][i]+(b[i]-from[a][i])*k}
+    var acts=A.map(function(v,i){return mix('a',A,i)}), cmps=C.map(function(v,i){return C[i]==null?null:mix('c',C,i)});
+    var vals=acts.concat(cmps.filter(function(v){return v!=null}));
+    var top=Math.max.apply(null,vals)*1.12;
+    var padL=narrow()?38:50,padR=12,padT=12,padB=26,w=W-padL-padR,h=H-padT-padB;
+    var X=function(i){return padL+w*i/(L.length-1)},Y=function(v){return padT+h*(1-v/top)};
+    g.clearRect(0,0,W,H);
+    g.fillStyle=col('--hot-soft');tq.forEach(function(i){g.fillRect(X(i)-w/(L.length-1)/2,padT,w/(L.length-1),h)});
+    g.strokeStyle=col('--line');g.lineWidth=1;g.fillStyle=col('--muted');g.font=mono(10.5);g.textAlign='right';g.textBaseline='middle';
+    var step=niceStep(top/4);for(var v=0;v<=top;v+=step){g.beginPath();g.moveTo(padL,Y(v));g.lineTo(W-padR,Y(v));g.stroke();g.fillText(fmtK(v),padL-6,Y(v))}
+    g.textAlign='center';g.textBaseline='top';for(var i=0;i<L.length;i+=4)g.fillText(L[i].slice(0,4),X(i),H-padB+8);
+    // comparison
+    g.setLineDash([5,4]);g.strokeStyle=col('--bench');g.lineWidth=2;g.beginPath();var on=false;
+    cmps.forEach(function(v,i){if(v==null){on=false;return}if(!on){g.moveTo(X(i),Y(v));on=true}else g.lineTo(X(i),Y(v))});g.stroke();g.setLineDash([]);
+    // actual
+    g.strokeStyle=col('--accent');g.lineWidth=2.4;g.lineJoin='round';g.beginPath();acts.forEach(function(v,i){i?g.lineTo(X(i),Y(v)):g.moveTo(X(i),Y(v))});g.stroke();
+    // gap arrow
+    var t=tq[0], a=acts[t], b=cmps[t];
+    if(b!=null){g.strokeStyle=col('--hot');g.fillStyle=col('--hot');g.lineWidth=1.6;var x=X(t)+ (t>L.length-3?-7:7);
+      g.beginPath();g.moveTo(x,Y(b));g.lineTo(x,Y(a));g.stroke();var dir=a<b?1:-1;g.beginPath();g.moveTo(x,Y(a));g.lineTo(x-4,Y(a)-6*dir);g.lineTo(x+4,Y(a)-6*dir);g.closePath();g.fill();
+      g.beginPath();g.arc(X(t),Y(b),3.5,0,7);g.fillStyle=col('--surface');g.fill();g.strokeStyle=col('--bench');g.lineWidth=2;g.stroke()}
+    g.beginPath();g.arc(X(t),Y(a),4,0,7);g.fillStyle=col('--accent');g.fill();
+  }
+  function niceStep(x){var p=Math.pow(10,Math.floor(Math.log10(x))),n=x/p;return (n<1.5?1:n<3.5?2:n<7.5?5:10)*p}
+  function fmtK(v){return v>=1e6?(v/1e6).toFixed(v%1e6?1:0)+'M':v>=1e3?Math.round(v/1e3)+'k':Math.round(v)}
+
+  // 02 forest
+  function drawForest(){
+    var c=$('#c-forest'),S=setup(c),g=S.g,W=S.W,H=S.H;
+    var rows=D.events.slice().sort(function(a,b){return a.sdid.pct-b.sdid.pct});
+    var nm=narrow();g.font=font(nm?11.5:13,600);var padL=12+Math.max.apply(null,rows.map(function(e){return g.measureText(e.country+' '+e.id.slice(3)).width})),padR=14,padT=6,padB=28,w=W-padL-padR,h=H-padT-padB,rh=h/rows.length;
+    var lo=-0.8,hi=0.65,X=function(v){return padL+w*(v-lo)/(hi-lo)};
+    g.clearRect(0,0,W,H);g.font=mono(10.5);g.fillStyle=col('--muted');g.textAlign='center';g.textBaseline='top';
+    [-0.75,-0.5,-0.25,0,0.25,0.5].forEach(function(v){g.strokeStyle=v===0?col('--ink'):col('--line');g.lineWidth=1;g.beginPath();g.moveTo(X(v),padT);g.lineTo(X(v),padT+h);g.stroke();g.fillText(pct(v),X(v),padT+h+8)});
+    rows.forEach(function(e,i){var y=padT+rh*(i+.5),cc=e.kind==='full'?col('--accent'):col('--bench');
+      g.globalAlpha=.4;g.strokeStyle=cc;g.lineWidth=3;g.lineCap='round';g.beginPath();g.moveTo(X(Math.max(lo,e.sdid.lo)),y);g.lineTo(X(Math.min(hi,e.sdid.hi)),y);g.stroke();g.globalAlpha=1;
+      g.fillStyle=cc;g.beginPath();g.arc(X(e.sdid.pct),y,5,0,7);g.fill();
+      if(e.full_stop!=null){var x=X(e.full_stop);g.strokeStyle=col('--hot');g.lineWidth=1.8;g.fillStyle=col('--surface');g.beginPath();g.moveTo(x,y-5.5);g.lineTo(x+5.5,y);g.lineTo(x,y+5.5);g.lineTo(x-5.5,y);g.closePath();g.fill();g.stroke()}
+      g.fillStyle=e.id===cur?col('--accent'):col('--ink');g.font=font(nm?11.5:13,e.id===cur?600:400);g.textAlign='right';g.textBaseline='middle';g.fillText(e.country+' '+e.id.slice(3),padL-12,y)});
+  }
+
+  // 03 dose
+  var dr=D.dose;
+  $('#dose-text').innerHTML='If coding just pauses while the internet is off and picks back up after, a country offline for a third of a quarter should land a third below its twin. Across the six full shutdowns, each day offline cost about <b>'+dr.beta.toFixed(2)+' days</b> of work (95% interval '+dr.lo.toFixed(2)+' to '+dr.hi.toFixed(2)+'). So people didn\'t make up the lost time. Maybe it even cost a little more, but without Iran 2026 the estimate is too loose to say much beyond "about a day".';
+  function drawDose(){
+    var c=$('#c-dose'),S=setup(c),g=S.g,W=S.W,H=S.H,nm=narrow();
+    var padL=nm?40:52,padR=14,padT=12,padB=34,w=W-padL-padR,h=H-padT-padB;
+    var X=function(s){return padL+w*s/0.66},Y=function(v){return padT+h*(0.62-v)/(0.62+0.8)};
+    g.clearRect(0,0,W,H);g.font=mono(10.5);g.fillStyle=col('--muted');
+    g.textAlign='right';g.textBaseline='middle';[-0.75,-0.5,-0.25,0,0.25,0.5].forEach(function(v){g.strokeStyle=v===0?col('--ink'):col('--line');g.lineWidth=1;g.beginPath();g.moveTo(padL,Y(v));g.lineTo(W-padR,Y(v));g.stroke();g.fillText(pct(v),padL-6,Y(v))});
+    g.textAlign='center';g.textBaseline='top';[0,.1,.2,.3,.4,.5,.6].forEach(function(s){g.fillText(Math.round(s*100)+'%',X(s),padT+h+8)});
+    g.fillText('share of the quarter offline',padL+w/2,padT+h+21);
+    g.setLineDash([5,4]);g.strokeStyle=col('--hot');g.lineWidth=1.6;g.beginPath();g.moveTo(X(0),Y(0));g.lineTo(X(.66),Y(-.66));g.stroke();g.setLineDash([]);
+    g.strokeStyle=col('--accent');g.lineWidth=2.2;g.beginPath();for(var s=0;s<=.66;s+=.01){var v=Math.exp(dr.beta*Math.log(1-s))-1;s?g.lineTo(X(s),Y(v)):g.moveTo(X(s),Y(v))}g.stroke();
+    D.events.filter(function(e){return e.kind==='full'}).forEach(function(e){var m=(e.share[0]+e.share[1])/2,x=X(m),y=Y(e.sdid.pct);
+      g.globalAlpha=.35;g.strokeStyle=col('--accent');g.lineWidth=3;g.beginPath();g.moveTo(x,Y(Math.min(.6,e.sdid.hi)));g.lineTo(x,Y(e.sdid.lo));g.moveTo(X(e.share[0]),y);g.lineTo(X(e.share[1]),y);g.stroke();g.globalAlpha=1;
+      g.fillStyle=col('--accent');g.beginPath();g.arc(x,y,5,0,7);g.fill();
+      if(nm&&m<.2&&e.id!=='BD-2024')return;g.fillStyle=col('--ink');g.font=font(nm?10.5:12);g.textAlign=m>.5?'right':'left';g.textBaseline='bottom';g.fillText(e.country+' '+e.id.slice(3),x+(m>.5?-8:8),y-5)});
+    g.font=font(nm?10.5:12);g.textAlign='left';g.textBaseline='top';g.fillStyle=col('--hot');g.fillText('a day costs a day',X(.43),Y(-.36));
+    g.fillStyle=col('--accent');g.fillText('best fit',X(.36),Y(-.6));
+  }
+
+  // 04 drift bars
+  var drift=['MM-2021','IR-2026','SD-2021','BD-2024','TZ-2025','IR-2025','IR-2022','KZ-2022','PK-2023'];
+  $('#bars').innerHTML=drift.map(function(id){var d=EV[id].drift.developers,v=d.pct;var wpct=Math.min(50,Math.abs(v)/0.15*50);
+    return '<div class="bar"><span>'+EV[id].country+' '+id.slice(3)+'</span><span class="track"><i style="'+(v<0?'right:50%;width:'+wpct+'%':'left:50%;right:auto;width:'+wpct+'%;border-radius:0 4px 4px 0')+'"></i></span><span>'+pct(v,1)+'</span></div>'}).join('');
+
+  // 05 power
+  var P=D.power;
+  function powerAt(days){var d=days/91;for(var i=1;i<P.length;i++){if(d<=P[i].drop){var a=P[i-1],b=P[i],f=(d-a.drop)/(b.drop-a.drop);return a.sdid+f*(b.sdid-a.sdid)}}return P[P.length-1].sdid}
+  function drawPower(){
+    var days=+$('#days').value,pw=powerAt(days);
+    $('#pw').textContent=Math.round(pw*100)+'%';
+    $('#pw-sub').textContent=days===0?'false alarms when nothing happened':'chance a '+days+' day shutdown gets flagged';
+    var c=$('#c-power'),S=setup(c),g=S.g,W=S.W,H=S.H,padL=40,padR=12,padT=10,padB=26,w=W-padL-padR,h=H-padT-padB,maxD=46;
+    var X=function(d){return padL+w*d/maxD},Y=function(p){return padT+h*(1-p)};
+    g.clearRect(0,0,W,H);g.font=mono(10.5);g.fillStyle=col('--muted');g.textAlign='right';g.textBaseline='middle';
+    [0,.5,.8,1].forEach(function(p){g.strokeStyle=p===.8?col('--hot'):col('--line');g.setLineDash(p===.8?[4,4]:[]);g.lineWidth=1;g.beginPath();g.moveTo(padL,Y(p));g.lineTo(W-padR,Y(p));g.stroke();g.fillText(Math.round(p*100)+'%',padL-6,Y(p))});g.setLineDash([]);
+    g.textAlign='center';g.textBaseline='top';[0,10,20,30,40].forEach(function(d){g.fillText(d+'d',X(d),padT+h+8)});
+    g.strokeStyle=col('--accent');g.lineWidth=2.2;g.beginPath();for(var d=0;d<=maxD;d+=.5){var p=powerAt(d);d?g.lineTo(X(d),Y(p)):g.moveTo(X(d),Y(p))}g.stroke();
+    g.fillStyle=col('--accent');g.beginPath();g.arc(X(days),Y(pw),6,0,7);g.fill();
+  }
+  $('#days').addEventListener('input',drawPower);
+
+  function all(){drawTwin(1);drawForest();drawDose();drawPower()}
+  go();all();
+  var rt;addEventListener('resize',function(){clearTimeout(rt);rt=setTimeout(all,120)});
+  var mq=matchMedia('(prefers-color-scheme: dark)');if(mq.addEventListener)mq.addEventListener('change',all);
+  document.querySelectorAll('.chip').forEach(function(b){b.addEventListener('click',drawForest)});
+  if(document.fonts&&document.fonts.ready)document.fonts.ready.then(all);
+})();
+</script>
+</body>
+</html>
