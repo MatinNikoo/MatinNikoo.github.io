@@ -527,7 +527,7 @@ button.nav-lab{font:inherit;font-size:.92rem;background:none;border:0;padding:0 
       <p class="feat mono">Featured project</p>
       <h3>What actually gets an app to 100K installs</h3>
       <ul class="tags"><li>Python</li><li>pandas</li><li>scikit-learn</li><li>2.2M rows</li></ul>
-      <p>The scroll story above is the short version. The full analysis checks that the ads plus in-app purchases gap isn't just a games thing (it held in all 48 categories), and admits part of it runs backwards, since apps often add purchases after they already have users.</p>
+      <p>The scroll story above is the short version. The full analysis checks that the ads plus in-app purchases gap isn't just a games thing, and it held in all 48 categories. It also admits part of it runs backwards, since apps often add purchases after they already have users.</p>
       <p>Then I turned the model into the simulator here.</p>
       <div class="links"><a href="simulator.html">Full simulator</a><a href="https://github.com/MatinNikoo/play-store-analysis" target="_blank" rel="noopener">Code and write-up</a></div>
     </div>
@@ -580,7 +580,7 @@ button.nav-lab{font:inherit;font-size:.92rem;background:none;border:0;padding:0 
   <article class="proj reveal">
     <div>
       <h3>A/B testing library, checked by simulation</h3>
-      <ul class="tags"><li>Python</li><li>SciPy</li><li>pytest</li><li>GitHub Actions</li><li>CLI</li></ul>
+      <ul class="tags"><li>Python</li><li>SciPy</li><li>pytest</li><li>CLI</li></ul>
       <p>Most A/B test tutorials stop at a t test, but real experiments break it in predictable ways. People check results every day, metrics are noisy, splits come out wrong, and dashboards track twenty metrics at once. I built a Python library that handles each one, with methods like CUPED and always valid sequential tests.</p>
       <p>I tested every method on thousands of simulated experiments, then ran it on a real 90K player game test. It found a 4.3% drop in 7 day retention, and also caught that the groups were split unevenly.</p>
       <a class="lab-cta" href="lab.html">
@@ -609,7 +609,7 @@ button.nav-lab{font:inherit;font-size:.92rem;background:none;border:0;padding:0 
       <h3>What it costs to turn off the internet</h3>
       <ul class="tags"><li>SQL</li><li>DuckDB</li><li>causal inference</li><li>Python</li><li>pytest</li></ul>
       <p>When a government shuts off a country's internet, there's no A/B test to run. So I built each country a synthetic twin out of 106 countries that stayed online, using GitHub's public data on how much code every country pushes.</p>
-      <p>Iran's blackouts in early 2026 cut its coding by 69%. Across six full shutdowns, every day offline cost about 1.3 days of work, so people didn't catch up after. To make sure the methods actually work, I first planted 1,500 fake shutdowns and checked they got caught.</p>
+      <p>Iran's blackouts in early 2026 cut its coding by 69%. Across six full shutdowns, every day offline cost about 1.3 days of work, so people didn't catch up after. First I planted 1,500 fake shutdowns to make sure the methods catch them.</p>
       <a class="lab-cta" href="shutdowns.html">
         <span class="lab-cta-k mono">Interactive</span>
         <span class="lab-cta-t">Build a country's twin and see what simple comparisons get wrong</span>
