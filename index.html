@@ -192,6 +192,31 @@ footer{padding-block:2rem 3rem;border-top:1px solid var(--line);color:var(--mute
 .cue i::after{content:"";position:absolute;left:0;top:-40%;width:1px;height:40%;background:var(--accent);animation:cue 1.8s cubic-bezier(.6,0,.4,1) infinite}
 @keyframes cue{to{top:100%}}
 html.lenis-on{scroll-behavior:auto}
+/* make the lab hard to miss */
+.nav-lab{color:var(--accent)!important;font-weight:600;position:relative;padding-right:.6rem}
+.nav-lab::after{content:"";position:absolute;right:0;top:.05rem;width:.38rem;height:.38rem;border-radius:50%;background:var(--accent);animation:ping 1.8s ease-out infinite}
+.lab-cta{display:grid;gap:.3rem;margin:1.2rem 0 .4rem;padding:1.1rem 1.2rem;border-radius:14px;text-decoration:none;color:var(--ink);background:linear-gradient(135deg,var(--accent-soft),color-mix(in srgb,var(--accent-soft) 35%,var(--surface)));border:1px solid color-mix(in srgb,var(--accent) 35%,var(--line));transition:transform .25s cubic-bezier(.2,.8,.2,1),box-shadow .25s}
+.lab-cta:hover{color:var(--ink);transform:translateY(-2px);box-shadow:0 14px 30px -18px color-mix(in srgb,var(--accent) 70%,transparent)}
+.lab-cta-k{color:var(--accent);letter-spacing:.04em}
+.lab-cta-t{font-family:var(--display);font-weight:700;font-size:1.2rem;line-height:1.2;letter-spacing:-.01em}
+.lab-cta-s{font-size:.9rem;color:var(--muted)}
+.lab-cta-go{display:inline-flex;align-items:center;gap:.35rem;margin-top:.3rem;font-weight:600;color:var(--accent);font-size:.95rem}
+.lab-cta-go svg{width:1rem;height:1rem;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;transition:transform .25s}
+.lab-cta:hover .lab-cta-go svg{transform:translateX(3px)}
+@media (prefers-reduced-motion:reduce){.nav-lab::after{animation:none}.lab-cta{transition:none}}
+
+/* peeking demo */
+.peek-head{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:.6rem;margin-bottom:.8rem;font-size:.88rem;color:var(--muted)}
+.peek-head select{font:inherit;color:var(--ink);background:var(--bg);border:1px solid var(--line);border-radius:8px;padding:.3rem .4rem;margin-left:.35rem}
+.peek-head .btn{padding:.45rem .8rem;font-size:.88rem}
+.peek-plots{display:grid;grid-template-columns:1fr 1fr;gap:.8rem}
+.peek-plots>div{min-width:0}
+.peek-t{display:block;font-family:var(--mono);font-size:.72rem;color:var(--muted);margin-bottom:.25rem}
+.peek-plots canvas{display:block;width:100%;aspect-ratio:4/3;border-radius:8px;background:color-mix(in srgb,var(--bg) 70%,transparent);border:1px solid var(--line)}
+.peek-plots b{display:block;font-family:var(--mono);font-weight:500;font-size:.78rem;margin-top:.35rem;min-height:1.2em}
+.peek-plots b.bad{color:#C2413B}.peek-plots b.ok{color:var(--good)}
+@media (max-width:460px){.peek-plots{grid-template-columns:1fr}}
+
 .desk .icons{grid-column:1;align-self:stretch;display:flex;flex-direction:column;justify-content:center;gap:.9rem;padding:.2rem 0}
 .desk .icons a{display:flex;flex-direction:column;align-items:center;gap:.25rem;text-decoration:none;color:#fff;border-radius:6px;padding:.3rem .2rem;transition:background .2s}
 .desk .icons a:hover{background:rgba(255,255,255,.1);color:#fff}
@@ -359,6 +384,7 @@ html,body{overflow-x:clip}
     <span class="prog" id="prog" aria-hidden="true"></span>
     <ul>
       <li><a href="#projects">Projects</a></li>
+      <li><a class="nav-lab" href="lab.html">Lab</a></li>
       <li class="hide-xs"><a href="#experience">Experience</a></li>
       <li class="hide-sm"><a href="#education">Education</a></li>
       <li><a href="resume.pdf" target="_blank" rel="noopener">Resume</a></li>
@@ -459,6 +485,33 @@ html,body{overflow-x:clip}
         <div><b>9.8%</b>breakout rate for devs with 6 to 20 apps</div>
         <div><b>0.87</b>AUC, trained on 2018 and tested on 2019</div>
       </div>
+    </figure>
+  </article>
+
+  <article class="proj reveal">
+    <div>
+      <h3>A/B testing library, checked by simulation</h3>
+      <ul class="tags"><li>Python</li><li>SciPy</li><li>pytest</li><li>GitHub Actions</li><li>CLI</li></ul>
+      <p>Most A/B test tutorials stop at a t test. Real experiments break it in a few predictable ways. People check results every day, metrics are noisy, some are ratios, the split between groups comes out wrong, and dashboards track twenty metrics at once. I built a Python library that handles each one with the methods big experimentation teams use, like CUPED and always valid sequential tests.</p>
+      <p>I didn't want to just trust the methods, so I tested every one on thousands of simulated experiments where I knew the right answer. Then I ran it on a real mobile game experiment with 90K players. Moving the first level gate later cut 7 day retention by 4.3%, but the library also caught that the groups were split unevenly, so that result needs a closer look before anyone acts on it.</p>
+      <a class="lab-cta" href="lab.html">
+        <span class="lab-cta-k mono">Experiment Lab</span>
+        <span class="lab-cta-t">Run a real 90K player A/B test in your browser</span>
+        <span class="lab-cta-s">or drop in your own CSV. It walks through every step, from the split check to what checking it every day would have done.</span>
+        <span class="lab-cta-go" aria-hidden="true">Open the lab <svg viewBox="0 0 16 16"><path d="M3 8h9M8.5 4.5 12 8l-3.5 3.5"/></svg></span>
+      </a>
+      <div class="links"><a href="https://github.com/MatinNikoo/abkit" target="_blank" rel="noopener">Code and tests</a><a href="https://github.com/MatinNikoo/abkit/blob/main/paper/abkit.pdf" target="_blank" rel="noopener">Paper</a><a href="https://github.com/MatinNikoo/abkit/blob/main/docs/design.md" target="_blank" rel="noopener">Design doc</a></div>
+    </div>
+    <figure class="visual peek">
+      <div class="peek-head">
+        <label>Check the results <select id="peek-looks"><option value="10">10 times</option><option value="50" selected>50 times</option><option value="100">100 times</option></select></label>
+        <button class="btn" type="button" id="peek-run">Run 200 tests</button>
+      </div>
+      <div class="peek-plots">
+        <div><span class="peek-t">normal p value</span><canvas id="peek-a" aria-hidden="true"></canvas><b id="peek-ra">&nbsp;</b></div>
+        <div><span class="peek-t">always valid p value</span><canvas id="peek-b" aria-hidden="true"></canvas><b id="peek-rb">&nbsp;</b></div>
+      </div>
+      <figcaption>Each line is an experiment where nothing actually changed. Someone checks it after every batch of users and stops the first time it dips under 0.05 (the dashed line). Red lines are false alarms. With a normal p value they pile up the more you check. The always valid test the library uses stays under 5%.</figcaption>
     </figure>
   </article>
 
@@ -979,6 +1032,63 @@ var AURA_LASTFM={user:'',key:''};
   addEventListener('resize',function(){size();draw(performance.now())});
   var go=function(){start()};
   if(document.fonts&&document.fonts.load){Promise.all([document.fonts.load('700 50px Unbounded'),document.fonts.load('300 12px Unbounded')]).then(go,go)}else go();
+})();
+</script>
+<script>
+// peeking demo: A/A tests checked over and over, normal p value vs mSPRT
+(function(){
+  var ca=document.getElementById('peek-a'),cb=document.getElementById('peek-b'),btn=document.getElementById('peek-run'),sel=document.getElementById('peek-looks');
+  if(!ca||!ca.getContext) return;
+  var ra=document.getElementById('peek-ra'),rb=document.getElementById('peek-rb');
+  var reduce=matchMedia('(prefers-reduced-motion: reduce)').matches, SIMS=200, N=4000, TAU=0.05, run=0;
+  function gauss(){var u=1-Math.random(),v=Math.random();return Math.sqrt(-2*Math.log(u))*Math.cos(2*Math.PI*v)}
+  function phi(x){var t=1/(1+0.2316419*Math.abs(x)),d=0.3989423*Math.exp(-x*x/2),p=d*t*(0.3193815+t*(-0.3565638+t*(1.781478+t*(-1.821256+t*1.330274))));return x>0?1-p:p}
+  function simulate(L){
+    var m=N/L, out=[];
+    for(var s=0;s<SIMS;s++){
+      var sa=0,sb=0,pa=[],pb=[],best=1;
+      for(var k=1;k<=L;k++){
+        sa+=gauss()*Math.sqrt(m); sb+=gauss()*Math.sqrt(m);
+        var n=m*k, d=(sb-sa)/n, V=2/n;
+        pa.push(2*(1-phi(Math.abs(d)/Math.sqrt(V))));
+        var t2=TAU*TAU, logL=0.5*Math.log(V/(V+t2))+t2*d*d/(2*V*(V+t2));
+        best=Math.min(best,Math.min(1,Math.exp(-logL))); pb.push(best);
+      }
+      out.push({a:pa,b:pb});
+    }
+    return out;
+  }
+  function col(n){return getComputedStyle(document.documentElement).getPropertyValue(n).trim()}
+  function setup(c){var r=c.getBoundingClientRect(),d=Math.min(devicePixelRatio||1,2);c.width=Math.round(r.width*d);c.height=Math.round(r.height*d);var x=c.getContext('2d');x.setTransform(d,0,0,d,0,0);return {x:x,w:r.width,h:r.height}}
+  function frame(g,L){var x=g.x;x.clearRect(0,0,g.w,g.h);var pad=8,y05=g.h-pad-(g.h-2*pad)*0.05/0.6;
+    x.strokeStyle=col('--muted');x.globalAlpha=.7;x.setLineDash([4,4]);x.lineWidth=1;x.beginPath();x.moveTo(pad,y05);x.lineTo(g.w-pad,y05);x.stroke();x.setLineDash([]);x.globalAlpha=1;
+    return {X:function(k){return pad+(g.w-2*pad)*(k/(L-1||1))},Y:function(p){return g.h-pad-(g.h-2*pad)*Math.min(p,0.6)/0.6}}}
+  function paths(g,S,key,L,upto){
+    var sc=frame(g,L),x=g.x,grey=col('--bench'),red='#C2413B',hits=[],k;
+    // all the quiet lines in one stroke, all the false alarms in another
+    x.strokeStyle=grey;x.globalAlpha=.22;x.lineWidth=1;x.beginPath();
+    S.forEach(function(sim){
+      var arr=sim[key],hit=-1;for(k=0;k<L;k++){if(arr[k]<0.05){hit=k;break}}
+      if(hit>=0&&hit<=upto){hits.push([arr,hit]);return}
+      var end=Math.min(upto,L-1);for(k=0;k<=end;k++){var X=sc.X(k),Y=sc.Y(arr[k]);k?x.lineTo(X,Y):x.moveTo(X,Y)}
+    });
+    x.stroke();
+    x.strokeStyle=red;x.globalAlpha=.85;x.lineWidth=1.3;x.beginPath();
+    hits.forEach(function(h){for(k=0;k<=h[1];k++){var X=sc.X(k),Y=sc.Y(h[0][k]);k?x.lineTo(X,Y):x.moveTo(X,Y)}});
+    x.stroke();x.globalAlpha=1;x.fillStyle=red;x.beginPath();
+    hits.forEach(function(h){var X=sc.X(h[1]),Y=sc.Y(h[0][h[1]]);x.moveTo(X+2.2,Y);x.arc(X,Y,2.2,0,6.283)});x.fill();
+    return hits.length;
+  }
+  function go(){
+    var L=+sel.value, S=simulate(L), id=++run, ga=setup(ca), gb=setup(cb), t0=null, dur=reduce?0:1600;
+    function report(h,el){var r=h/SIMS;el.textContent=h+' of '+SIMS+' false alarms ('+Math.round(r*100)+'%)';el.className=r>0.06?'bad':'ok'}
+    function step(ts){if(id!==run)return;if(t0===null)t0=ts;var f=dur?Math.min(1,(ts-t0)/dur):1,upto=Math.max(0,Math.round(f*(L-1)));
+      var ha=paths(ga,S,'a',L,upto),hb=paths(gb,S,'b',L,upto);report(ha,ra);report(hb,rb);if(f<1)requestAnimationFrame(step)}
+    requestAnimationFrame(step);
+    if(typeof window.goatcounter!=='undefined'&&window.goatcounter.count){try{window.goatcounter.count({path:'peeking-demo',event:true})}catch(e){}}
+  }
+  btn.addEventListener('click',go); sel.addEventListener('change',go);
+  if('IntersectionObserver' in window){var io=new IntersectionObserver(function(es){if(es[0].isIntersecting){io.disconnect();go()}},{threshold:.3});io.observe(ca)}else go();
 })();
 </script>
 <script>
