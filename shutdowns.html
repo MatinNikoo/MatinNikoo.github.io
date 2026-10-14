@@ -359,7 +359,7 @@ var D={"labels":["2020Q1","2020Q2","2020Q3","2020Q4","2021Q1","2021Q2","2021Q3",
   chip.querySelector('button').addEventListener('click',function(){try{localStorage.removeItem(K)}catch(e){}sync()});
   function mount(){document.body.appendChild(st);document.body.appendChild(chip);sync()}
   if(document.body)mount();else document.addEventListener('DOMContentLoaded',mount);
-  addEventListener('storage',function(e){if(e.key===K)sync()});
+  addEventListener('storage',function(e){if(e.key===K)sync()});addEventListener('pageshow',sync);
 })();
 </script>
 <style>

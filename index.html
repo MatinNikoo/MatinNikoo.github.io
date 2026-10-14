@@ -1767,6 +1767,8 @@ var AURA_LASTFM={user:'',key:''};
 " * anything. It only changes your copy of the page. */",
 ""].join("\n");
   var live=document.createElement('style'); live.id='live-css'; document.body.appendChild(live);
+  // a fresh homepage is the original look, so forget any old console CSS and the lab pages go back too
+  try{localStorage.removeItem('mn-live-css')}catch(e){}
   function esc(t){return t.replace(/&/g,'&amp;').replace(/</g,'&lt;')}
   function hl(t){
     var out='',i=0,n=t.length,inB=false;

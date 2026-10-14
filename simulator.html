@@ -290,7 +290,7 @@ render();
   chip.querySelector('button').addEventListener('click',function(){try{localStorage.removeItem(K)}catch(e){}sync()});
   function mount(){document.body.appendChild(st);document.body.appendChild(chip);sync()}
   if(document.body)mount();else document.addEventListener('DOMContentLoaded',mount);
-  addEventListener('storage',function(e){if(e.key===K)sync()});
+  addEventListener('storage',function(e){if(e.key===K)sync()});addEventListener('pageshow',sync);
 })();
 </script>
 <style>
