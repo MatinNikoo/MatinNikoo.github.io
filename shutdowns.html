@@ -29,7 +29,7 @@
   --accent:#8FA3FF; --accent-soft:#1D2646; --bench:#6B7688; --hot:#F08A5D; --hot-soft:#2A1A14; color-scheme:dark}
 *,*::before,*::after{box-sizing:border-box}
 html{-webkit-text-size-adjust:100%;overflow-x:clip}
-body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--body);font-size:16.5px;line-height:1.6;overflow-x:clip}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--body);font-size:1.03125rem;line-height:1.6;overflow-x:clip}
 a{color:inherit;text-decoration-color:var(--line);text-underline-offset:3px}
 a:hover{color:var(--accent)}
 :focus-visible{outline:2px solid var(--accent);outline-offset:3px;border-radius:4px}
@@ -133,9 +133,15 @@ body::after{content:"";position:fixed;inset:0;pointer-events:none;z-index:0;back
 /* soft corners on objects you touch, sharp only on rules, tags and labels */
 button,.btn,select,input{border-radius:7px}
 section,.card,.panel,.box,.step,.res,.result,aside,fieldset,table,.tbl{border-radius:10px}
+
+/* big monitors and TVs: everything scales up together so the page fills the screen like it does on a laptop */
+@media (min-width:2200px) and (min-height:1250px){html{font-size:20px;--mk:1.25}}
+@media (min-width:2900px) and (min-height:1600px){html{font-size:24px;--mk:1.5}}
+@media (min-width:3400px) and (min-height:1900px){html{font-size:28px;--mk:1.75}}
 </style>
 <style id="ink-follow">/* every accent shade follows the one ink color, so the console reaches all of them */
-html:root:root{--accent:color-mix(in srgb,var(--signal) 86%,#000);--accent-soft:color-mix(in srgb,var(--accent) 17%,var(--bg));--hot:var(--accent);--hot-soft:var(--accent-soft);--signal-soft:color-mix(in srgb,var(--signal) 14%,transparent)}
+@supports (color:color-mix(in srgb,red,blue)){html:root:root{--accent:color-mix(in srgb,var(--signal) 86%,#000);--accent-soft:color-mix(in srgb,var(--accent) 17%,var(--bg))}}
+html:root:root{--hot:var(--accent);--hot-soft:var(--accent-soft);--signal-soft:color-mix(in srgb,var(--signal) 14%,transparent)}
 @media (prefers-color-scheme:dark){html:root:root:not([data-theme="light"]){--accent:var(--signal)}}
 html:root[data-theme="dark"]:root{--accent:var(--signal)}
 </style>
@@ -217,7 +223,7 @@ var D={"labels":["2020Q1","2020Q2","2020Q3","2020Q4","2021Q1","2021Q2","2021Q3",
   var reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
   function col(n){return getComputedStyle(root).getPropertyValue(n).trim()}
   function pct(x,d){return (x>0?'+':x<0?'−':'')+Math.abs(x*100).toFixed(d==null?0:d)+'%'}
-  function setup(c){var r=c.getBoundingClientRect(),dpr=Math.min(devicePixelRatio||1,2);c.width=Math.round(r.width*dpr);c.height=Math.round(r.height*dpr);var g=c.getContext('2d');g.setTransform(dpr,0,0,dpr,0,0);return {g:g,W:r.width,H:r.height}}
+  function setup(c){var r=c.getBoundingClientRect(),dpr=Math.min(devicePixelRatio||1,2);c.width=Math.round(r.width*dpr);c.height=Math.round(r.height*dpr);var g=c.getContext('2d'),zk=(parseFloat(getComputedStyle(document.documentElement).fontSize)/16||1);g.setTransform(dpr*zk,0,0,dpr*zk,0,0);return {g:g,W:r.width/zk,H:r.height/zk}}
   var EV={};D.events.forEach(function(e){EV[e.id]=e});
   var L=D.labels;
   var narrow=function(){return innerWidth<600};
@@ -379,6 +385,7 @@ var D={"labels":["2020Q1","2020Q2","2020Q3","2020Q4","2021Q1","2021Q2","2021Q3",
 .live-chip{position:fixed;left:1rem;bottom:calc(1rem + env(safe-area-inset-bottom,0px));z-index:50;display:flex;gap:.8rem;align-items:center;padding:.55rem .7rem;border:1px solid currentColor;border-radius:8px;background:var(--bg,#ECE9E2);color:var(--ink,#121212);font:500 .62rem/1 "Geist Mono",ui-monospace,monospace;letter-spacing:.12em;text-transform:uppercase}
 .live-chip button{font:inherit;letter-spacing:inherit;text-transform:inherit;background:none;border:0;padding:0;color:inherit;text-decoration:underline;text-underline-offset:3px;cursor:pointer}
 .live-chip[hidden]{display:none}
+@supports not (color:color-mix(in srgb,red,blue)){html .nav{background:var(--bg)}}
 </style>
 <script src="player.js" defer></script>
 </body>

@@ -21,7 +21,7 @@
     draw(true);
   }
   function size() {
-    var r = win.getBoundingClientRect(), cell = window.MN_LITE ? 4 : 3;
+    var r = win.getBoundingClientRect(), cell = (window.MN_LITE ? 4 : 3) * (window.MN_K ? MN_K() : 1);
     W = Math.max(8, Math.round(r.width / cell)); H = Math.max(8, Math.round(r.height / cell));
     cv.width = W; cv.height = H; img = g.createImageData(W, H); buf = img.data;
     colW = new Float32Array(W); colA = new Float32Array(W); glow = new Float32Array(W * H);

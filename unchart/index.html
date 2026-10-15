@@ -186,8 +186,13 @@ pre.code{margin:0;background:var(--bg);border:1px solid var(--line);padding:12px
 .console,.below,.drop,.err,.check,.card,.tablebox,pre.code,.rcanvas,.kpis{border-radius:10px}
 .console{overflow:hidden}.below{overflow:hidden;border-top:1px solid var(--line);margin-top:14px}
 .frame canvas#src{border-radius:6px}
+
+/* big monitors and TVs: the whole tool scales up so it reads like it does on a laptop */
+@media (min-width:2200px) and (min-height:1250px){body>*:not(.mp):not(.mp-frame){zoom:1.25}html{--mk:1.25}}
+@media (min-width:2900px) and (min-height:1600px){body>*:not(.mp):not(.mp-frame){zoom:1.5}html{--mk:1.5}}
+@media (min-width:3400px) and (min-height:1900px){body>*:not(.mp):not(.mp-frame){zoom:1.75}html{--mk:1.75}}
 </style>
-<style id="ink-follow">html:root:root{--signal-soft:color-mix(in srgb,var(--signal) 14%,transparent)}</style>
+<style id="ink-follow">@supports (color:color-mix(in srgb,red,blue)){html:root:root{--signal-soft:color-mix(in srgb,var(--signal) 14%,transparent)}}</style>
 </head><body>
 
 <div class="wrap">

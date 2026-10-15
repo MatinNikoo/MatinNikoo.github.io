@@ -30,7 +30,7 @@
     '@property --as{syntax:"<color>";inherits:true;initial-value:#c8c4cc}',
     '@property --abar{syntax:"<color>";inherits:true;initial-value:#e6e2ea}',
     /* the card itself: sizes follow aura_widget.pyw (400 x 132, radius 26, art as tall as the card) */
-    '.ac{--h:132px;--r:calc(var(--h)*.197);-webkit-tap-highlight-color:transparent;position:relative;height:var(--h);border-radius:var(--r);isolation:isolate;background:var(--ab);',
+    '.ac{--h:calc(132px*var(--mk,1));--r:calc(var(--h)*.197);-webkit-tap-highlight-color:transparent;position:relative;height:var(--h);border-radius:var(--r);isolation:isolate;background:var(--ab);',
       'transition:--ab .9s ease,--at .9s ease,--as .9s ease,--abar .9s ease;',
       'font-family:"Segoe UI Variable Display","Segoe UI",Geist,Inter,system-ui,sans-serif;color:var(--at);-webkit-font-smoothing:antialiased;user-select:none;-webkit-user-select:none;text-align:left;line-height:normal;letter-spacing:normal}',
     '.ac *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}',
@@ -80,13 +80,13 @@
     '@keyframes acping{0%{box-shadow:0 0 0 0 color-mix(in srgb,var(--at) 50%,transparent)}100%{box-shadow:0 0 0 9px transparent}}',
     '@media (hover:none){.ac-ctl{opacity:1}.ac-knob{opacity:1;transform:scale(.8)}}',
     /* the floating one */
-    '.mp{position:fixed;right:max(16px,env(safe-area-inset-right));bottom:max(16px,env(safe-area-inset-bottom));z-index:60;width:min(400px,calc(100vw - 32px));',
+    '.mp{position:fixed;right:max(16px,env(safe-area-inset-right));bottom:max(16px,env(safe-area-inset-bottom));z-index:60;width:min(calc(400px*var(--mk,1)),calc(100vw - 32px));',
       'box-shadow:0 6px 26px rgba(0,0,0,.47);transition:--ab .9s ease,--at .9s ease,--as .9s ease,--abar .9s ease,width .45s ' + E + ',height .45s ' + E + ',border-radius .45s ' + E + ',transform .5s ' + E + ',opacity .5s ease}',
     '.mp.mp-in{transform:translateY(12px);opacity:0}',
     /* drag it to any corner: it tilts with the motion and springs into the nearest corner */
     '.mp{cursor:grab;touch-action:none}.mp button,.mp input,.mp .ac-seek{cursor:pointer}',
     '.mp.c-bl,.mp.c-tl{right:auto;left:max(16px,env(safe-area-inset-left))}',
-    '.mp.c-tr,.mp.c-tl{bottom:auto;top:76px}',
+    '.mp.c-tr,.mp.c-tl{bottom:auto;top:calc(3.6rem + 18px)}',
     '.mp.held{cursor:grabbing;transition:width .45s ' + E + ',height .45s ' + E + ',border-radius .45s ' + E + ',box-shadow .25s ease;box-shadow:0 22px 50px -10px rgba(0,0,0,.55)}',
     '.mp.snap{transition:box-shadow .5s ease,width .45s ' + E + ',height .45s ' + E + ',border-radius .45s ' + E + '}',
     '.mp.held,.mp.snap{will-change:transform}',
@@ -108,7 +108,7 @@
     '.mp-vr:focus-visible{outline:none}',
     '@media (hover:none){.mp-vr{display:none}}',
     '.mp-open{display:none}',
-    '.mp.min{width:64px;--h:64px;--r:18px}',
+    '.mp.min{width:calc(64px*var(--mk,1));--h:calc(64px*var(--mk,1));--r:calc(18px*var(--mk,1))}',
     '@media (max-width:600px){.mp{--h:104px;width:min(340px,calc(100vw - 24px));right:12px;bottom:12px}.mp.c-bl,.mp.c-tl{left:12px}.mp.c-tr,.mp.c-tl{top:68px}.mp.min{width:50px;--h:50px;--r:14px}.mp-eq{right:6px;bottom:6px}.mp-cor{top:8px;right:10px}}',
     '.mp.min .ac-body,.mp.min .mp-cor,.mp.min .ac-blur{display:none}',
     '.mp.min .ac-art{width:100%;height:100%;-webkit-mask-image:none;mask-image:none}',
@@ -358,7 +358,7 @@
         try { var w = fr.firstChild.contentWindow; if (!w || w.location.href === 'about:blank') return;
           var u = new URL(w.location.href);
           if (page(u) === page(new URL(home))) { hide(); history.replaceState(null, '', home); return }
-          document.title = w.document.title; history.replaceState({ mnf: u.href }, '', u.href) } catch (x) {}
+          document.title = w.document.title; history.replaceState({ mnf: u.href }, '', u.href); w.focus() } catch (x) {}
       });
     }
     fr.firstChild.src = href; document.documentElement.classList.add('mp-framed');

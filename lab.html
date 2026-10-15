@@ -29,7 +29,7 @@
   --accent:#8FA3FF; --accent-soft:#1D2646; --bench:#5D6878; --good:#5CC48F; --bad:#F07A73; --warn-bg:#2A1517; --ok-bg:#122A1F; color-scheme:dark}
 *,*::before,*::after{box-sizing:border-box}
 html{-webkit-text-size-adjust:100%;overflow-x:clip}
-body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--body);font-size:16.5px;line-height:1.6;overflow-x:clip}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--body);font-size:1.03125rem;line-height:1.6;overflow-x:clip}
 a{color:inherit;text-decoration-color:var(--line);text-underline-offset:3px}
 a:hover{color:var(--accent)}
 :focus-visible{outline:2px solid var(--accent);outline-offset:3px;border-radius:4px}
@@ -130,9 +130,15 @@ body::after{content:"";position:fixed;inset:0;pointer-events:none;z-index:0;back
 /* soft corners on objects you touch, sharp only on rules, tags and labels */
 button,.btn,select,input{border-radius:7px}
 section,.card,.panel,.box,.step,.res,.result,aside,fieldset,table,.tbl{border-radius:10px}
+
+/* big monitors and TVs: everything scales up together so the page fills the screen like it does on a laptop */
+@media (min-width:2200px) and (min-height:1250px){html{font-size:20px;--mk:1.25}}
+@media (min-width:2900px) and (min-height:1600px){html{font-size:24px;--mk:1.5}}
+@media (min-width:3400px) and (min-height:1900px){html{font-size:28px;--mk:1.75}}
 </style>
 <style id="ink-follow">/* every accent shade follows the one ink color, so the console reaches all of them */
-html:root:root{--accent:color-mix(in srgb,var(--signal) 86%,#000);--accent-soft:color-mix(in srgb,var(--accent) 17%,var(--bg));--hot:var(--accent);--hot-soft:var(--accent-soft);--signal-soft:color-mix(in srgb,var(--signal) 14%,transparent)}
+@supports (color:color-mix(in srgb,red,blue)){html:root:root{--accent:color-mix(in srgb,var(--signal) 86%,#000);--accent-soft:color-mix(in srgb,var(--accent) 17%,var(--bg))}}
+html:root:root{--hot:var(--accent);--hot-soft:var(--accent-soft);--signal-soft:color-mix(in srgb,var(--signal) 14%,transparent)}
 @media (prefers-color-scheme:dark){html:root:root:not([data-theme="light"]){--accent:var(--signal)}}
 html:root[data-theme="dark"]:root{--accent:var(--signal)}
 </style>
@@ -415,16 +421,16 @@ function replay(){
   var m=$("seq-metric").value;S.seqMetric=m;var s=split(m),tau=Math.abs(+$("seq-mde").value)||0.01,L=+$("seq-looks").value;
   var P=msprt(shuffled(s.c,11),shuffled(s.t,12),tau,L);if(!P.length){$("seq-text").textContent="Not enough users to replay.";return}
   var cv=$("seq"),r=cv.getBoundingClientRect(),dpr=Math.min(devicePixelRatio||1,2);var asp=r.width<560?0.75:0.5;cv.width=Math.round(r.width*dpr);cv.height=Math.round(r.width*asp*dpr);
-  var x=cv.getContext("2d");x.setTransform(dpr,0,0,dpr,0,0);var W=r.width,H=r.width*asp,pl=62,pr=10,pt=10,pb=24;
+  var lk=(parseFloat(getComputedStyle(document.documentElement).fontSize)/16||1);var x=cv.getContext("2d");x.setTransform(dpr*lk,0,0,dpr*lk,0,0);var W=r.width/lk,H=r.width*asp/lk,pl=62,pr=10,pt=10,pb=24;
   var vals=[];P.forEach(function(q,i){if(i>=Math.floor(P.length*0.15)){vals.push(q.nlo,q.nhi,isFinite(q.lo)?q.lo:q.d,isFinite(q.hi)?q.hi:q.d)}});
   var ymax=Math.max.apply(null,vals.concat([0])),ymin=Math.min.apply(null,vals.concat([0])),pad=(ymax-ymin)*0.12||0.01;ymax+=pad;ymin-=pad;
   var N=P[P.length-1].n,X=function(n){return pl+(W-pl-pr)*n/N},Y=function(v){return pt+(H-pt-pb)*(1-(Math.max(ymin,Math.min(ymax,v))-ymin)/(ymax-ymin))};
   x.clearRect(0,0,W,H);x.font="11px "+col("--mono");x.fillStyle=col("--muted");x.strokeStyle=col("--line");x.lineWidth=1;
   for(var k=0;k<=4;k++){var v=ymin+(ymax-ymin)*k/4,yy=Y(v);x.beginPath();x.moveTo(pl,yy);x.lineTo(W-pr,yy);x.stroke();x.textAlign="right";x.fillText(fmt(v),pl-6,yy+4)}
   x.textAlign="center";x.fillText("0",X(0),H-6);x.fillText(Math.round(N/2).toLocaleString(),X(N/2),H-6);x.textAlign="right";x.fillText(N.toLocaleString()+" users",W-pr,H-6);
-  function band(lo,hi,c){x.fillStyle=c;x.beginPath();P.forEach(function(q,i){var a=lo(q);i?x.lineTo(X(q.n),Y(a)):x.moveTo(X(q.n),Y(a))});for(var i=P.length-1;i>=0;i--)x.lineTo(X(P[i].n),Y(hi(P[i])));x.closePath();x.fill()}
-  band(function(q){return isFinite(q.lo)?q.lo:ymin},function(q){return isFinite(q.hi)?q.hi:ymax},"color-mix(in srgb,"+col("--accent")+" 22%,transparent)");
-  band(function(q){return q.nlo},function(q){return q.nhi},"color-mix(in srgb,"+col("--bench")+" 40%,transparent)");
+  function band(lo,hi,c,a){x.save();x.globalAlpha=a;x.fillStyle=c;x.beginPath();P.forEach(function(q,i){var a=lo(q);i?x.lineTo(X(q.n),Y(a)):x.moveTo(X(q.n),Y(a))});for(var i=P.length-1;i>=0;i--)x.lineTo(X(P[i].n),Y(hi(P[i])));x.closePath();x.fill();x.restore()}
+  band(function(q){return isFinite(q.lo)?q.lo:ymin},function(q){return isFinite(q.hi)?q.hi:ymax},col("--accent"),.22);
+  band(function(q){return q.nlo},function(q){return q.nhi},col("--bench"),.4);
   x.strokeStyle=col("--ink");x.globalAlpha=.6;x.beginPath();x.moveTo(pl,Y(0));x.lineTo(W-pr,Y(0));x.stroke();x.globalAlpha=1;
   x.strokeStyle=col("--accent");x.lineWidth=2;x.beginPath();P.forEach(function(q,i){i?x.lineTo(X(q.n),Y(q.d)):x.moveTo(X(q.n),Y(q.d))});x.stroke();
   var naive=-1,valid=-1;P.forEach(function(q,i){if(naive<0&&q.np<0.05)naive=i;if(valid<0&&q.p<0.05)valid=i});
@@ -476,6 +482,7 @@ loadCC();
 .live-chip{position:fixed;left:1rem;bottom:calc(1rem + env(safe-area-inset-bottom,0px));z-index:50;display:flex;gap:.8rem;align-items:center;padding:.55rem .7rem;border:1px solid currentColor;border-radius:8px;background:var(--bg,#ECE9E2);color:var(--ink,#121212);font:500 .62rem/1 "Geist Mono",ui-monospace,monospace;letter-spacing:.12em;text-transform:uppercase}
 .live-chip button{font:inherit;letter-spacing:inherit;text-transform:inherit;background:none;border:0;padding:0;color:inherit;text-decoration:underline;text-underline-offset:3px;cursor:pointer}
 .live-chip[hidden]{display:none}
+@supports not (color:color-mix(in srgb,red,blue)){html .nav{background:var(--bg)}.legend span:nth-child(1)::before{background:var(--accent);opacity:.3}.legend span:nth-child(2)::before{background:var(--bench);opacity:.45}}
 </style>
 <script src="player.js" defer></script>
 </body>
