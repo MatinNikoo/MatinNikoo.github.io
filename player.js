@@ -40,6 +40,9 @@
     /* the cover's own colors glow out from behind it and settle into the card color to the right */
     '.ac-blur::after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,color-mix(in srgb,var(--ab) 35%,transparent) 0%,color-mix(in srgb,var(--ab) 70%,transparent) 45%,var(--ab) 85%)}',
     '.ac::after{content:"";position:absolute;inset:0;border-radius:inherit;box-shadow:inset 0 0 0 1px rgba(255,255,255,.08);pointer-events:none}',
+    /* phones and older Safari: the fade is baked into the cover image itself, so no mask is needed to draw it */
+    '.ac.baked .ac-art{-webkit-mask-image:none!important;mask-image:none!important;background-image:var(--art)!important}',
+    '@supports not (color:color-mix(in srgb,red,blue)){.ac-blur::after{background:linear-gradient(90deg,transparent 0%,var(--ab) 85%)}}',
     '.ac-art{position:absolute;left:0;top:0;width:var(--h);height:var(--h);background:var(--cover) center/cover;',
       /* Aura's fade to the right, plus a soft feather on the other three sides so the cover melts into its own glow */
       '-webkit-mask-image:linear-gradient(90deg,rgba(0,0,0,.55) 0%,#000 9%,#000 30%,rgba(0,0,0,.894) 45%,rgba(0,0,0,.647) 60%,rgba(0,0,0,.345) 75%,rgba(0,0,0,.118) 88%,transparent 100%),linear-gradient(180deg,rgba(0,0,0,.55) 0%,#000 10%,#000 90%,rgba(0,0,0,.55) 100%);',
@@ -111,7 +114,7 @@
     '.mp.min{width:calc(64px*var(--mk,1));--h:calc(64px*var(--mk,1));--r:calc(18px*var(--mk,1))}',
     '@media (max-width:600px){.mp{--h:104px;width:min(340px,calc(100vw - 24px));right:12px;bottom:12px}.mp.c-bl,.mp.c-tl{left:12px}.mp.c-tr,.mp.c-tl{top:68px}.mp.min{width:50px;--h:50px;--r:14px}.mp-eq{right:6px;bottom:6px}.mp-cor{top:8px;right:10px}}',
     '.mp.min .ac-body,.mp.min .mp-cor,.mp.min .ac-blur{display:none}',
-    '.mp.min .ac-art{width:100%;height:100%;-webkit-mask-image:none;mask-image:none}',
+    '.mp.min .ac-art{width:100%;height:100%;-webkit-mask-image:none;mask-image:none;background-image:var(--cover)!important}',
     '.mp.min .ac-blur{display:none}',
     '.mp.min .mp-open{display:block;position:absolute;inset:0;border-radius:inherit}',
     '.mp-eq{position:absolute;right:10px;bottom:10px;display:none;gap:2px;align-items:flex-end;height:12px;padding:3px;border-radius:5px;background:rgba(0,0,0,.45)}',
@@ -178,6 +181,30 @@
   }
 
   /* put the current song's title, artist, cover and colors on a card */
+  /* the cover with Aura's fade drawn into it: a soft fade to the right and a light feather top and bottom.
+     Made once per song and kept, and it works in every browser because it is just a picture */
+  var baked = {};
+  function bake(src, cb) {
+    if (baked[src] !== undefined) { cb(baked[src]); return }
+    var im = new Image(); im.decoding = 'async';
+    im.onload = function () {
+      try {
+        var n = 256, c = document.createElement('canvas'); c.width = c.height = n; var g = c.getContext('2d');
+        var w = im.naturalWidth, h = im.naturalHeight, m = Math.min(w, h); g.drawImage(im, (w - m) / 2, (h - m) / 2, m, m, 0, 0, n, n);
+        g.globalCompositeOperation = 'destination-in';
+        var gx = g.createLinearGradient(0, 0, n, 0);
+        [[0, .55], [.09, 1], [.3, 1], [.45, .894], [.6, .647], [.75, .345], [.88, .118], [1, 0]].forEach(function (k) { gx.addColorStop(k[0], 'rgba(0,0,0,' + k[1] + ')') });
+        g.fillStyle = gx; g.fillRect(0, 0, n, n);
+        var gy = g.createLinearGradient(0, 0, 0, n);
+        [[0, .55], [.1, 1], [.9, 1], [1, .55]].forEach(function (k) { gy.addColorStop(k[0], 'rgba(0,0,0,' + k[1] + ')') });
+        g.fillStyle = gy; g.fillRect(0, 0, n, n);
+        baked[src] = c.toDataURL('image/png');
+      } catch (e) { baked[src] = null }
+      cb(baked[src]);
+    };
+    im.onerror = function () { baked[src] = null; cb(null) };
+    im.src = src;
+  }
   function dress(v, anim) {
     var tr = cur(), el = v.el, p = tr.p;
     v.t.innerHTML = '<span>' + esc(tr.t) + '</span>'; v.t.title = tr.t;
@@ -185,6 +212,7 @@
       if (over > 2) { v.t.style.setProperty('--gx', -(over + 12) + 'px'); v.t.style.setProperty('--gt', Math.max(7, over / 12 + 6) + 's') } }); if (!el.classList.contains('wait')) v.ar.textContent = tr.a;
     el.style.setProperty('--ab', p.bg); el.style.setProperty('--at', p.text); el.style.setProperty('--as', p.sub); el.style.setProperty('--abar', p.bar);
     el.style.setProperty('--cover', tr.c ? 'url("' + BASE + tr.c + '")' : 'none'); el.classList.toggle('nocov', !tr.c);
+    if (tr.c) bake(BASE + tr.c, function (u) { if (cur() !== tr) return; if (u) { el.style.setProperty('--art', 'url("' + u + '")'); el.classList.add('baked') } else el.classList.remove('baked') });
     if (anim) { el.classList.remove('swap'); void el.offsetWidth; el.classList.add('swap') }
   }
   function paint() {

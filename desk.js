@@ -185,6 +185,10 @@
     '.win.full>.desk .icons{flex-direction:row!important;justify-content:flex-start!important;width:auto;gap:.3rem!important}.win.full>.desk .icons a{width:5.6rem}}',
     '.win.full>.desk .aura-slot .ac{--h:clamp(92px,30cqw,calc(150px * var(--mk,1)))}',
     'html.os-full{overflow:hidden}',
+    '.win.flat{transition:none!important;--rx:0deg!important;--ry:0deg!important}',
+    '.os-frame{position:absolute;inset:0;background:#0B0B0D;z-index:0}',
+    '.os-frame canvas{display:block;width:100%;height:100%;image-rendering:pixelated;image-rendering:crisp-edges}',
+    '.win.exiting{background:transparent!important;overflow:visible!important;box-shadow:none!important;border-color:transparent!important}',
     'html.os-full .mp{visibility:hidden}'
   ].join('\n');
   var st = document.createElement('style'); st.id = 'desk-os'; st.textContent = css; document.head.appendChild(st);
@@ -571,6 +575,7 @@
   /* ---------- square: full screen. The window is lifted out to the page so nothing around it can clip it ---------- */
   var full = false, host = el('div', 'visual showcase win-host'), ph = null; host.hidden = true; document.body.appendChild(host);
   function poke() { try { dispatchEvent(new Event('resize')) } catch (x) {} }
+  function wallNow() { try { dispatchEvent(new Event('deskresize')) } catch (x) {} }
   /* Full screen is one move: the window opens out to the edges while every icon and widget glides from
      where it was to its new place, folders down the left side and the widgets in a column on the right.
      Each piece is measured before and after and only its transform animates, so nothing is laid out mid way. */
@@ -585,10 +590,22 @@
   function rects(list) { return list.map(function (e) { return e.getBoundingClientRect() }) }
   function inset(r, round) { return 'inset(' + r.top.toFixed(1) + 'px ' + (innerWidth - r.right).toFixed(1) + 'px ' + (innerHeight - r.bottom).toFixed(1) + 'px ' + r.left.toFixed(1) + 'px round ' + round + 'px)' }
   function fromTo(b, a, scale) { return scale ? T(b.left - a.left, b.top - a.top, b.width / (a.width || 1), b.height / (a.height || 1)) : T(b.left - a.left, b.top - a.top) }
+  /* the same move without stretching: one even scale, centres lined up, so icons and widgets keep their real proportions */
+  /* folder icons keep their size and only travel, centre to centre */
+  function slideC(b, a) { return T(b.left + b.width / 2 - (a.left + a.width / 2), b.top + b.height / 2 - (a.top + a.height / 2)) }
+  function move(e, b, a) { return e.matches('.icons a') ? slideC(b, a) : even(b, a) }
+  function even(b, a) { var s = Math.sqrt((b.width * b.height) / Math.max(1, a.width * a.height)); return T(b.left + b.width / 2 - (a.left + a.width * s / 2), b.top + b.height / 2 - (a.top + a.height * s / 2), s) }
   function openApps() { return apps.filter(function (a) { return a.open && !a.min }) }
+  /* an open app window glides from where it was on screen to its new place, at its own proportions */
+  function appGlide(a, b, D, run) {
+    var lr = layer.getBoundingClientRect(), s = Math.sqrt((b.width * b.height) / Math.max(1, a.ww * a.hh));
+    var tx = b.left + b.width / 2 - lr.left - a.ww * s / 2, ty = b.top + b.height / 2 - lr.top - a.hh * s / 2;
+    run.push(a.w.animate([{ transform: T(tx, ty, s) }, { transform: T(a.x, a.y) }], { duration: D, easing: OUT }));
+  }
   function enterFull() {
     if (full) return; full = true; closeStart();
-    var P = pieces(), all = P.fit.concat(P.slide, [win]); settle(all); openApps().forEach(function (a) { settle([a.w]) });
+    win.classList.add('flat'); win.style.setProperty('--rx', '0deg'); win.style.setProperty('--ry', '0deg');
+    var P = pieces(), all = P.fit.concat(P.slide, [win]); settle(all); var OA = openApps(); OA.forEach(function (a) { settle([a.w]) }); var a0 = OA.map(function (a) { return a.w.getBoundingClientRect() });
     root.classList.add('os-full');
     var w0 = win.getBoundingClientRect(), f0 = rects(P.fit), s0 = rects(P.slide);
     memo = { vw: innerWidth, vh: innerHeight, w: w0, f: f0, s: s0 };
@@ -596,48 +613,53 @@
     memo.ph = ph.getBoundingClientRect();
     win.style.setProperty('--rx', '0deg'); win.style.setProperty('--ry', '0deg');
     host.hidden = false; host.appendChild(win); win.classList.add('full');
-    layout();
+    layout(); wallNow();
     ctl.max.setAttribute('aria-label', 'Leave full screen'); ctl.max.innerHTML = I.res;
-    if (reduce || !win.animate) { poke(); return }
+    if (reduce || !win.animate) { return }
     var f1 = rects(P.fit), s1 = rects(P.slide), D = 640, run = [];
-    P.fit.forEach(function (e, i) { e.style.transformOrigin = '0 0'; run.push(e.animate([{ transform: fromTo(f0[i], f1[i], true) }, { transform: 'none' }], { duration: D, easing: OUT })) });
+    P.fit.forEach(function (e, i) { e.style.transformOrigin = '0 0'; run.push(e.animate([{ transform: move(e, f0[i], f1[i]) }, { transform: 'none' }], { duration: D, easing: OUT })) });
     P.slide.forEach(function (e, i) { run.push(e.animate([{ transform: fromTo(s0[i], s1[i]) }, { transform: 'none' }], { duration: D, easing: OUT })) });
-    openApps().forEach(function (a) { run.push(a.w.animate([{ opacity: 0 }, { opacity: 1 }], { duration: 300, delay: D * .55, easing: SOFT, fill: 'backwards' })) });
+    OA.forEach(function (a, i) { appGlide(a, a0[i], D, run) });
     var wa = win.animate([{ clipPath: inset(w0, 14) }, { clipPath: inset({ top: 0, left: 0, right: innerWidth, bottom: innerHeight }, 0) }], { duration: D, easing: OUT });
     win._a = wa;
-    wa.onfinish = function () { if (win._a === wa) win._a = null; run.forEach(function (r) { r.cancel() }); P.fit.forEach(function (e) { e.style.transformOrigin = '' }); poke() };
+    wa.onfinish = function () { if (win._a === wa) win._a = null; run.forEach(function (r) { r.cancel() }); P.fit.forEach(function (e) { e.style.transformOrigin = '' }) };
   }
+  /* leaving full screen: the window takes its small layout at its final spot straight away, so every piece knows where
+     it is going, then each one glides there from where it was. Behind them a copy of the wallpaper frame closes down
+     onto the window. Nothing fades out and nothing snaps at the end */
   function exitFull(then) {
     if (!full) { then && then(); return }
-    var P = pieces(), done = false;
-    settle(P.fit.concat(P.slide, [win]));
-    function swap() {
-      if (done) return; done = true; full = false;
-      fig.insertBefore(win, ph); ph.remove(); ph = null; host.hidden = true;
-      win.classList.remove('full'); root.classList.remove('os-full');
-      layout(); poke(); then && then();
-    }
+    var P = pieces(); settle(P.fit.concat(P.slide, [win]));
     ctl.max.setAttribute('aria-label', 'Full screen'); ctl.max.innerHTML = I.max;
-    /* if the screen changed size while it was open, the old spots are stale, so it just settles back in place */
-    if (reduce || !win.animate || !memo || memo.vw !== innerWidth || memo.vh !== innerHeight) {
-      swap(); if (!reduce && win.animate) win.animate([{ opacity: 0, transform: 'translateY(10px)' }, { opacity: 1, transform: 'none' }], { duration: 320, easing: OUT }); return;
-    }
-    /* the page gets its scrollbar back first, and the remembered spots shift by however much that moved the page */
+    var f1 = rects(P.fit), s1 = rects(P.slide), wr = win.getBoundingClientRect(), OA = openApps(); OA.forEach(function (a) { settle([a.w]) }); var a1 = OA.map(function (a) { return a.w.getBoundingClientRect() });
     root.classList.remove('os-full');
-    var pn = ph.getBoundingClientRect(), ox = pn.left - memo.ph.left, oy = pn.top - memo.ph.top;
-    function sh(r) { return { left: r.left + ox, top: r.top + oy, width: r.width, height: r.height, right: r.right + ox, bottom: r.bottom + oy } }
-    var f1 = rects(P.fit), s1 = rects(P.slide), D = 540, run = [];
-    P.fit.forEach(function (e, i) { e.style.transformOrigin = '0 0'; run.push(e.animate([{ transform: 'none' }, { transform: fromTo(sh(memo.f[i]), f1[i], true) }], { duration: D, easing: OUT, fill: 'forwards' })) });
-    P.slide.forEach(function (e, i) { run.push(e.animate([{ transform: 'none' }, { transform: fromTo(sh(memo.s[i]), s1[i]) }], { duration: D, easing: OUT, fill: 'forwards' })) });
-    openApps().forEach(function (a) { run.push(a.w.animate([{ opacity: 1 }, { opacity: 0 }], { duration: 160, easing: SOFT, fill: 'forwards' })) });
-    var wr = win.getBoundingClientRect(), mw = sh(memo.w);
-    var wa = win.animate([{ clipPath: 'inset(0px 0px 0px 0px round 0px)' }, { clipPath: 'inset(' + (mw.top - wr.top).toFixed(1) + 'px ' + (wr.right - mw.right).toFixed(1) + 'px ' + (wr.bottom - mw.bottom).toFixed(1) + 'px ' + (mw.left - wr.left).toFixed(1) + 'px round 14px)' }], { duration: D, easing: OUT, fill: 'forwards' });
-    win._a = wa;
-    wa.onfinish = function () {
-      if (win._a === wa) win._a = null;
-      swap();
-      run.forEach(function (r) { r.cancel() }); wa.cancel(); P.fit.forEach(function (e) { e.style.transformOrigin = '' });
-      openApps().forEach(function (a) { a.w.animate([{ opacity: 0 }, { opacity: 1 }], { duration: 220, easing: SOFT }) });
+    var pn = ph.getBoundingClientRect();
+    function home() {
+      full = false; fig.insertBefore(win, ph); ph.remove(); ph = null; host.hidden = true;
+      win.classList.remove('exiting'); win.style.position = win.style.left = win.style.top = win.style.width = win.style.zIndex = '';
+      requestAnimationFrame(function () { requestAnimationFrame(function () { win.classList.remove('flat') }) });
+      layout(); then && then();
+    }
+    if (reduce || !win.animate) { win.classList.remove('full'); home(); return }
+    /* the frame: the wallpaper as it looks right now, closing down onto the window */
+    var fr = el('div', 'os-frame'), wall = win.querySelector('canvas.wall');
+    if (wall) { var cc = document.createElement('canvas'); cc.width = wall.width; cc.height = wall.height; try { cc.getContext('2d').drawImage(wall, 0, 0) } catch (x) {} fr.appendChild(cc) }
+    host.insertBefore(fr, win);
+    /* the window, already small, at its final spot */
+    win.classList.remove('full'); win.classList.add('exiting');
+    win.style.position = 'absolute'; win.style.left = pn.left + 'px'; win.style.top = pn.top + 'px'; win.style.width = pn.width + 'px'; win.style.zIndex = '1';
+    layout(); wallNow();
+    var f2 = rects(P.fit), s2 = rects(P.slide), D = 560, run = [];
+    P.fit.forEach(function (e, i) { e.style.transformOrigin = '0 0'; run.push(e.animate([{ transform: move(e, f1[i], f2[i]) }, { transform: 'none' }], { duration: D, easing: OUT })) });
+    P.slide.forEach(function (e, i) { run.push(e.animate([{ transform: fromTo(s1[i], s2[i]) }, { transform: 'none' }], { duration: D, easing: OUT })) });
+    OA.forEach(function (a, i) { appGlide(a, a1[i], D, run) });
+    var to = 'inset(' + pn.top.toFixed(1) + 'px ' + (innerWidth - pn.right).toFixed(1) + 'px ' + (innerHeight - pn.top - win.offsetHeight).toFixed(1) + 'px ' + pn.left.toFixed(1) + 'px round 14px)';
+    var fa = fr.animate([{ clipPath: 'inset(0px 0px 0px 0px round 0px)' }, { clipPath: to }], { duration: D, easing: OUT, fill: 'forwards' });
+    win._a = fa;
+    fa.onfinish = function () {
+      if (win._a === fa) win._a = null;
+      run.forEach(function (r) { r.cancel() }); P.fit.forEach(function (e) { e.style.transformOrigin = '' });
+      fr.remove(); home();
     };
   }
 

@@ -215,6 +215,7 @@
     if ('IntersectionObserver' in window) new IntersectionObserver(function (es) { visible = es[0].isIntersecting; visible ? go() : stop() }).observe(box);
     document.addEventListener('visibilitychange', function () { document.hidden ? stop() : go() });
     var rt; addEventListener('resize', function () { clearTimeout(rt); rt = setTimeout(function () { size(); paint() }, 150) });
+    addEventListener('deskresize', function () { clearTimeout(rt); size(); paint() });
 
     /* a visitor's own GIF from an earlier visit, otherwise the original */
     Promise.all([get(key), get(key + ':s')]).then(function (v) {

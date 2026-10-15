@@ -450,6 +450,8 @@ html,body{overflow-x:clip}
 .src-ctl svg{width:.62rem;height:.62rem;fill:none;stroke:#fff;stroke-width:1.4;vector-effect:non-scaling-stroke}
 .src-body{overflow:hidden}
 .src-looks{display:flex;flex-wrap:wrap;align-items:center;gap:.35rem;padding:.65rem .9rem;border-bottom:1px solid rgba(255,255,255,.07)}
+.src-hint{display:flex;align-items:center;gap:.5rem;margin:0;padding:.5rem .9rem;border-bottom:1px solid rgba(255,255,255,.07);font-size:.62rem;letter-spacing:.06em;line-height:1.45;color:#8D97A8}
+.src-hint i{flex:none;width:.4rem;height:.4rem;background:var(--signal,#FF5A1F)}
 .src-looks .lk-k{font-size:.58rem;letter-spacing:.2em;text-transform:uppercase;color:#8D97A8;margin-right:.3rem}
 .src-looks button{font-family:var(--mono);font-size:.62rem;letter-spacing:.12em;text-transform:uppercase;color:#D6DCE6;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.12);border-radius:6px;padding:.32rem .55rem;cursor:pointer;transition:background .15s,border-color .15s,color .15s,transform .2s cubic-bezier(.16,1,.3,1)}
 .src-looks button:hover{background:rgba(255,255,255,.1);border-color:rgba(255,255,255,.3);transform:translateY(-1px)}
@@ -462,9 +464,11 @@ html,body{overflow-x:clip}
 .src.src-host{position:fixed;inset:0;z-index:85;background:rgba(5,5,6,.6);margin:0!important;perspective:none;display:block}
 .src-host[hidden]{display:none}
 .src-box.moving{transition:none!important}
-.src-host .src-box{position:absolute;inset:clamp(.6rem,2vw,1.4rem);max-width:none;display:flex;flex-direction:column;transform:none!important}
-.src-host .src-body{flex:1;display:flex;flex-direction:column;min-height:0}
-.src.src-host pre{flex:1;height:auto!important;font-size:.9rem!important;padding:1.2rem 1.4rem!important}
+.src-host.on .src-box{position:absolute;inset:clamp(.6rem,2vw,1.4rem);max-width:none;display:flex;flex-direction:column;transform:none!important}
+.src-host .src-frame{position:absolute;inset:0;background:#0A0A0B;border:1px solid #26262B;border-radius:10px}
+.src-box.exiting{background:transparent!important;border-color:transparent!important;box-shadow:none!important;overflow:visible!important;transform:none!important}
+.src-host.on .src-body{flex:1;display:flex;flex-direction:column;min-height:0}
+.src.src-host.on pre{flex:1;height:auto!important;font-size:.9rem!important;padding:1.2rem 1.4rem!important}
 html.src-full .mp{visibility:hidden}
 .src.src-host{overscroll-behavior:contain}
 .src-bar .st{margin-left:auto}
@@ -1401,6 +1405,7 @@ html.lite .dock,html.lite .gctl,html.lite .gchip{backdrop-filter:none!important;
           <span class="lk-k mono">Looks</span>
           <button type="button" data-look="original">Original</button><button type="button" data-look="ops">Ops Room</button><button type="button" data-look="gallery">Gallery</button><button type="button" data-look="blueprint">Blueprint</button><button type="button" data-look="infrared">Infrared</button><button type="button" data-look="mercury">Mercury</button><button type="button" data-look="terminal">Terminal</button><button type="button" data-look="newsprint">Newsprint</button><button type="button" data-look="brutalist">Brutalist</button><button type="button" data-look="noir">Noir</button>
         </div>
+        <p class="src-hint mono"><i aria-hidden="true"></i>Tap a look, or click into the code and change anything. The page follows as you type.</p>
         <pre id="src-pre" spellcheck="false" autocapitalize="off" autocorrect="off" data-lenis-prevent></pre>
       </div>
     </div>
@@ -1861,6 +1866,7 @@ var AURA_LASTFM={user:'',key:''};
   function start(){size();buildStar();timeKey='';draw(performance.now());started=true;if(reduce)setInterval(function(){draw(performance.now())},15000);else wakeClock()}
   if('IntersectionObserver' in window)new IntersectionObserver(function(es){visible=es[0].isIntersecting;wakeClock()}).observe(cv);
   addEventListener('resize',function(){size();draw(performance.now())});
+  addEventListener('deskresize',function(){size();draw(performance.now())});
   var go=function(){start()};
   if(document.fonts&&document.fonts.load){Promise.all([document.fonts.load('700 50px Unbounded'),document.fonts.load('300 12px Unbounded')]).then(go,go)}else go();
 })();
@@ -1930,7 +1936,7 @@ var AURA_LASTFM={user:'',key:''};
   tick();setInterval(tick,15000);
   var w=document.querySelector('.win');
   if(!w||!matchMedia('(hover:hover)').matches||matchMedia('(prefers-reduced-motion: reduce)').matches)return;
-  w.addEventListener('pointermove',function(e){if(w.classList.contains('full')||w.querySelector('.os-w:not([hidden])')){w.style.setProperty('--ry','0deg');w.style.setProperty('--rx','0deg');return}var r=w.getBoundingClientRect(),x=(e.clientX-r.left)/r.width-.5,y=(e.clientY-r.top)/r.height-.5;
+  w.addEventListener('pointermove',function(e){if(w.classList.contains('full')||w.querySelector('.os-w:not([hidden])')||(e.target.closest&&e.target.closest('.win-bar,.taskbar'))){w.style.setProperty('--ry','0deg');w.style.setProperty('--rx','0deg');return}var r=w.getBoundingClientRect(),x=(e.clientX-r.left)/r.width-.5,y=(e.clientY-r.top)/r.height-.5;
     w.style.setProperty('--ry',(x*5).toFixed(2)+'deg');w.style.setProperty('--rx',(-y*4).toFixed(2)+'deg')});
   w.addEventListener('pointerleave',function(){w.style.setProperty('--ry','0deg');w.style.setProperty('--rx','0deg')});
 })();
@@ -2062,17 +2068,15 @@ var AURA_LASTFM={user:'',key:''};
 
 // one click looks for the console at the end. Each is plain CSS, written into the console so people can read it and keep editing
 window.MN_LOOKS={
-original:"/* The original. Warm paper, black ink, one orange.\n * Pick another look, or write your own here. */\n",
-ops:["/* Ops Room. Black glass, white hairlines, everything",
-" * set in mono caps like a live operations wall. */","",
+original:"/* The original. Warm paper, black ink, one orange. */\n",
+ops:["/* Ops Room. Black, white hairlines, all mono caps. */","",
 "html:root:root:root {","  --bg: #000000;","  --surface: #070707;","  --ink: #F2F2F2;","  --muted: #8C8C8C;","  --line: #262626;",
 "  --signal: #FFFFFF;","  --accent: #FFFFFF;","  --accent-soft: #141414;","  --hot: #FFFFFF;","  --display: \"Geist Mono\", ui-monospace, monospace;","  --serif: \"Geist Mono\", ui-monospace, monospace;","}","",
 "html:root:root:root body {","  background-color: #000 !important;","  background-image:","    linear-gradient(rgba(255,255,255,.05) 1px, transparent 1px),","    linear-gradient(90deg, rgba(255,255,255,.05) 1px, transparent 1px) !important;","  background-size: 56px 56px !important;","}","",
 "h1, h2, h3, .hero h1 .n2 {","  text-transform: uppercase;","  font-style: normal !important;","  letter-spacing: .04em !important;","}","",".hero h1 {","  font-size: clamp(2.2rem, 6.4vw, 5.4rem) !important;","  overflow-wrap: normal;","  word-break: keep-all;","}","",
 ".visual, .sim, .src-box, .btn, .lab-cta {","  border-radius: 0 !important;","}","",
 "img {","  filter: grayscale(1) contrast(1.15);","}",""].join("\n"),
-gallery:["/* Gallery. A white room, a huge serif and silver",
-" * instead of colour, like a sculpture show. */","",
+gallery:["/* Gallery. White room, big serif, silver instead of orange. */","",
 "html:root:root:root {","  --bg: #F6F6F4;","  --surface: #FFFFFF;","  --ink: #0A0A0A;","  --muted: #7C7C7C;","  --line: #E2E2DF;",
 "  --signal: #A9AEB6;","  --accent: #0A0A0A;","  --accent-soft: #EDEDEB;","  --hot: #0A0A0A;","}","",
 "html:root:root:root body {","  background: #F6F6F4 !important;","}","",
@@ -2080,53 +2084,46 @@ gallery:["/* Gallery. A white room, a huge serif and silver",
 ".sec-head h2 {","  font-style: italic;","  font-size: clamp(3rem, 8vw, 6rem) !important;","}","",
 ".visual, .sim {","  border: 0 !important;","  box-shadow: 0 40px 80px -40px rgba(0,0,0,.28) !important;","}","",
 "img {","  filter: grayscale(1) contrast(1.05) brightness(1.05);","}",""].join("\n"),
-blueprint:["/* Blueprint. Drafting paper, white linework and a",
-" * cyan pen, like the site is still being drawn. */","",
+blueprint:["/* Blueprint. Navy, a drafting grid, cyan lines. */","",
 "html:root:root:root {","  --bg: #0B2A5B;","  --surface: #0E3268;","  --ink: #EAF2FF;","  --muted: #9DB4DA;","  --line: #2F5A9C;",
 "  --signal: #7FD3FF;","  --accent: #7FD3FF;","  --accent-soft: #143E7C;","  --hot: #7FD3FF;","  --bench: #6E8DBF;","}","",
 "html:root:root:root body {","  background-color: #0B2A5B !important;","  background-image:","    linear-gradient(rgba(255,255,255,.12) 1px, transparent 1px),","    linear-gradient(90deg, rgba(255,255,255,.12) 1px, transparent 1px),","    linear-gradient(rgba(255,255,255,.05) 1px, transparent 1px),","    linear-gradient(90deg, rgba(255,255,255,.05) 1px, transparent 1px) !important;","  background-size: 120px 120px, 120px 120px, 24px 24px, 24px 24px !important;","}","",
 ".visual, .sim, .lab-cta {","  background: rgba(11,42,91,.6) !important;","  border: 1px dashed #7FD3FF !important;","}","",
 "img {","  filter: grayscale(1) sepia(1) hue-rotate(170deg) saturate(2.4);","}",""].join("\n"),
-infrared:["/* Infrared. The page seen through a heat camera,",
-" * black and hot red with scan lines over it. */","",
+infrared:["/* Infrared. Black and hot red with scan lines. */","",
 "html:root:root:root {","  --bg: #080000;","  --surface: #120202;","  --ink: #FFE7E2;","  --muted: #B88780;","  --line: #3A0E0E;",
 "  --signal: #FF2A14;","  --accent: #FF3B24;","  --accent-soft: #2A0705;","  --hot: #FF3B24;","  --bench: #7A3A34;","}","",
 "html:root:root:root body {","  background: #080000 !important;","}","",
 "html:root:root:root body::after {","  background: repeating-linear-gradient(0deg,","    rgba(255,40,20,.07) 0 1px, transparent 1px 3px) !important;","  opacity: 1 !important;","}","",
 "h1, h2 {","  text-shadow: 0 0 24px rgba(255,42,20,.55);","}","",
 "img {","  filter: grayscale(1) sepia(1) hue-rotate(-45deg) saturate(5) contrast(1.2);","}",""].join("\n"),
-mercury:["/* Mercury. The whole page turned to brushed silver,",
-" * dark ink sitting on polished metal. */","",
+mercury:["/* Mercury. Brushed silver, dark ink. */","",
 "html:root:root:root {","  --bg: #C9CCD1;","  --surface: #E9EBEE;","  --ink: #0D0E10;","  --muted: #464A51;","  --line: #A3A8B0;",
 "  --signal: #15171A;","  --accent: #15171A;","  --accent-soft: #D6D9DD;","  --hot: #15171A;","}","",
 "html:root:root:root body {","  background:","    linear-gradient(180deg, #F2F3F5 0%, #B8BCC3 34%,","      #E8EAED 48%, #8F949C 62%, #DADDE1 100%) fixed !important;","}","",
 ".visual, .sim, .src-box, .lab-cta {","  box-shadow: inset 0 1px 0 #fff,","    0 30px 60px -30px rgba(0,0,0,.45) !important;","}","",
 "h1, h2 {","  text-shadow: 0 1px 0 rgba(255,255,255,.85), 0 -1px 0 rgba(0,0,0,.18);","}",""].join("\n"),
-terminal:["/* Terminal. Green phosphor on black, every letter",
-" * in mono with a little glow, like an old screen. */","",
+terminal:["/* Terminal. Green on black, all mono. */","",
 "html:root:root:root {","  --bg: #020802;","  --surface: #031003;","  --ink: #7CFF8A;","  --muted: #3E9C48;","  --line: #0E3613;",
 "  --signal: #7CFF8A;","  --accent: #7CFF8A;","  --accent-soft: #082A0C;","  --hot: #7CFF8A;","  --bench: #2E7A36;",
 "  --display: \"Geist Mono\", ui-monospace, monospace;","  --serif: \"Geist Mono\", ui-monospace, monospace;","  --body: \"Geist Mono\", ui-monospace, monospace;","}","",
 "html:root:root:root body {","  background: #020802 !important;","  text-shadow: 0 0 6px rgba(124,255,138,.4);","}","",
 ".hero h1 .n2 {","  font-style: normal;","}","",
 "img {","  filter: grayscale(1) sepia(1) hue-rotate(60deg) saturate(3);","}",""].join("\n"),
-newsprint:["/* Newsprint. Cheap paper, a halftone screen and",
-" * plain black ink, like it came off a press this morning. */","",
+newsprint:["/* Newsprint. Halftone paper, black ink. */","",
 "html:root:root:root {","  --bg: #EFE9DC;","  --surface: #F6F1E6;","  --ink: #111111;","  --muted: #4E4A43;","  --line: #1A1A1A;",
 "  --signal: #111111;","  --accent: #111111;","  --accent-soft: #E2DCCD;","  --hot: #111111;","}","",
 "html:root:root:root body {","  background-color: #EFE9DC !important;","  background-image: radial-gradient(rgba(0,0,0,.13) 1px, transparent 1.4px) !important;","  background-size: 5px 5px !important;","}","",
 ".sec-head, .proj {","  border-top: 3px double #111 !important;","}","",
 "img {","  filter: grayscale(1) contrast(1.35);","}",""].join("\n"),
-brutalist:["/* Brutalist. Safety yellow, thick black borders,",
-" * hard shadows and no rounded corners anywhere. */","",
+brutalist:["/* Brutalist. Yellow, thick borders, hard shadows, no round corners. */","",
 "html:root:root:root {","  --bg: #FFE500;","  --surface: #FFFFFF;","  --ink: #000000;","  --muted: #000000;","  --line: #000000;",
 "  --signal: #000000;","  --accent: #000000;","  --accent-soft: #FFFFFF;","  --hot: #000000;","}","",
 "html:root:root:root body {","  background: #FFE500 !important;","}","",
 "* {","  border-radius: 0 !important;","}","",
 ".visual, .sim, .src-box, .btn, .lab-cta, .tags li {","  border: 3px solid #000 !important;","  box-shadow: 8px 8px 0 #000 !important;","}","",
 "h1, h2 {","  font-family: \"Bricolage Grotesque\", sans-serif !important;","  font-weight: 800 !important;","  font-style: normal !important;","  text-transform: lowercase;","}",""].join("\n"),
-noir:["/* Noir. Black and white film, heavy grain and no",
-" * colour at all, like a still from an old movie. */","",
+noir:["/* Noir. Black and white, heavy grain. */","",
 "html:root:root:root {","  --bg: #0B0B0B;","  --surface: #131313;","  --ink: #EDEDED;","  --muted: #8A8A8A;","  --line: #2A2A2A;",
 "  --signal: #EDEDED;","  --accent: #EDEDED;","  --accent-soft: #1E1E1E;","  --hot: #EDEDED;","  --bench: #5A5A5A;","}","",
 "html:root:root:root body {","  background: #0B0B0B !important;","}","",
@@ -2246,7 +2243,7 @@ noir:["/* Noir. Black and white film, heavy grain and no",
     if(MODE[k])R.setAttribute('data-theme',MODE[k]);else{var pv=R.getAttribute('data-look-prev');if(pv)R.setAttribute('data-theme',pv);else R.removeAttribute('data-theme');R.removeAttribute('data-look-prev')}
     clearTimeout(timer);state='done';pos=TXT.length;pre.textContent=css;pre.innerHTML=hl(css);pre.scrollTop=0;apply(css);
     try{pre.contentEditable='plaintext-only'}catch(e){} if(pre.contentEditable!=='plaintext-only') pre.contentEditable='true';
-    st.textContent=k==='original'?'back to the original':'look, '+b.textContent.toLowerCase();btn.textContent='replay';
+    st.textContent=k==='original'?'original':b.textContent.toLowerCase()+' on';btn.textContent='replay';
     [].forEach.call(document.querySelectorAll('.src-looks button'),function(x){x.setAttribute('aria-pressed',x===b?'true':'false')});
   })});
   pre.addEventListener('input',function(){[].forEach.call(document.querySelectorAll('.src-looks button'),function(x){x.setAttribute('aria-pressed','false')})});
@@ -2278,35 +2275,45 @@ noir:["/* Noir. Black and white film, heavy grain and no",
   function inset(r){return 'inset('+r.top.toFixed(1)+'px '+(innerWidth-r.right).toFixed(1)+'px '+(innerHeight-r.bottom).toFixed(1)+'px '+r.left.toFixed(1)+'px round 10px)'}
   var memo=null;
   function settle(){box.classList.add('moving');requestAnimationFrame(function(){requestAnimationFrame(function(){box.classList.remove('moving')})})}
+  // the pieces that glide: everything in the title bar, the looks, the hint and the code
+  function pieces(){return [].slice.call(bar.children).concat([].slice.call(box.querySelectorAll('.src-looks,.src-hint,pre')))}
+  function rects(l){return l.map(function(e){return e.getBoundingClientRect()})}
+  function even(b,a){var s=Math.sqrt((b.width*b.height)/Math.max(1,a.width*a.height));return 'translate3d('+(b.left+b.width/2-(a.left+a.width*s/2)).toFixed(1)+'px,'+(b.top+b.height/2-(a.top+a.height*s/2)).toFixed(1)+'px,0) scale('+s.toFixed(4)+')'}
+  function ins(r){return 'inset('+r.top.toFixed(1)+'px '+(innerWidth-r.right).toFixed(1)+'px '+(innerHeight-r.bottom).toFixed(1)+'px '+r.left.toFixed(1)+'px round 10px)'}
+  // both ways work the same: the console takes its new layout at once, a dark frame opens or closes between the two
+  // sizes, and every piece glides from where it was to where it now sits. Nothing fades and nothing jumps
+  function glide(P,from,D,done){
+    var to=rects(P),run=P.map(function(e,i){e.style.transformOrigin='0 0';return e.animate([{transform:even(from[i],to[i])},{transform:'none'}],{duration:D,easing:OUT})});
+    return function(){run.forEach(function(r){r.cancel()});P.forEach(function(e){e.style.transformOrigin=''})}}
   function enter(){
     if(full)return;if(folded){folded=false;body.hidden=false;bMin.setAttribute('aria-label','Fold the console')}
-    full=true;box.classList.add('moving');var r0=box.getBoundingClientRect();
-    memo={r:r0,w:innerWidth,h:innerHeight};
+    full=true;box.classList.add('moving');
+    var P=pieces(),r0=box.getBoundingClientRect(),f0=rects(P),pre=box.querySelector('pre'),sc=pre.scrollTop;
     ph=document.createElement('div');ph.style.height=box.offsetHeight+'px';wrap.insertBefore(ph,box);
-    root.classList.add('src-full');host.hidden=false;host.appendChild(box);
+    root.classList.add('src-full');host.classList.add('on');host.hidden=false;
+    var fr=document.createElement('div');fr.className='src-frame';host.appendChild(fr);host.appendChild(box);box.classList.add('exiting');
     bMax.innerHTML=RES;bMax.setAttribute('aria-label','Leave full screen');
-    var r1=box.getBoundingClientRect();
-    anim(host,[{opacity:0},{opacity:1}],{duration:360});
-    anim(box,[{clipPath:'inset('+(r0.top-r1.top).toFixed(1)+'px '+(r1.right-r0.right).toFixed(1)+'px '+(r1.bottom-r0.bottom).toFixed(1)+'px '+(r0.left-r1.left).toFixed(1)+'px round 10px)'},{clipPath:'inset(0px 0px 0px 0px round 10px)'}],{duration:560},function(){box.style.clipPath='';box.classList.remove('moving')});
-    var pre=box.querySelector('pre');try{pre.focus({preventScroll:true})}catch(e){}
+    var r1=box.getBoundingClientRect();fr.style.cssText='left:'+r1.left+'px;top:'+r1.top+'px;right:auto;bottom:auto;width:'+r1.width+'px;height:'+r1.height+'px';
+    if(reduce||!box.animate){fr.remove();box.classList.remove('exiting','moving');return}
+    var D=560,stop=glide(P,f0,D);pre.scrollTop=sc;
+    host.animate([{backgroundColor:'rgba(5,5,6,0)'},{backgroundColor:'rgba(5,5,6,.6)'}],{duration:D,easing:OUT});
+    var fa=fr.animate([{clipPath:'inset('+(r0.top-r1.top).toFixed(1)+'px '+(r1.right-r0.right).toFixed(1)+'px '+(r1.bottom-r0.bottom).toFixed(1)+'px '+(r0.left-r1.left).toFixed(1)+'px round 10px)'},{clipPath:'inset(0px 0px 0px 0px round 10px)'}],{duration:D,easing:OUT});
+    fa.onfinish=function(){stop();fr.remove();box.classList.remove('exiting','moving');try{pre.focus({preventScroll:true})}catch(e){}};
   }
-  // the way back: the real console returns to its spot in its own small layout straight away, while a stand in copy of the
-  // full screen one closes down onto that exact spot and hands over with a short crossfade, so nothing reflows mid animation
   function leave(){
     if(!full)return;
-    var r1=box.getBoundingClientRect(),ghost=box.cloneNode(true);
-    [].forEach.call(ghost.querySelectorAll('[id]'),function(n){n.removeAttribute('id')});
-    ghost.classList.add('moving');ghost.setAttribute('aria-hidden','true');ghost.style.pointerEvents='none';host.appendChild(ghost);
-    ghost.querySelector('pre').scrollTop=box.querySelector('pre').scrollTop;
-    box.classList.add('moving');wrap.insertBefore(box,ph);ph.remove();ph=null;full=false;
+    var P=pieces(),r1=box.getBoundingClientRect(),f1=rects(P),pn=ph.getBoundingClientRect();
+    box.classList.add('moving','exiting');host.classList.remove('on');
+    var fr=document.createElement('div');fr.className='src-frame';fr.style.cssText='left:'+r1.left+'px;top:'+r1.top+'px;right:auto;bottom:auto;width:'+r1.width+'px;height:'+r1.height+'px';host.insertBefore(fr,box);
+    box.style.position='absolute';box.style.left=pn.left+'px';box.style.top=pn.top+'px';box.style.width=pn.width+'px';box.style.margin='0';
     bMax.innerHTML=MAXI;bMax.setAttribute('aria-label','Open the console full screen');
-    var r0=box.getBoundingClientRect();
-    var t=Math.max(0,r0.top-r1.top),rr=Math.max(0,r1.right-r0.right),bb=Math.max(0,r1.bottom-r0.bottom),l=Math.max(0,r0.left-r1.left),D=reduce?0:520;
-    function end(){ghost.remove();host.hidden=true;host.getAnimations().forEach(function(a){a.cancel()});root.classList.remove('src-full');settle()}
-    if(!D||!ghost.animate){end();return}
-    host.animate([{opacity:1},{opacity:0}],{duration:D,easing:'cubic-bezier(.4,0,.2,1)',fill:'forwards'});
-    var to='inset('+t.toFixed(1)+'px '+rr.toFixed(1)+'px '+bb.toFixed(1)+'px '+l.toFixed(1)+'px round 10px)';
-    ghost.animate([{clipPath:'inset(0px 0px 0px 0px round 10px)',opacity:1,offset:0,easing:OUT},{clipPath:to,opacity:1,offset:.88,easing:'linear'},{clipPath:to,opacity:0,offset:1}],{duration:D+60,easing:'linear',fill:'forwards'}).onfinish=end;
+    function home(){full=false;box.style.position=box.style.left=box.style.top=box.style.width=box.style.margin='';wrap.insertBefore(box,ph);ph.remove();ph=null;
+      host.hidden=true;root.classList.remove('src-full');box.classList.remove('exiting');settle()}
+    if(reduce||!box.animate){fr.remove();home();return}
+    var r0=box.getBoundingClientRect(),D=560,stop=glide(P,f1,D);
+    host.animate([{backgroundColor:'rgba(5,5,6,.6)'},{backgroundColor:'rgba(5,5,6,0)'}],{duration:D,easing:OUT,fill:'forwards'});
+    var fa=fr.animate([{clipPath:'inset(0px 0px 0px 0px round 10px)'},{clipPath:'inset('+(r0.top-r1.top).toFixed(1)+'px '+(r1.right-r0.right).toFixed(1)+'px '+(r1.bottom-r0.bottom).toFixed(1)+'px '+(r0.left-r1.left).toFixed(1)+'px round 10px)'}],{duration:D,easing:OUT,fill:'forwards'});
+    fa.onfinish=function(){stop();home();fr.remove();host.getAnimations().forEach(function(a){a.cancel()})};
   }
   // switch off: folds to a bright line like an old monitor and leaves a small pill to bring it back
   function off(){
