@@ -165,6 +165,29 @@ figure{margin:0}
 @media (max-width:900px){.proj.featured,.visual.wide{grid-template-columns:minmax(0,1fr)}.visual.wide .stats{grid-template-columns:repeat(3,minmax(0,1fr));border-top:1px solid var(--line);padding-top:1rem}}
 @media (max-width:460px){.visual.wide .stats{grid-template-columns:1fr 1fr}}
 .js-motion .reveal{will-change:transform,opacity;transform-origin:50% 0}
+.js-motion .proj{position:relative}
+/* frosted glass over each chart while it slides in, with a glossy sheen gliding across; it clears as the chart settles */
+.glass{position:absolute;inset:-1px;z-index:5;pointer-events:none;border-radius:inherit;overflow:hidden;
+  background:linear-gradient(135deg,rgba(255,255,255,.62),rgba(255,255,255,.2) 42%,rgba(255,255,255,.38));
+  -webkit-backdrop-filter:blur(16px) saturate(1.5);backdrop-filter:blur(16px) saturate(1.5);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.9),inset 0 0 0 1px rgba(255,255,255,.45);visibility:hidden}
+.glass i{position:absolute;top:-25%;bottom:-25%;left:0;width:62%;background:linear-gradient(100deg,rgba(255,255,255,0) 0%,rgba(255,255,255,.06) 22%,rgba(255,255,255,.2) 38%,rgba(255,255,255,.42) 50%,rgba(255,255,255,.2) 62%,rgba(255,255,255,.06) 78%,rgba(255,255,255,0) 100%);transform:translateX(-120%) skewX(-12deg)}
+@media (prefers-color-scheme:dark){:root:where(:not([data-theme="light"])) .glass{background:linear-gradient(135deg,rgba(255,255,255,.14),rgba(255,255,255,.04) 42%,rgba(255,255,255,.09));box-shadow:inset 0 1px 0 rgba(255,255,255,.25),inset 0 0 0 1px rgba(255,255,255,.1)}}
+:root[data-theme="dark"] .glass{background:linear-gradient(135deg,rgba(255,255,255,.14),rgba(255,255,255,.04) 42%,rgba(255,255,255,.09));box-shadow:inset 0 1px 0 rgba(255,255,255,.25),inset 0 0 0 1px rgba(255,255,255,.1)}
+:root[data-theme="dark"] .glass i{background:linear-gradient(100deg,rgba(255,255,255,0) 0%,rgba(255,255,255,.03) 22%,rgba(255,255,255,.1) 38%,rgba(255,255,255,.2) 50%,rgba(255,255,255,.1) 62%,rgba(255,255,255,.03) 78%,rgba(255,255,255,0) 100%)}
+html.lite .glass{-webkit-backdrop-filter:none;backdrop-filter:none;background:linear-gradient(135deg,rgba(236,233,226,.92),rgba(236,233,226,.78))}
+/* section heads: the top rule draws itself across as the section arrives */
+.js-motion .sec-head{position:relative;border-top-color:transparent!important}
+.sec-rule{position:absolute;left:0;right:0;top:-1px;height:1px;background:var(--ink);transform-origin:0 50%;transform:scaleX(0);pointer-events:none}
+.sec-rule::after{content:"";position:absolute;right:0;top:-3px;width:7px;height:7px;background:var(--signal,#FF5A1F)}
+/* the chart scan: a glowing hairline sweeps across once, the part it hasn't reached waits dimmed under a dot grid */
+.scan{position:absolute;inset:0;z-index:6;pointer-events:none;border-radius:inherit}
+.scan .veil{position:absolute;inset:0;transform-origin:100% 50%;border-radius:inherit;background-color:var(--bg);opacity:.74;background-image:radial-gradient(circle,var(--ink) .7px,transparent 1.1px);background-size:11px 11px}
+.scan .sl{position:absolute;top:-8px;bottom:-8px;left:0;width:1px;background:var(--signal,#FF5A1F);box-shadow:0 0 18px 2px var(--signal,#FF5A1F);opacity:0}
+.scan .sl::before{content:"";position:absolute;left:-3px;top:0;width:7px;height:7px;background:var(--signal,#FF5A1F)}
+.scan .sl.flip s{left:auto;right:9px}
+.scan .sl s{position:absolute;left:9px;top:-2px;padding:.2rem .4rem;background:var(--ink);color:var(--bg);font-family:var(--mono);font-size:.56rem;font-weight:500;letter-spacing:.18em;line-height:1;text-transform:uppercase;text-decoration:none;white-space:nowrap;font-variant-numeric:tabular-nums}
+.js-motion .proj>figure{transition:none}
 
 /* timeline lists */
 .rows{list-style:none;margin:0;padding:0}
@@ -216,11 +239,11 @@ footer{padding-block:2rem 3rem;border-top:1px solid var(--line);color:var(--mute
 .win-title{display:flex;align-items:center;gap:.45rem;padding-left:.8rem}
 .win-title i{width:.65rem;height:.65rem;border-radius:3px;background:conic-gradient(from 200deg,#5b7cff,#c86bff,#ff7a9a,#5b7cff);opacity:.9}
 .win-ctl{display:flex;height:100%}
-.win-ctl b{display:grid;place-items:center;width:2.4rem;height:100%;transition:background .15s}
+.win-ctl button{display:grid;place-items:center;width:2.4rem;height:100%;transition:background .15s}
 .win-ctl svg{width:.58rem;height:.58rem;fill:none;stroke:rgba(255,255,255,.6);stroke-width:1;vector-effect:non-scaling-stroke}
-.win-ctl b:hover{background:rgba(255,255,255,.08)}
-.win-ctl b.cls:hover{background:#c42b1c}
-.win-ctl b.cls:hover svg{stroke:#fff}
+.win-ctl button:hover{background:rgba(255,255,255,.08)}
+.win-ctl button.cls:hover{background:#c42b1c}
+.win-ctl button.cls:hover svg{stroke:#fff}
 .win .desk{border-radius:0;padding-top:.4rem}
 
 /* make the lab hard to miss */
@@ -420,7 +443,30 @@ html,body{overflow-x:clip}
 .src-box{max-width:44rem;background:#10151E;color:#D6DCE6;border-radius:10px;box-shadow:0 1px 0 rgba(255,255,255,.04) inset,0 24px 50px -24px rgba(10,15,30,.55);overflow:hidden;transition:box-shadow .4s ease}
 .src-box:hover{box-shadow:0 0 0 1px rgba(255,255,255,.08) inset,0 0 44px 2px color-mix(in srgb,var(--accent) 30%,transparent)}
 .src-bar{display:flex;align-items:center;gap:.7rem;padding:.6rem .9rem;border-bottom:1px solid rgba(255,255,255,.07);color:#8D97A8;font-size:.76rem}
-.src-bar .dots{display:flex;gap:.35rem}.src-bar .dots i{width:.6rem;height:.6rem;border-radius:50%;background:#2A3240}
+.src-bar .sq{width:.5rem;height:.5rem;background:var(--signal,#FF5A1F);flex:none}
+.src-ctl{display:flex;gap:.25rem;margin-left:.2rem}
+.src-bar .src-ctl button{display:grid;place-items:center;width:1.85rem;height:1.45rem;padding:0;border-radius:6px;background:rgba(255,255,255,.07);border:0;box-shadow:inset 0 0 0 1px rgba(255,255,255,.08);cursor:pointer;transition:background .15s}
+.src-bar .src-ctl button:hover{background:rgba(255,255,255,.17)}.src-bar .src-ctl button.cls:hover{background:#c42b1c}
+.src-ctl svg{width:.62rem;height:.62rem;fill:none;stroke:#fff;stroke-width:1.4;vector-effect:non-scaling-stroke}
+.src-body{overflow:hidden}
+.src-looks{display:flex;flex-wrap:wrap;align-items:center;gap:.35rem;padding:.65rem .9rem;border-bottom:1px solid rgba(255,255,255,.07)}
+.src-looks .lk-k{font-size:.58rem;letter-spacing:.2em;text-transform:uppercase;color:#8D97A8;margin-right:.3rem}
+.src-looks button{font-family:var(--mono);font-size:.62rem;letter-spacing:.12em;text-transform:uppercase;color:#D6DCE6;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.12);border-radius:6px;padding:.32rem .55rem;cursor:pointer;transition:background .15s,border-color .15s,color .15s,transform .2s cubic-bezier(.16,1,.3,1)}
+.src-looks button:hover{background:rgba(255,255,255,.1);border-color:rgba(255,255,255,.3);transform:translateY(-1px)}
+.src-looks button[aria-pressed="true"]{background:#ECECEA;border-color:#ECECEA;color:#0A0A0B;box-shadow:inset 3px 0 0 #FF5A1F}
+@media (max-width:640px){.src-looks{flex-wrap:nowrap;overflow-x:auto;scrollbar-width:none;-webkit-mask-image:linear-gradient(90deg,#000 88%,transparent)}.src-looks::-webkit-scrollbar{display:none}.src-looks button{flex:none}}
+.src-pill{display:inline-flex;align-items:center;gap:.55rem;font-size:.66rem;letter-spacing:.18em;text-transform:uppercase;color:#ECECEA;background:#0A0A0B;border:1px solid #26262B;border-radius:8px;padding:.6rem .9rem;cursor:pointer;transition:transform .25s cubic-bezier(.16,1,.3,1),border-color .2s}
+.src-pill:hover{transform:translateY(-2px);border-color:var(--signal,#FF5A1F)}.src-pill[hidden]{display:none}
+.src-pill i{width:.45rem;height:.45rem;background:var(--signal,#FF5A1F)}
+.src-box.off{display:none}
+.src.src-host{position:fixed;inset:0;z-index:85;background:rgba(5,5,6,.6);margin:0!important;perspective:none;display:block}
+.src-host[hidden]{display:none}
+.src-box.moving{transition:none!important}
+.src-host .src-box{position:absolute;inset:clamp(.6rem,2vw,1.4rem);max-width:none;display:flex;flex-direction:column;transform:none!important}
+.src-host .src-body{flex:1;display:flex;flex-direction:column;min-height:0}
+.src.src-host pre{flex:1;height:auto!important;font-size:.9rem!important;padding:1.2rem 1.4rem!important}
+html.src-full .mp{visibility:hidden}
+.src.src-host{overscroll-behavior:contain}
 .src-bar .st{margin-left:auto}
 .src-bar button{font:inherit;color:#C9D1DD;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);border-radius:7px;padding:.15rem .65rem;cursor:pointer}
 .src-bar button:hover{background:rgba(255,255,255,.12)}
@@ -917,8 +963,8 @@ html:root[data-theme="dark"]:root{--accent:var(--signal)}
 .visual.showcase .win-title em::before{content:"";display:inline-block;width:.32rem;height:.32rem;border-radius:50%;background:#3DDC97;margin-right:.45rem;vertical-align:.08em;box-shadow:0 0 0 0 rgba(61,220,151,.5);animation:livedot 2.4s ease-out infinite}
 @keyframes livedot{0%{box-shadow:0 0 0 0 rgba(61,220,151,.45)}70%,100%{box-shadow:0 0 0 .4rem rgba(61,220,151,0)}}
 .visual.showcase .win-ctl{padding-right:.35rem;gap:.1rem}
-.visual.showcase .win-ctl b{width:1.9rem;opacity:.55;border-radius:7px;transition:opacity .2s,background .2s}
-.visual.showcase .win-ctl b:hover{opacity:1}
+.visual.showcase .win-ctl button{width:1.9rem;opacity:.55;border-radius:7px;transition:opacity .2s,background .2s}
+.visual.showcase .win-ctl button:hover{opacity:1}
 .visual.showcase .win-ctl svg{width:.5rem;height:.5rem}
 .visual.showcase .taskbar{padding:.2rem 0 .8rem!important;background:none!important}
 .visual.showcase .dock{background:rgba(14,14,16,.74)!important;border:1px solid rgba(255,255,255,.11)!important;box-shadow:0 1px 0 rgba(255,255,255,.06) inset,0 14px 30px -12px rgba(0,0,0,.7)!important;border-radius:14px!important;padding:.3rem .45rem!important}
@@ -976,18 +1022,26 @@ html.lite .dock,html.lite .gctl,html.lite .gchip{backdrop-filter:none!important;
   set(low);
   /* big monitors and TVs: full screen canvases keep to about a 1440p worth of pixels, the browser scales them up */
   /* on big screens the whole layout grows (see the type scale), and the canvases grow with it */
+  /* charts wait for their slide: fn runs once the chart's figure has finished sliding in and sits in view */
+  window.mnAfterSlide=function(el,fn){var fig=(el.closest&&el.closest('.proj > figure'))||el,done=false,pend=false;
+    function chk(){pend=false;if(done)return;var r=fig.getBoundingClientRect(),vh=innerHeight;if(r.bottom<0||r.top>vh)return;
+      var moving=d.classList.contains('js-motion')&&(fig.style.translate||fig.style.opacity==='0');
+      if(r.top<=vh*.38&&!moving){done=true;removeEventListener('scroll',on);removeEventListener('resize',on);fn()}}
+    function on(){if(!pend){pend=true;requestAnimationFrame(chk)}}
+    addEventListener('scroll',on,{passive:true});addEventListener('resize',on);setTimeout(chk,80);setTimeout(chk,600)};
   window.MN_K=function(){var f=parseFloat(getComputedStyle(d).fontSize)/16;return f>1?f:1};
   window.MN_FIT=function(w,h){var d=window.MN_DPR||1,cap=Math.sqrt((window.MN_LITE?1.6e6:3.7e6)/Math.max(1,w*h));return Math.max(.5,Math.min(d,cap))};
   if(!low)addEventListener('load',function(){setTimeout(function(){var last=0,k=0,slow=0;(function f(t){if(last){k++;if(t-last>30)slow++}last=t;if(k<150)requestAnimationFrame(f);else if(slow/k>.3){set(true);dispatchEvent(new Event('resize'))}})(performance.now())},1200)});
 })();
 </script>
-<style id="wordmark">/* the name set like the big title: Matin in roman, Nikoomanzar in italic, the ink square after */
-.wm{font-family:"Instrument Serif",Georgia,serif!important;font-size:1.42rem!important;font-weight:400!important;letter-spacing:-.01em!important;line-height:1!important;text-transform:none!important;display:inline-flex!important;align-items:baseline;color:var(--ink)!important;text-decoration:none!important;white-space:nowrap}
-.wm::before{display:none!important}
-.wm::after{content:""!important;display:inline-block!important;flex:none;width:.36em;height:.36em;margin-left:.34em;background:var(--signal,#FF5A1F);align-self:center;transform:translateY(.04em)}
-.wm .fn{font-style:normal}
-.wm .ln{font-style:italic;margin-left:.24em}
-@media (max-width:440px){.wm{font-size:1.3rem!important}.wm .ln{display:none}}
+<style id="wordmark">/* the name as a console label: the ink square, M. NIKOOMANZAR in spaced mono, and a boxed catalogue number */
+.wm{font-family:var(--mono,"Geist Mono",ui-monospace,monospace)!important;font-size:.76rem!important;font-weight:500!important;font-style:normal!important;letter-spacing:.3em!important;line-height:1!important;text-transform:uppercase!important;display:inline-flex!important;align-items:center;gap:.85rem;color:var(--ink)!important;text-decoration:none!important;white-space:nowrap}
+.wm::after{display:none!important}
+.wm::before{content:""!important;display:inline-block!important;flex:none;width:.62rem;height:.62rem;margin:0!important;background:var(--signal,#FF5A1F)!important;border:0!important;border-radius:0!important;position:static!important;transform:none!important}
+.wm .fn{margin-right:-.3em}
+.wm .no{display:inline-block;padding:.38rem .42rem .36rem .62rem;border:1px solid currentColor;letter-spacing:.2em;font-size:.92em}
+.wm .sn{display:none;margin-right:-.24em}
+@media (max-width:440px){.wm{font-size:.7rem!important;letter-spacing:.24em!important;gap:.6rem}.wm .no,.wm .fn{display:none}.wm .sn{display:inline}}
 @supports not (color:color-mix(in srgb,red,blue)){html .nav{background:var(--bg)}html .lab .hint{background:var(--surface)}html .peek-plots canvas{background:var(--bg)}html .lab-cta{background:var(--accent-soft)}}
 </style>
 </head>
@@ -995,7 +1049,7 @@ html.lite .dock,html.lite .gctl,html.lite .gchip{backdrop-filter:none!important;
 
 <nav class="nav" aria-label="Main">
   <div class="wrap">
-    <a class="mark wm" href="#top"><span class="fn">Matin</span> <span class="ln">Nikoomanzar</span></a>
+    <a class="mark wm" href="#top" aria-label="Matin Nikoomanzar, home"><span class="fn">M. Nikoomanzar</span><span class="sn">M.N.</span><span class="no">N°01</span></a>
     <span class="prog" id="prog" aria-hidden="true"></span>
     <ul>
       <li class="labm"><button class="nav-drop" id="proj-btn" type="button" aria-expanded="false" aria-controls="proj-menu">Projects<svg viewBox="0 0 10 10" aria-hidden="true"><path d="M2 3.8 5 6.6 8 3.8"/></svg></button>
@@ -1276,9 +1330,9 @@ html.lite .dock,html.lite .gctl,html.lite .gchip{backdrop-filter:none!important;
     </div>
     <figure class="visual showcase">
       <div class="win">
-        <div class="win-bar" aria-hidden="true">
-          <span class="win-title"><i></i>Aura<em>desktop, live</em></span>
-          <span class="win-ctl"><b class="min"><svg viewBox="0 0 10 10"><path d="M1 5h8"/></svg></b><b class="max"><svg viewBox="0 0 10 10"><rect x="1.5" y="1.5" width="7" height="7" rx="1"/></svg></b><b class="cls"><svg viewBox="0 0 10 10"><path d="M1.5 1.5l7 7M8.5 1.5l-7 7"/></svg></b></span>
+        <div class="win-bar">
+          <span class="win-title" aria-hidden="true"><i></i>Aura<em>desktop, live</em></span>
+          <span class="win-ctl"><button type="button" class="min" aria-label="Minimize the desktop"><svg viewBox="0 0 10 10"><path d="M1 5h8"/></svg></button><button type="button" class="max" aria-label="Full screen"><svg viewBox="0 0 10 10"><rect x="1.5" y="1.5" width="7" height="7" rx="1"/></svg></button><button type="button" class="cls" aria-label="Turn the desktop off"><svg viewBox="0 0 10 10"><path d="M1.5 1.5l7 7M8.5 1.5l-7 7"/></svg></button></span>
         </div>
       <div class="desk" id="desk">
         <div class="gif tall" data-key="tall"><span>GIF</span></div>
@@ -1292,10 +1346,10 @@ html.lite .dock,html.lite .gctl,html.lite .gchip{backdrop-filter:none!important;
         <div class="gif wide" data-key="wide"><span>GIF</span></div>
       </div>
         <div class="taskbar"><span class="dock">
-          <b class="tb-start" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="4" y="4" width="7" height="7" rx="1" fill="var(--signal,#FF5A1F)"/><rect x="13" y="4" width="7" height="7" rx="1" stroke="currentColor" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/><rect x="4" y="13" width="7" height="7" rx="1" stroke="currentColor" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/><rect x="13" y="13" width="7" height="7" rx="1" stroke="currentColor" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></b>
-          <b class="tb-app on" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M3.5 7.5a2 2 0 0 1 2-2h3.6l2 2.2h7.4a2 2 0 0 1 2 2v7.8a2 2 0 0 1-2 2h-13a2 2 0 0 1-2-2z" stroke="currentColor" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></b>
-          <b class="tb-app on" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.5" stroke="currentColor" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/><path d="M3.5 12h17M12 3.5c2.6 3 2.6 14 0 17M12 3.5c-2.6 3-2.6 14 0 17" stroke="currentColor" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></b>
-          <button class="tb-app tb-music" type="button" aria-label="Play music"><svg viewBox="0 0 24 24"><path d="M9.5 17.5V6.5l9-2v10.5" stroke="currentColor" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/><circle cx="7.3" cy="17.6" r="2.2" stroke="currentColor" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/><circle cx="16.3" cy="15.1" r="2.2" stroke="currentColor" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+          <button type="button" class="tb-start" aria-label="Start"><svg viewBox="0 0 24 24"><rect x="4" y="4" width="7" height="7" rx="1" fill="var(--signal,#FF5A1F)"/><rect x="13" y="4" width="7" height="7" rx="1" stroke="currentColor" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/><rect x="4" y="13" width="7" height="7" rx="1" stroke="currentColor" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/><rect x="13" y="13" width="7" height="7" rx="1" stroke="currentColor" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+          <button type="button" class="tb-app" data-app="files" aria-label="Projects"><svg viewBox="0 0 24 24"><path d="M3.5 7.5a2 2 0 0 1 2-2h3.6l2 2.2h7.4a2 2 0 0 1 2 2v7.8a2 2 0 0 1-2 2h-13a2 2 0 0 1-2-2z" stroke="currentColor" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+          <button type="button" class="tb-app" data-app="web" aria-label="Browser"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.5" stroke="currentColor" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/><path d="M3.5 12h17M12 3.5c2.6 3 2.6 14 0 17M12 3.5c-2.6 3-2.6 14 0 17" stroke="currentColor" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+          <button class="tb-app tb-music" type="button" data-app="music" aria-label="Music"><svg viewBox="0 0 24 24"><path d="M9.5 17.5V6.5l9-2v10.5" stroke="currentColor" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/><circle cx="7.3" cy="17.6" r="2.2" stroke="currentColor" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/><circle cx="16.3" cy="15.1" r="2.2" stroke="currentColor" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
           <em class="tb-sep" aria-hidden="true"></em><span class="tb-time" id="tb-t" aria-hidden="true">--:--</span>
         </span></div>
       </div>
@@ -1339,10 +1393,16 @@ html.lite .dock,html.lite .gctl,html.lite .gchip{backdrop-filter:none!important;
     <button class="btn" type="button" id="copy">Copy</button>
     <a class="btn" href="mailto:Matinnekoomanzar@gmail.com">Open email</a>
   </div>
-  <div class="src" id="src" aria-label="A box where this page writes part of its own CSS">
+  <div class="src" id="src" aria-label="A box where this page writes part of its own CSS"><button type="button" class="src-pill mono" hidden><i></i>Reopen style.css</button>
     <div class="src-box">
-      <div class="src-bar mono"><span class="dots"><i></i><i></i><i></i></span><span>style.css</span><span class="st" id="src-st">waiting for you</span><button type="button" id="src-btn">skip</button></div>
-      <pre id="src-pre" spellcheck="false" autocapitalize="off" autocorrect="off" data-lenis-prevent></pre>
+      <div class="src-bar mono"><i class="sq" aria-hidden="true"></i><span>style.css</span><span class="st" id="src-st">waiting for you</span><button type="button" id="src-btn">skip</button><span class="src-ctl"><button type="button" class="min" aria-label="Fold the console"><svg viewBox="0 0 10 10"><path d="M1 5h8"/></svg></button><button type="button" class="max" aria-label="Open the console full screen"><svg viewBox="0 0 10 10"><rect x="1.5" y="1.5" width="7" height="7" rx="1"/></svg></button><button type="button" class="cls" aria-label="Close the console"><svg viewBox="0 0 10 10"><path d="M1.5 1.5l7 7M8.5 1.5l-7 7"/></svg></button></span></div>
+      <div class="src-body">
+        <div class="src-looks" role="group" aria-label="One click looks for the whole site">
+          <span class="lk-k mono">Looks</span>
+          <button type="button" data-look="original">Original</button><button type="button" data-look="ops">Ops Room</button><button type="button" data-look="gallery">Gallery</button><button type="button" data-look="blueprint">Blueprint</button><button type="button" data-look="infrared">Infrared</button><button type="button" data-look="mercury">Mercury</button><button type="button" data-look="terminal">Terminal</button><button type="button" data-look="newsprint">Newsprint</button><button type="button" data-look="brutalist">Brutalist</button><button type="button" data-look="noir">Noir</button>
+        </div>
+        <pre id="src-pre" spellcheck="false" autocapitalize="off" autocorrect="off" data-lenis-prevent></pre>
+      </div>
     </div>
   </div>
 </section>
@@ -1491,7 +1551,7 @@ html.lite .dock,html.lite .gctl,html.lite .gchip{backdrop-filter:none!important;
     if(first){var dp=svg.querySelector('.draw'),TL=dp.getTotalLength();
       if(!matchMedia('(prefers-reduced-motion: reduce)').matches&&'IntersectionObserver' in window){
         dp.style.strokeDasharray=TL;dp.style.strokeDashoffset=TL;
-        var io=new IntersectionObserver(function(e){if(e[0].isIntersecting){dp.style.animation='draw 1.6s ease-out forwards';io.disconnect()}},{threshold:.3});io.observe(svg)}}
+        mnAfterSlide(svg,function(){dp.style.animation='draw 1.6s ease-out forwards'})}}
   }
   function show(cx){var hx=svg.querySelector('#hx'),hb=svg.querySelector('#hb'),hs=svg.querySelector('#hs');var r=svg.getBoundingClientRect(),px=(cx-r.left)*W/r.width;var i=Math.round((px-P.l)/(W-P.l-P.r)*(n-1));i=Math.max(0,Math.min(n-1,i));var X=x(i);
     hx.setAttribute('x1',X);hx.setAttribute('x2',X);hx.setAttribute('opacity',1);hb.setAttribute('cx',X);hb.setAttribute('cy',y(B[i]));hb.setAttribute('opacity',1);hs.setAttribute('cx',X);hs.setAttribute('cy',y(S[i]));hs.setAttribute('opacity',1);
@@ -1717,7 +1777,7 @@ var AURA_LASTFM={user:'',key:''};
     (function f(now){var done=true;rows.forEach(function(r,i){var p=Math.min(1,Math.max(0,(now-t0-i*70)/900)),e=1-Math.pow(1-p,3),X=r.x0+(r.x1-r.x0)*e;
       r.l.setAttribute('x2',X.toFixed(1));if(r.c)r.c.setAttribute('cx',X.toFixed(1));if(p>=1)r.t.forEach(function(t){t.style.opacity=1});else done=false});
       if(!done)requestAnimationFrame(f)})(t0)}
-  var io=new IntersectionObserver(function(es){if(es[0].isIntersecting){io.disconnect();run()}},{threshold:.35});io.observe(svg);
+  mnAfterSlide(svg,run);
 })();
 </script>
 <script>
@@ -1859,7 +1919,7 @@ var AURA_LASTFM={user:'',key:''};
     if(typeof window.goatcounter!=='undefined'&&window.goatcounter.count){try{window.goatcounter.count({path:'peeking-demo',event:true})}catch(e){}}
   }
   btn.addEventListener('click',go); sel.addEventListener('change',go);
-  if('IntersectionObserver' in window){var io=new IntersectionObserver(function(es){if(es[0].isIntersecting){io.disconnect();go()}},{threshold:.3});io.observe(ca)}else go();
+  mnAfterSlide(ca,go);
 })();
 </script>
 <script>
@@ -1870,7 +1930,7 @@ var AURA_LASTFM={user:'',key:''};
   tick();setInterval(tick,15000);
   var w=document.querySelector('.win');
   if(!w||!matchMedia('(hover:hover)').matches||matchMedia('(prefers-reduced-motion: reduce)').matches)return;
-  w.addEventListener('pointermove',function(e){var r=w.getBoundingClientRect(),x=(e.clientX-r.left)/r.width-.5,y=(e.clientY-r.top)/r.height-.5;
+  w.addEventListener('pointermove',function(e){if(w.classList.contains('full')||w.querySelector('.os-w:not([hidden])')){w.style.setProperty('--ry','0deg');w.style.setProperty('--rx','0deg');return}var r=w.getBoundingClientRect(),x=(e.clientX-r.left)/r.width-.5,y=(e.clientY-r.top)/r.height-.5;
     w.style.setProperty('--ry',(x*5).toFixed(2)+'deg');w.style.setProperty('--rx',(-y*4).toFixed(2)+'deg')});
   w.addEventListener('pointerleave',function(){w.style.setProperty('--ry','0deg');w.style.setProperty('--rx','0deg')});
 })();
@@ -1892,11 +1952,25 @@ var AURA_LASTFM={user:'',key:''};
     h.textContent=''; out.forEach(function(n){h.appendChild(n)});
     return {el:h,words:[].slice.call(h.querySelectorAll('.w>i')),top:0};
   });
-  var items=$$('.reveal').map(function(el){return {el:el,top:0,h:0,sim:el===sim}});
+  var items=$$('.reveal').map(function(el){return {el:el,top:0,h:0,sim:el===sim,proj:el.classList.contains('proj')}});
+  // projects: the text lines come up one after another and the picture slides in a beat later. All transforms, all tied to the scroll.
+  var projs=$$('.proj').map(function(a){
+    var col=a.querySelector(':scope > div'), fig=a.querySelector(':scope > figure:not(.reveal)');
+    var o={el:a,col:col,parts:col?[].slice.call(col.children):[],fig:fig,top:0,h:0,ftop:0,done:-1};
+    if(fig){var gl=document.createElement('i');gl.className='glass';gl.setAttribute('aria-hidden','true');gl.innerHTML='<i></i>';fig.appendChild(gl);o.gl=gl;o.sh=gl.firstChild}
+
+    return o});
+  // section heads: the rule draws across and the small meta line slides in from the right
+  var secs=$$('.sec-head').map(function(h){var r=document.createElement('i');r.className='sec-rule';r.setAttribute('aria-hidden','true');h.insertBefore(r,h.firstChild);return {el:h,r:r,m:h.querySelector('.meta'),top:0}});
+  // experience and education: each row arrives on its own instead of the list as one block
+  var rowsets=$$('.rows').map(function(u){return {el:u,li:[].slice.call(u.children),top:0}});
   function clamp(v){return v<0?0:v>1?1:v}
   function ease(t){return 1-Math.pow(1-t,3)}
+
   function absTop(el){var t=0;while(el){t+=el.offsetTop;el=el.offsetParent}return t}
-  function measure(){dirty=true;if(typeof kick==='function')kick();items.forEach(function(o){o.top=absTop(o.el);o.h=o.el.offsetHeight});heads.forEach(function(o){o.top=absTop(o.el)})}
+  function measure(){dirty=true;if(typeof kick==='function')kick();items.forEach(function(o){o.top=absTop(o.el);o.h=o.el.offsetHeight});heads.forEach(function(o){o.top=absTop(o.el)});
+    secs.forEach(function(o){o.top=absTop(o.el)});rowsets.forEach(function(o){o.top=absTop(o.el)});scans.forEach(function(o){o.top=absTop(o.f);o.h=o.f.offsetHeight});
+    projs.forEach(function(o){o.top=o.col?absTop(o.col):absTop(o.el);o.h=o.el.offsetHeight;if(o.fig){o.ftop=absTop(o.fig);o.fh=o.fig.offsetHeight}})}
   var lastY=-1, dirty=true, last=performance.now();
   function frame(now){
     var dt=Math.min(64,now-last); last=now;
@@ -1917,7 +1991,40 @@ var AURA_LASTFM={user:'',key:''};
       var e=ease(clamp(rel/Math.max(1,Math.min(vh*.45,max+vh-o.top-20))));
       var t='translate3d(0,'+((1-e)*40).toFixed(1)+'px,0)';
       if(o.sim) t='perspective(1400px) translate3d(0,'+((1-e)*50).toFixed(1)+'px,0) rotateX('+((1-e)*10).toFixed(2)+'deg)';
+      if(o.proj){o.el.style.transform='translate3d(0,'+((1-e)*16).toFixed(1)+'px,0)';o.el.style.opacity='';return}
+      if(o.el.classList.contains('rows')){o.el.style.transform='';o.el.style.opacity='';return}
+      if(!o.sim)t+=' scale('+(.97+.03*e).toFixed(4)+')';
       o.el.style.transform=t; o.el.style.opacity=(.2+.8*e).toFixed(3);
+    });
+    scans.forEach(function(o){if(o.done)return;var t=o.top-y,st=o.f.style;
+      if(t<=vh*.36&&t>-o.h*.5){o.done=true;setTimeout(function(){var r=o.f.getBoundingClientRect();if(r.bottom>0&&r.top<innerHeight)o.play()},1700)}});
+    secs.forEach(function(o){var rel=y+vh-o.top;if(rel<-200)return;var p=clamp(rel/(vh*.5)),e=ease(p);
+      o.r.style.transform=e>=1?'scaleX(1)':'scaleX('+e.toFixed(4)+')';
+      if(o.m){var m=ease(clamp(p*1.4-.25));if(m>=1){if(o.m.style.opacity!==''){o.m.style.transform='';o.m.style.opacity=''}}else{o.m.style.transform='translate3d('+((1-m)*36).toFixed(1)+'px,0,0)';o.m.style.opacity=m.toFixed(3)}}});
+    rowsets.forEach(function(o){var rel=y+vh-o.top;if(rel<-300)return;var p=clamp(rel/(vh*.6));
+      var n=o.li.length;o.li.forEach(function(li,i){var q=ease(clamp(p*(1+(n-1)*.12)-i*.12));
+        if(q>=1){if(li.style.opacity!==''){li.style.transform='';li.style.opacity=''}return}
+        li.style.transform='translate3d(0,'+((1-q)*30).toFixed(1)+'px,0)';li.style.opacity=q.toFixed(3)})});
+    projs.forEach(function(o){
+      var rel=y+vh-o.top; if(rel<-300)return;
+      var p=clamp(rel/(vh*.55));
+      o.parts.forEach(function(e,i){var q=ease(clamp(p*1.7-i*.12));
+        if(q>=1){if(e.style.opacity!==''){e.style.transform='';e.style.opacity=''}return}
+        e.style.transform='translate3d(0,'+((1-q)*26).toFixed(1)+'px,0)';e.style.opacity=q.toFixed(3)});
+      if(!o.fig)return;
+      // the picture slides up a beat after its text and settles from slightly small, the same scroll scrubbed slide as the rest.
+      // It uses the separate translate and scale properties, so it adds to the gentle parallax lag instead of replacing it
+      // once a chart has slid in it stays in, so the slide, the blur and the chart's own animation each play once per visit
+      if(o.locked)return;
+      var q=clamp((y+vh*.98-o.ftop)/(vh*.6));
+      if(q>=1||q<=0){var st=q>=1?1:0;if(o.done!==st){o.done=st;var f=o.fig.style;
+        if(st){f.translate='';f.scale='';f.opacity='';o.gl.style.visibility='hidden';o.locked=true}else{f.translate='0 90px';f.scale='.94';f.opacity='0';o.gl.style.visibility='visible';o.gl.style.opacity='1'}}return}
+      o.done=-1;var e2=ease(q),f2=o.fig.style;
+      f2.translate='0 '+((1-e2)*90).toFixed(1)+'px';f2.scale=(.94+.06*e2).toFixed(4);f2.opacity=clamp(q*1.8).toFixed(3);
+      // the glass is only as strong as the slide still to go, so it is there while the chart moves and gone the moment it lands
+      var go=Math.pow(1-e2,.8),gs=o.gl.style;gs.visibility=go<.01?'hidden':'visible';gs.opacity=Math.min(1,go*1.15).toFixed(3);
+      // the blur itself melts away with the slide instead of a blurred copy fading over a sharp one
+      if(!window.MN_LITE){var bf='blur('+(16*go).toFixed(1)+'px) saturate('+(1+.5*go).toFixed(2)+')';gs.backdropFilter=bf;gs.webkitBackdropFilter=bf}o.sh.style.transform='translateX('+(-120+clamp(q/.75)*330).toFixed(1)+'%) skewX(-14deg)';
     });
     // headings: each word slides up out of its line, one after another
     heads.forEach(function(o){
@@ -1925,6 +2032,25 @@ var AURA_LASTFM={user:'',key:''};
       o.words.forEach(function(w,i){var q=ease(clamp(p*1.5-i*(.5/Math.max(1,n-1||1))));w.style.transform='translate3d(0,'+((1-q)*110).toFixed(1)+'%,0) rotate('+((1-q)*7).toFixed(2)+'deg)'});
     });
   }
+  // charts: once a chart has finished sliding in and sits well in view, a glowing hairline sweeps across it once.
+  // Nothing dims it before that, so the chart itself is always seen first
+  var scans=[];
+  (function(){
+    if(!Element.prototype.animate)return;
+    $$('.proj > figure.visual').filter(function(f){return !f.classList.contains('showcase')}).forEach(function(f){
+      var a=f.closest('.proj'),no=a&&a.getAttribute('data-no')||'01';
+      var sc=document.createElement('div');sc.className='scan';sc.setAttribute('aria-hidden','true');
+      sc.innerHTML='<i class="veil"></i><i class="sl"><s>Fig. '+no+' · 000</s></i>';f.appendChild(sc);
+      var veil=sc.firstChild,line=sc.lastChild,tag=line.firstChild;veil.style.opacity='0';
+      scans.push({f:f,top:0,done:false,play:function(){
+        var W=f.offsetWidth,D=1500,EZ='cubic-bezier(.7,0,.3,1)',t0=performance.now();
+        veil.animate([{opacity:0,transform:'scaleX(1)'},{opacity:.74,transform:'scaleX(1)',offset:.08},{opacity:.74,transform:'scaleX(0)'}],{duration:D,easing:EZ,fill:'forwards'});
+        line.animate([{transform:'translate3d(0,0,0)',opacity:0},{opacity:1,offset:.08},{opacity:1,offset:.9},{transform:'translate3d('+W+'px,0,0)',opacity:0}],{duration:D,easing:EZ,fill:'forwards'})
+          .onfinish=function(){sc.remove()};
+        (function tick(now){var k=Math.min(1,(now-t0)/D),e=k<.5?4*k*k*k:1-Math.pow(-2*k+2,3)/2;tag.textContent='Fig. '+no+' · '+('00'+Math.round(e*100)).slice(-3);if(e>.55&&!line.classList.contains('flip'))line.classList.add('flip');if(k<1)requestAnimationFrame(tick)})(t0);
+      }});
+    });
+  })();
   // only runs when the page actually scrolls or resizes
   var fr=0; function kick(){if(!fr)fr=requestAnimationFrame(frame)}
   addEventListener('scroll',kick,{passive:true});
@@ -1933,6 +2059,81 @@ var AURA_LASTFM={user:'',key:''};
   addEventListener('resize',measure); addEventListener('load',measure);
   requestAnimationFrame(frame);
 })();
+
+// one click looks for the console at the end. Each is plain CSS, written into the console so people can read it and keep editing
+window.MN_LOOKS={
+original:"/* The original. Warm paper, black ink, one orange.\n * Pick another look, or write your own here. */\n",
+ops:["/* Ops Room. Black glass, white hairlines, everything",
+" * set in mono caps like a live operations wall. */","",
+"html:root:root:root {","  --bg: #000000;","  --surface: #070707;","  --ink: #F2F2F2;","  --muted: #8C8C8C;","  --line: #262626;",
+"  --signal: #FFFFFF;","  --accent: #FFFFFF;","  --accent-soft: #141414;","  --hot: #FFFFFF;","  --display: \"Geist Mono\", ui-monospace, monospace;","  --serif: \"Geist Mono\", ui-monospace, monospace;","}","",
+"html:root:root:root body {","  background-color: #000 !important;","  background-image:","    linear-gradient(rgba(255,255,255,.05) 1px, transparent 1px),","    linear-gradient(90deg, rgba(255,255,255,.05) 1px, transparent 1px) !important;","  background-size: 56px 56px !important;","}","",
+"h1, h2, h3, .hero h1 .n2 {","  text-transform: uppercase;","  font-style: normal !important;","  letter-spacing: .04em !important;","}","",".hero h1 {","  font-size: clamp(2.2rem, 6.4vw, 5.4rem) !important;","  overflow-wrap: normal;","  word-break: keep-all;","}","",
+".visual, .sim, .src-box, .btn, .lab-cta {","  border-radius: 0 !important;","}","",
+"img {","  filter: grayscale(1) contrast(1.15);","}",""].join("\n"),
+gallery:["/* Gallery. A white room, a huge serif and silver",
+" * instead of colour, like a sculpture show. */","",
+"html:root:root:root {","  --bg: #F6F6F4;","  --surface: #FFFFFF;","  --ink: #0A0A0A;","  --muted: #7C7C7C;","  --line: #E2E2DF;",
+"  --signal: #A9AEB6;","  --accent: #0A0A0A;","  --accent-soft: #EDEDEB;","  --hot: #0A0A0A;","}","",
+"html:root:root:root body {","  background: #F6F6F4 !important;","}","",
+".hero h1 {","  font-size: clamp(3.4rem, 9.6vw, 8.4rem) !important;","  letter-spacing: -.045em !important;","}","",
+".sec-head h2 {","  font-style: italic;","  font-size: clamp(3rem, 8vw, 6rem) !important;","}","",
+".visual, .sim {","  border: 0 !important;","  box-shadow: 0 40px 80px -40px rgba(0,0,0,.28) !important;","}","",
+"img {","  filter: grayscale(1) contrast(1.05) brightness(1.05);","}",""].join("\n"),
+blueprint:["/* Blueprint. Drafting paper, white linework and a",
+" * cyan pen, like the site is still being drawn. */","",
+"html:root:root:root {","  --bg: #0B2A5B;","  --surface: #0E3268;","  --ink: #EAF2FF;","  --muted: #9DB4DA;","  --line: #2F5A9C;",
+"  --signal: #7FD3FF;","  --accent: #7FD3FF;","  --accent-soft: #143E7C;","  --hot: #7FD3FF;","  --bench: #6E8DBF;","}","",
+"html:root:root:root body {","  background-color: #0B2A5B !important;","  background-image:","    linear-gradient(rgba(255,255,255,.12) 1px, transparent 1px),","    linear-gradient(90deg, rgba(255,255,255,.12) 1px, transparent 1px),","    linear-gradient(rgba(255,255,255,.05) 1px, transparent 1px),","    linear-gradient(90deg, rgba(255,255,255,.05) 1px, transparent 1px) !important;","  background-size: 120px 120px, 120px 120px, 24px 24px, 24px 24px !important;","}","",
+".visual, .sim, .lab-cta {","  background: rgba(11,42,91,.6) !important;","  border: 1px dashed #7FD3FF !important;","}","",
+"img {","  filter: grayscale(1) sepia(1) hue-rotate(170deg) saturate(2.4);","}",""].join("\n"),
+infrared:["/* Infrared. The page seen through a heat camera,",
+" * black and hot red with scan lines over it. */","",
+"html:root:root:root {","  --bg: #080000;","  --surface: #120202;","  --ink: #FFE7E2;","  --muted: #B88780;","  --line: #3A0E0E;",
+"  --signal: #FF2A14;","  --accent: #FF3B24;","  --accent-soft: #2A0705;","  --hot: #FF3B24;","  --bench: #7A3A34;","}","",
+"html:root:root:root body {","  background: #080000 !important;","}","",
+"html:root:root:root body::after {","  background: repeating-linear-gradient(0deg,","    rgba(255,40,20,.07) 0 1px, transparent 1px 3px) !important;","  opacity: 1 !important;","}","",
+"h1, h2 {","  text-shadow: 0 0 24px rgba(255,42,20,.55);","}","",
+"img {","  filter: grayscale(1) sepia(1) hue-rotate(-45deg) saturate(5) contrast(1.2);","}",""].join("\n"),
+mercury:["/* Mercury. The whole page turned to brushed silver,",
+" * dark ink sitting on polished metal. */","",
+"html:root:root:root {","  --bg: #C9CCD1;","  --surface: #E9EBEE;","  --ink: #0D0E10;","  --muted: #464A51;","  --line: #A3A8B0;",
+"  --signal: #15171A;","  --accent: #15171A;","  --accent-soft: #D6D9DD;","  --hot: #15171A;","}","",
+"html:root:root:root body {","  background:","    linear-gradient(180deg, #F2F3F5 0%, #B8BCC3 34%,","      #E8EAED 48%, #8F949C 62%, #DADDE1 100%) fixed !important;","}","",
+".visual, .sim, .src-box, .lab-cta {","  box-shadow: inset 0 1px 0 #fff,","    0 30px 60px -30px rgba(0,0,0,.45) !important;","}","",
+"h1, h2 {","  text-shadow: 0 1px 0 rgba(255,255,255,.85), 0 -1px 0 rgba(0,0,0,.18);","}",""].join("\n"),
+terminal:["/* Terminal. Green phosphor on black, every letter",
+" * in mono with a little glow, like an old screen. */","",
+"html:root:root:root {","  --bg: #020802;","  --surface: #031003;","  --ink: #7CFF8A;","  --muted: #3E9C48;","  --line: #0E3613;",
+"  --signal: #7CFF8A;","  --accent: #7CFF8A;","  --accent-soft: #082A0C;","  --hot: #7CFF8A;","  --bench: #2E7A36;",
+"  --display: \"Geist Mono\", ui-monospace, monospace;","  --serif: \"Geist Mono\", ui-monospace, monospace;","  --body: \"Geist Mono\", ui-monospace, monospace;","}","",
+"html:root:root:root body {","  background: #020802 !important;","  text-shadow: 0 0 6px rgba(124,255,138,.4);","}","",
+".hero h1 .n2 {","  font-style: normal;","}","",
+"img {","  filter: grayscale(1) sepia(1) hue-rotate(60deg) saturate(3);","}",""].join("\n"),
+newsprint:["/* Newsprint. Cheap paper, a halftone screen and",
+" * plain black ink, like it came off a press this morning. */","",
+"html:root:root:root {","  --bg: #EFE9DC;","  --surface: #F6F1E6;","  --ink: #111111;","  --muted: #4E4A43;","  --line: #1A1A1A;",
+"  --signal: #111111;","  --accent: #111111;","  --accent-soft: #E2DCCD;","  --hot: #111111;","}","",
+"html:root:root:root body {","  background-color: #EFE9DC !important;","  background-image: radial-gradient(rgba(0,0,0,.13) 1px, transparent 1.4px) !important;","  background-size: 5px 5px !important;","}","",
+".sec-head, .proj {","  border-top: 3px double #111 !important;","}","",
+"img {","  filter: grayscale(1) contrast(1.35);","}",""].join("\n"),
+brutalist:["/* Brutalist. Safety yellow, thick black borders,",
+" * hard shadows and no rounded corners anywhere. */","",
+"html:root:root:root {","  --bg: #FFE500;","  --surface: #FFFFFF;","  --ink: #000000;","  --muted: #000000;","  --line: #000000;",
+"  --signal: #000000;","  --accent: #000000;","  --accent-soft: #FFFFFF;","  --hot: #000000;","}","",
+"html:root:root:root body {","  background: #FFE500 !important;","}","",
+"* {","  border-radius: 0 !important;","}","",
+".visual, .sim, .src-box, .btn, .lab-cta, .tags li {","  border: 3px solid #000 !important;","  box-shadow: 8px 8px 0 #000 !important;","}","",
+"h1, h2 {","  font-family: \"Bricolage Grotesque\", sans-serif !important;","  font-weight: 800 !important;","  font-style: normal !important;","  text-transform: lowercase;","}",""].join("\n"),
+noir:["/* Noir. Black and white film, heavy grain and no",
+" * colour at all, like a still from an old movie. */","",
+"html:root:root:root {","  --bg: #0B0B0B;","  --surface: #131313;","  --ink: #EDEDED;","  --muted: #8A8A8A;","  --line: #2A2A2A;",
+"  --signal: #EDEDED;","  --accent: #EDEDED;","  --accent-soft: #1E1E1E;","  --hot: #EDEDED;","  --bench: #5A5A5A;","}","",
+"html:root:root:root body {","  background: #0B0B0B !important;","}","",
+"html:root:root:root body::before {","  opacity: .2 !important;","  filter: invert(1) !important;","}","",
+"img, video {","  filter: grayscale(1) contrast(1.3);","}","",
+".hero h1 {","  font-style: italic;","}",""].join("\n")
+};
 
 // the page types part of its own CSS and applies it as it goes; editable at the end
 (function(){
@@ -1995,7 +2196,7 @@ var AURA_LASTFM={user:'',key:''};
     return out;
   }
   var pos=0, timer=0, state='idle';
-  var lastSig='';function apply(t){live.textContent=t;try{localStorage.setItem('mn-live-css',t)}catch(e){}var cs=getComputedStyle(document.documentElement),sig=cs.getPropertyValue('--accent')+cs.getPropertyValue('--signal');if(sig!==lastSig){lastSig=sig;dispatchEvent(new Event('themechange'))}}
+  var lastSig='';function apply(t){live.textContent=t;try{localStorage.setItem('mn-live-css',t)}catch(e){}var cs=getComputedStyle(document.documentElement),sig=cs.getPropertyValue('--accent')+cs.getPropertyValue('--signal')+cs.getPropertyValue('--bg')+cs.getPropertyValue('--ink');if(sig!==lastSig){lastSig=sig;dispatchEvent(new Event('themechange'))}}
   function show(){pre.innerHTML=hl(TXT.slice(0,pos))+'<span class="cur"></span>';pre.scrollTop=pre.scrollHeight}
   function step(){
     var ch=TXT[pos++]; show();
@@ -2035,10 +2236,98 @@ var AURA_LASTFM={user:'',key:''};
   pre.addEventListener('input',function(){if(state!=='done')return;clearTimeout(deb);deb=setTimeout(function(){apply(pre.textContent)},120)});
   pre.addEventListener('blur',function(){if(state==='done')pre.innerHTML=hl(pre.textContent)});
   pre.addEventListener('keydown',function(e){if(e.key==='Tab'){e.preventDefault();document.execCommand('insertText',false,'  ')}});
+  // looks: one click rewrites the console with a whole new stylesheet and applies it, so anyone can change the site
+  var LOOKS=window.MN_LOOKS||{};
+  [].forEach.call(document.querySelectorAll('.src-looks button'),function(b){b.addEventListener('click',function(){
+    var k=b.getAttribute('data-look'),css=LOOKS[k];if(css==null)return;
+    // each look was drawn on a light or a dark base, so the page switches to that base and goes back to yours with Original
+    var MODE={ops:'dark',gallery:'light',blueprint:'dark',infrared:'dark',mercury:'light',terminal:'dark',newsprint:'light',brutalist:'light',noir:'dark'},R=document.documentElement;
+    if(!R.hasAttribute('data-look-prev'))R.setAttribute('data-look-prev',R.getAttribute('data-theme')||'');
+    if(MODE[k])R.setAttribute('data-theme',MODE[k]);else{var pv=R.getAttribute('data-look-prev');if(pv)R.setAttribute('data-theme',pv);else R.removeAttribute('data-theme');R.removeAttribute('data-look-prev')}
+    clearTimeout(timer);state='done';pos=TXT.length;pre.textContent=css;pre.innerHTML=hl(css);pre.scrollTop=0;apply(css);
+    try{pre.contentEditable='plaintext-only'}catch(e){} if(pre.contentEditable!=='plaintext-only') pre.contentEditable='true';
+    st.textContent=k==='original'?'back to the original':'look, '+b.textContent.toLowerCase();btn.textContent='replay';
+    [].forEach.call(document.querySelectorAll('.src-looks button'),function(x){x.setAttribute('aria-pressed',x===b?'true':'false')});
+  })});
+  pre.addEventListener('input',function(){[].forEach.call(document.querySelectorAll('.src-looks button'),function(x){x.setAttribute('aria-pressed','false')})});
   if(matchMedia('(prefers-reduced-motion: reduce)').matches||!('IntersectionObserver' in window)){finish();return}
   pre.innerHTML='<span class="cur"></span>';
   var io=new IntersectionObserver(function(es){es.forEach(function(e){if(e.isIntersecting){io.disconnect();setTimeout(start,350)}})},{threshold:.45});
   io.observe(box);
+})();
+
+// the console's own window buttons, same moves as the desktop: fold, full screen, switch off
+(function(){
+  var wrap=document.getElementById('src');if(!wrap)return;
+  var box=wrap.querySelector('.src-box'),body=box.querySelector('.src-body'),pill=wrap.querySelector('.src-pill'),bar=box.querySelector('.src-bar');
+  var bMin=box.querySelector('.src-ctl .min'),bMax=box.querySelector('.src-ctl .max'),bCls=box.querySelector('.src-ctl .cls');
+  var root=document.documentElement,reduce=matchMedia('(prefers-reduced-motion: reduce)').matches,OUT='cubic-bezier(.16,1,.3,1)',IN='cubic-bezier(.5,0,.75,0)';
+  var host=document.createElement('div');host.className='src src-host';host.hidden=true;document.body.appendChild(host);
+  var full=false,ph=null,folded=false;
+  var MAXI='<svg viewBox="0 0 10 10"><rect x="1.5" y="1.5" width="7" height="7" rx="1"/></svg>',RES='<svg viewBox="0 0 10 10"><rect x="1.5" y="3" width="5.5" height="5.5" rx="1"/><path d="M3.5 3V1.8a.6.6 0 0 1 .6-.6h4.1a.6.6 0 0 1 .6.6v4.1a.6.6 0 0 1-.6.6H7"/></svg>';
+  function anim(el,kf,o,done){if(reduce||!el.animate){done&&done();return}var a=el.animate(kf,Object.assign({duration:420,easing:OUT,fill:'forwards'},o||{}));a.onfinish=function(){done&&done();a.cancel()}}
+  // fold: the code and the looks tuck up under the title bar, press again to open
+  function fold(){
+    if(full)return;var h=body.offsetHeight;
+    if(!folded){folded=true;bMin.setAttribute('aria-label','Unfold the console');
+      anim(body,[{height:h+'px',opacity:1},{height:'0px',opacity:0}],{duration:360,easing:IN},function(){body.hidden=true})}
+    else{folded=false;bMin.setAttribute('aria-label','Fold the console');body.hidden=false;var to=body.offsetHeight;
+      anim(body,[{height:'0px',opacity:0},{height:to+'px',opacity:1}],{duration:460})}
+  }
+  // full screen: lifted to the page and opened out to the edges, the same way the desktop does it
+  function inset(r){return 'inset('+r.top.toFixed(1)+'px '+(innerWidth-r.right).toFixed(1)+'px '+(innerHeight-r.bottom).toFixed(1)+'px '+r.left.toFixed(1)+'px round 10px)'}
+  var memo=null;
+  function settle(){box.classList.add('moving');requestAnimationFrame(function(){requestAnimationFrame(function(){box.classList.remove('moving')})})}
+  function enter(){
+    if(full)return;if(folded){folded=false;body.hidden=false;bMin.setAttribute('aria-label','Fold the console')}
+    full=true;box.classList.add('moving');var r0=box.getBoundingClientRect();
+    memo={r:r0,w:innerWidth,h:innerHeight};
+    ph=document.createElement('div');ph.style.height=box.offsetHeight+'px';wrap.insertBefore(ph,box);
+    root.classList.add('src-full');host.hidden=false;host.appendChild(box);
+    bMax.innerHTML=RES;bMax.setAttribute('aria-label','Leave full screen');
+    var r1=box.getBoundingClientRect();
+    anim(host,[{opacity:0},{opacity:1}],{duration:360});
+    anim(box,[{clipPath:'inset('+(r0.top-r1.top).toFixed(1)+'px '+(r1.right-r0.right).toFixed(1)+'px '+(r1.bottom-r0.bottom).toFixed(1)+'px '+(r0.left-r1.left).toFixed(1)+'px round 10px)'},{clipPath:'inset(0px 0px 0px 0px round 10px)'}],{duration:560},function(){box.style.clipPath='';box.classList.remove('moving')});
+    var pre=box.querySelector('pre');try{pre.focus({preventScroll:true})}catch(e){}
+  }
+  // the way back: the real console returns to its spot in its own small layout straight away, while a stand in copy of the
+  // full screen one closes down onto that exact spot and hands over with a short crossfade, so nothing reflows mid animation
+  function leave(){
+    if(!full)return;
+    var r1=box.getBoundingClientRect(),ghost=box.cloneNode(true);
+    [].forEach.call(ghost.querySelectorAll('[id]'),function(n){n.removeAttribute('id')});
+    ghost.classList.add('moving');ghost.setAttribute('aria-hidden','true');ghost.style.pointerEvents='none';host.appendChild(ghost);
+    ghost.querySelector('pre').scrollTop=box.querySelector('pre').scrollTop;
+    box.classList.add('moving');wrap.insertBefore(box,ph);ph.remove();ph=null;full=false;
+    bMax.innerHTML=MAXI;bMax.setAttribute('aria-label','Open the console full screen');
+    var r0=box.getBoundingClientRect();
+    var t=Math.max(0,r0.top-r1.top),rr=Math.max(0,r1.right-r0.right),bb=Math.max(0,r1.bottom-r0.bottom),l=Math.max(0,r0.left-r1.left),D=reduce?0:520;
+    function end(){ghost.remove();host.hidden=true;host.getAnimations().forEach(function(a){a.cancel()});root.classList.remove('src-full');settle()}
+    if(!D||!ghost.animate){end();return}
+    host.animate([{opacity:1},{opacity:0}],{duration:D,easing:'cubic-bezier(.4,0,.2,1)',fill:'forwards'});
+    var to='inset('+t.toFixed(1)+'px '+rr.toFixed(1)+'px '+bb.toFixed(1)+'px '+l.toFixed(1)+'px round 10px)';
+    ghost.animate([{clipPath:'inset(0px 0px 0px 0px round 10px)',opacity:1,offset:0,easing:OUT},{clipPath:to,opacity:1,offset:.88,easing:'linear'},{clipPath:to,opacity:0,offset:1}],{duration:D+60,easing:'linear',fill:'forwards'}).onfinish=end;
+  }
+  // switch off: folds to a bright line like an old monitor and leaves a small pill to bring it back
+  function off(){
+    var go=function(){
+      anim(box,[{transform:'none',filter:'brightness(1)',opacity:1},{transform:'scale(1,.006)',filter:'brightness(2)',opacity:1,offset:.6},{transform:'scale(0,.006)',filter:'brightness(3)',opacity:0}],{duration:560,easing:'cubic-bezier(.6,0,.4,1)'},function(){
+        box.classList.add('off');pill.hidden=false;anim(pill,[{opacity:0,transform:'translateY(6px)'},{opacity:1,transform:'none'}],{duration:360});try{pill.focus({preventScroll:true})}catch(e){}
+      });
+    };
+    if(full){leave();setTimeout(go,480)}else go();
+  }
+  function on(){
+    pill.hidden=true;box.classList.remove('off');
+    anim(box,[{transform:'scale(0,.006)',filter:'brightness(3)',opacity:0},{transform:'scale(1,.006)',filter:'brightness(2)',opacity:1,offset:.4},{transform:'none',filter:'brightness(1)',opacity:1}],{duration:600,easing:'cubic-bezier(.3,0,.2,1)'});
+  }
+  bMin.addEventListener('click',fold);
+  bMax.addEventListener('click',function(){full?leave():enter()});
+  bCls.addEventListener('click',off);
+  pill.addEventListener('click',on);
+  bar.addEventListener('dblclick',function(e){if(!e.target.closest('button'))full?leave():enter()});
+  document.addEventListener('keydown',function(e){if(e.key==='Escape'&&full){leave();e.preventDefault()}});
+  host.addEventListener('click',function(e){if(e.target===host)leave()});
 })();
 
 // light or dark, remembered per visitor
@@ -2155,8 +2444,7 @@ var AURA_LASTFM={user:'',key:''};
   c.addEventListener('pointermove',function(e){if(!G.X||e.pointerType!=='mouse')return;var r=c.getBoundingClientRect(),i=Math.round(((e.clientX-r.left)/(G.k||1)-G.padL)/G.w*(G.n-1));hover=i>=0&&i<G.n?i:-1;readout();draw()});
   c.addEventListener('pointerleave',function(){hover=-1;readout();draw()});
   function start(){if(started)return;started=true;play()}
-  function check(){if(started)return;var r=c.getBoundingClientRect();if(r.top<innerHeight*.8&&r.bottom>innerHeight*.15)start()}
-  addEventListener('scroll',check,{passive:true});setTimeout(check,300);
+  mnAfterSlide(c,start);
   draw();
   var rt;addEventListener('resize',function(){clearTimeout(rt);rt=setTimeout(draw,120)});
   addEventListener('themechange',draw); var mq=matchMedia('(prefers-color-scheme: dark)'); if(mq.addEventListener)mq.addEventListener('change',draw);
@@ -2263,7 +2551,7 @@ var AURA_LASTFM={user:'',key:''};
     cross=[x,y];draw(1,0);read.innerHTML='under cursor <b>'+(fitX?'x '+fmt(fitX.toValue(x))+'  ':'')+'y '+fmt(fitY.toValue(y))+'</b>'});
   stage.addEventListener('mouseleave',function(){cross=null;if(T>=1)draw(1,0);read.textContent='Hover the chart to measure any point'});
   load('ex_line.png',false);
-  if('IntersectionObserver' in window){var io=new IntersectionObserver(function(e){if(e[0].isIntersecting){load(key,true);io.disconnect()}},{threshold:.35});io.observe(stage)}
+  mnAfterSlide(stage,function(){load(key,true)});
   var rt;addEventListener('resize',function(){clearTimeout(rt);rt=setTimeout(function(){if(key!=='ex_line.png')buildSide()},200)});
 })();
 </script>
@@ -2356,14 +2644,14 @@ var AURA_LASTFM={user:'',key:''};
   addEventListener('themechange',up);up()})();</script>
 <script>addEventListener('storage',function(e){if(e.key==='mn-live-css'){var l=document.getElementById('live-css');if(l)l.textContent=e.newValue||''}});</script>
 <script>
-// the music app in the desktop taskbar plays the site player
+// the music button in the desktop taskbar lights up while a song plays (desk.js opens the app)
 (function(){var btn=document.querySelector('.tb-music');if(!btn)return;
-  btn.addEventListener('click',function(){if(window.mnPlayer)window.mnPlayer.toggle()});
-  addEventListener('mnplayer',function(e){btn.classList.toggle('playing',e.detail.playing);btn.setAttribute('aria-label',(e.detail.playing?'Pause ':'Play ')+e.detail.title)});
+  addEventListener('mnplayer',function(e){btn.classList.toggle('playing',e.detail.playing)});
 })();
 </script>
 <script src="wall.js" defer></script>
 <script src="gifbox.js" defer></script>
 <script src="player.js" defer></script>
+<script src="desk.js" defer></script>
 </body>
 </html>

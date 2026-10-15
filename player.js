@@ -194,7 +194,7 @@
       v.seek.setAttribute('aria-valuemax', Math.round(d)); v.seek.setAttribute('aria-valuenow', Math.round(t)); v.seek.setAttribute('aria-valuetext', fmt(t) + ' of ' + fmt(d));
     });
   }
-  function emit() { var tr = cur(), d = { playing: !au.paused, t: st.t, dur: D(), title: tr.t, artist: tr.a }; wins.forEach(function (w) { try { w.dispatchEvent(new w.CustomEvent('mnplayer', { detail: d })) } catch (e) {} }) }
+  function emit() { var tr = cur(), d = { playing: !au.paused, t: st.t, dur: D(), title: tr.t, artist: tr.a, k: st.order[st.i] }; wins.forEach(function (w) { try { w.dispatchEvent(new w.CustomEvent('mnplayer', { detail: d })) } catch (e) {} }) }
   function ui() {
     var on = !au.paused;
     views.forEach(function (v) { v.el.classList.toggle('on', on); v.tog.setAttribute('aria-label', on ? 'Pause' : 'Play ' + cur().t) });
@@ -318,7 +318,11 @@
     for (var h in H) try { navigator.mediaSession.setActionHandler(h, H[h]) } catch (e) {}
   }
 
-  window.mnPlayer = { toggle: toggle, next: function () { next(true) }, prev: prev };
+  window.mnPlayer = { toggle: toggle, next: function () { next(true) }, prev: prev,
+    /* for the music app on the desktop: the whole list, what's on, and play any song by its number */
+    tracks: TRACKS.map(function (t) { return { t: t.t, a: t.a, c: t.c ? BASE + t.c : '', d: t.d, p: t.p } }),
+    current: function () { return st.order[st.i] }, playing: function () { return !au.paused },
+    play: function (k) { var i = st.order.indexOf(k); if (i < 0) return; if (i === st.i) { if (au.paused) play() } else go(i, true) } };
 
   /* keyboard: space plays or pauses, right and left arrows go to the next or previous song.
      Only while someone is on the page, and never while they're typing, using a slider or a focused control. */

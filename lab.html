@@ -142,18 +142,19 @@ html:root:root{--hot:var(--accent);--hot-soft:var(--accent-soft);--signal-soft:c
 @media (prefers-color-scheme:dark){html:root:root:not([data-theme="light"]){--accent:var(--signal)}}
 html:root[data-theme="dark"]:root{--accent:var(--signal)}
 </style>
-<style id="wordmark">/* the name set like the big title: Matin in roman, Nikoomanzar in italic, the ink square after */
-.wm{font-family:"Instrument Serif",Georgia,serif!important;font-size:1.42rem!important;font-weight:400!important;letter-spacing:-.01em!important;line-height:1!important;text-transform:none!important;display:inline-flex!important;align-items:baseline;color:var(--ink)!important;text-decoration:none!important;white-space:nowrap}
-.wm::before{display:none!important}
-.wm::after{content:""!important;display:inline-block!important;flex:none;width:.36em;height:.36em;margin-left:.34em;background:var(--signal,#FF5A1F);align-self:center;transform:translateY(.04em)}
-.wm .fn{font-style:normal}
-.wm .ln{font-style:italic;margin-left:.24em}
-@media (max-width:440px){.wm{font-size:1.3rem!important}.wm .ln{display:none}}
+<style id="wordmark">/* the name as a console label: the ink square, M. NIKOOMANZAR in spaced mono, and a boxed catalogue number */
+.wm{font-family:var(--mono,"Geist Mono",ui-monospace,monospace)!important;font-size:.76rem!important;font-weight:500!important;font-style:normal!important;letter-spacing:.3em!important;line-height:1!important;text-transform:uppercase!important;display:inline-flex!important;align-items:center;gap:.85rem;color:var(--ink)!important;text-decoration:none!important;white-space:nowrap}
+.wm::after{display:none!important}
+.wm::before{content:""!important;display:inline-block!important;flex:none;width:.62rem;height:.62rem;margin:0!important;background:var(--signal,#FF5A1F)!important;border:0!important;border-radius:0!important;position:static!important;transform:none!important}
+.wm .fn{margin-right:-.3em}
+.wm .no{display:inline-block;padding:.38rem .42rem .36rem .62rem;border:1px solid currentColor;letter-spacing:.2em;font-size:.92em}
+.wm .sn{display:none;margin-right:-.24em}
+@media (max-width:440px){.wm{font-size:.7rem!important;letter-spacing:.24em!important;gap:.6rem}.wm .no,.wm .fn{display:none}.wm .sn{display:inline}}
 </style>
 </head>
 <body>
 <div class="roomhead" aria-hidden="true"><i></i><b>Room 03</b><span>Experiment Lab</span><span class="ln"></span><span>M. Nikoomanzar, 2026</span></div>
-<nav class="nav"><div class="wrap"><a class="mark wm" href="index.html"><span class="fn">Matin</span> <span class="ln">Nikoomanzar</span></a><div class="row"><a href="index.html#projects">Projects</a><a href="https://github.com/MatinNikoo/abkit" target="_blank" rel="noopener">Code</a></div></div></nav>
+<nav class="nav"><div class="wrap"><a class="mark wm" href="index.html" aria-label="Matin Nikoomanzar, home"><span class="fn">M. Nikoomanzar</span><span class="sn">M.N.</span><span class="no">N°01</span></a><div class="row"><a href="index.html#projects">Projects</a><a href="https://github.com/MatinNikoo/abkit" target="_blank" rel="noopener">Code</a></div></div></nav>
 <main class="wrap">
 <header>
   <p class="note">try it with real data</p>
