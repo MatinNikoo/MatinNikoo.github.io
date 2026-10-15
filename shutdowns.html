@@ -134,10 +134,23 @@ body::after{content:"";position:fixed;inset:0;pointer-events:none;z-index:0;back
 button,.btn,select,input{border-radius:7px}
 section,.card,.panel,.box,.step,.res,.result,aside,fieldset,table,.tbl{border-radius:10px}
 </style>
+<style id="ink-follow">/* every accent shade follows the one ink color, so the console reaches all of them */
+html:root:root{--accent:color-mix(in srgb,var(--signal) 86%,#000);--accent-soft:color-mix(in srgb,var(--accent) 17%,var(--bg));--hot:var(--accent);--hot-soft:var(--accent-soft);--signal-soft:color-mix(in srgb,var(--signal) 14%,transparent)}
+@media (prefers-color-scheme:dark){html:root:root:not([data-theme="light"]){--accent:var(--signal)}}
+html:root[data-theme="dark"]:root{--accent:var(--signal)}
+</style>
+<style id="wordmark">/* the name set like the big title: Matin in roman, Nikoomanzar in italic, the ink square after */
+.wm{font-family:"Instrument Serif",Georgia,serif!important;font-size:1.42rem!important;font-weight:400!important;letter-spacing:-.01em!important;line-height:1!important;text-transform:none!important;display:inline-flex!important;align-items:baseline;color:var(--ink)!important;text-decoration:none!important;white-space:nowrap}
+.wm::before{display:none!important}
+.wm::after{content:""!important;display:inline-block!important;flex:none;width:.36em;height:.36em;margin-left:.34em;background:var(--signal,#FF5A1F);align-self:center;transform:translateY(.04em)}
+.wm .fn{font-style:normal}
+.wm .ln{font-style:italic;margin-left:.24em}
+@media (max-width:440px){.wm{font-size:1.3rem!important}.wm .ln{display:none}}
+</style>
 </head>
 <body>
 <div class="roomhead" aria-hidden="true"><i></i><b>Room 04</b><span>Internet shutdowns</span><span class="ln"></span><span>M. Nikoomanzar, 2026</span></div>
-<nav class="nav"><div class="wrap"><a class="mark" href="index.html">Matin Nikoomanzar</a><div class="row"><a href="index.html#projects">Projects</a><a href="https://github.com/MatinNikoo/internet-shutdowns" target="_blank" rel="noopener">Code</a></div></div></nav>
+<nav class="nav"><div class="wrap"><a class="mark wm" href="index.html"><span class="fn">Matin</span> <span class="ln">Nikoomanzar</span></a><div class="row"><a href="index.html#projects">Projects</a><a href="https://github.com/MatinNikoo/internet-shutdowns" target="_blank" rel="noopener">Code</a></div></div></nav>
 <main class="wrap">
 <header>
   <p class="note">a test nobody would ever run</p>
