@@ -15,10 +15,17 @@
   var ctl = { min: bar.querySelector('.win-ctl .min'), max: bar.querySelector('.win-ctl .max'), cls: bar.querySelector('.win-ctl .cls') };
 
   var css = [
+    '.full{box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}',
+    '.tb-exit{display:none!important}.full .tb-exit{display:grid!important;place-items:center}',
+    '@media (hover:hover) and (pointer:fine){.full .tb-exit{display:none!important}}',
     '.os-layer{position:absolute;left:0;right:0;z-index:3;pointer-events:none}',
     '.os-w{position:absolute;left:0;top:0;display:flex;flex-direction:column;pointer-events:auto;background:#141416;color:#ECECEA;border:1px solid rgba(255,255,255,.1);border-radius:12px;overflow:hidden;transform-origin:0 0;',
     'box-shadow:0 1px 0 rgba(255,255,255,.06) inset,0 30px 60px -20px rgba(0,0,0,.75),0 10px 22px -10px rgba(0,0,0,.6);font-family:var(--body,system-ui,sans-serif);contain:layout paint}',
-    '.os-w[hidden]{display:none}','.os-w:focus{outline:none}',
+    '.os-w[hidden]{display:none}',
+    /* no live blur inside the desktop: a blur behind the dock is recomputed when the full screen clip comes off, and that shows as a flash */
+    '.win .dock,.win .gctl,.win .gchip,.win [class*="gif"] *{backdrop-filter:none!important;-webkit-backdrop-filter:none!important}',
+    '.win .dock{background:rgba(16,16,18,.86)!important}',
+    '.os-w,.win .dock,.win .win-title,.win .win-ctl,.desk .icons a,.desk .tall,.desk .clock,.desk .aura-slot,.desk .wide{will-change:transform}','.os-w:focus{outline:none}',
     '.os-w.max{border-radius:0;border-width:0}',
     '.rz{position:absolute;z-index:5;touch-action:none}',
     '.rz-n,.rz-s{left:16px;right:16px;height:8px;cursor:ns-resize}.rz-n{top:0}.rz-s{bottom:0}',
@@ -126,6 +133,76 @@
     '.bx-pg h5{text-shadow:0 2px 18px rgba(0,0,0,.8);margin:0;font-family:var(--serif,Georgia,serif);font-weight:400;font-size:2.4rem;line-height:1;color:#fff;letter-spacing:-.01em}',
     '.bx-pg h5 em{font-style:italic}',
     '.bx-pg h5 i{display:inline-block;width:.16em;height:.16em;margin-left:.08em;background:var(--signal,#FF5A1F)}',
+    '.bx-home{display:flex;flex-direction:column;align-items:center;gap:1.1rem;width:100%}',
+    '.bx-qw{position:relative;width:min(23rem,92%);z-index:2}',
+    '.bx-q{display:flex;align-items:center;gap:.55rem;height:2.4rem;padding:0 .95rem;border-radius:99px;background:rgba(32,33,36,.92);border:1px solid rgba(255,255,255,.1);cursor:text;transition:border-color .2s,background .2s,box-shadow .2s}',
+    '.bx-q:hover{border-color:rgba(255,255,255,.2)}',
+    '.bx-q:focus-within{border-color:rgba(255,90,31,.7);box-shadow:0 0 0 3px rgba(255,90,31,.14);background:#202124}',
+    '.bx-q svg{width:.85rem;height:.85rem;flex:0 0 auto;fill:none;stroke:rgba(255,255,255,.6);stroke-width:1.8;stroke-linecap:round}',
+    '.bx-q input{flex:1;min-width:0;background:none;border:0;outline:none;color:#fff;font:inherit;font-size:.8rem}',
+    '.bx-q input::placeholder{color:rgba(255,255,255,.45)}',
+    '.bx-sug{position:absolute;left:0;right:0;top:calc(100% + .4rem);max-height:15.5rem;overflow:auto;overscroll-behavior:contain;padding:.35rem;border-radius:14px;background:#17181b;border:1px solid rgba(255,255,255,.1);box-shadow:0 24px 50px -18px rgba(0,0,0,.85)}',
+    '.bx-sh{margin:.25rem .55rem .35rem;font:500 .58rem var(--mono,monospace);letter-spacing:.16em;text-transform:uppercase;color:rgba(255,255,255,.4)}',
+    '.bx-none{margin:.6rem .7rem;font-size:.75rem;color:rgba(255,255,255,.5)}',
+    '.bx-si{display:grid;grid-template-columns:1.6rem minmax(0,1fr);column-gap:.4rem;width:100%;padding:.48rem .55rem;border:0;border-radius:9px;background:none;color:#fff;text-align:left;cursor:pointer;font:inherit;transition:background .15s}',
+    '.bx-si.hi{background:rgba(255,255,255,.07)}',
+    '.bx-si i{grid-row:span 2;font:normal .6rem var(--mono,monospace);color:var(--signal,#FF5A1F);padding-top:.15rem}',
+    '.bx-si b{font-size:.78rem;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}',
+    '.bx-si small{font-size:.68rem;color:rgba(255,255,255,.5);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}',
+    '.bx-tt{overflow:hidden;text-overflow:ellipsis}',
+    '.bx-home[hidden],.bx-site[hidden]{display:none}',
+    '.bx-pg{justify-content:safe center}',
+    '.bx-tab{border:0;cursor:pointer;color:rgba(255,255,255,.6);background:transparent;font:inherit;font-size:.72rem;transition:background .2s,color .2s}',
+    '.bx-tab.on{background:#202124;color:#fff}',
+    '.bx-tab:not(.on):hover{background:rgba(255,255,255,.05)}',
+    '.bx-tab .bx-tx{font-style:normal;margin-left:.15rem;width:1rem;height:1rem;display:grid;place-items:center;border-radius:50%;font-size:.8rem;line-height:1;color:rgba(255,255,255,.55)}',
+    '.bx-tab .bx-tx:hover{background:rgba(255,255,255,.12);color:#fff}',
+    '.bx-plus{align-self:center;width:1.5rem;height:1.5rem;margin-left:.15rem;border:0;border-radius:50%;background:none;color:rgba(255,255,255,.7);font-size:1rem;line-height:1;cursor:pointer;transition:background .15s}',
+    '.bx-plus:hover{background:rgba(255,255,255,.1)}',
+    '.bx-nav{display:flex;align-items:center;gap:.15rem;padding:.4rem .5rem;background:#202124}',
+    '.bx-nb{flex:0 0 auto;display:grid;place-items:center;width:1.65rem;height:1.65rem;border:0;border-radius:50%;background:none;color:#e8eaed;cursor:pointer;transition:background .15s,opacity .2s}',
+    '.bx-nb:hover:not(:disabled){background:rgba(255,255,255,.1)}',
+    '.bx-nb:disabled{opacity:.3;cursor:default}',
+    '.bx-nb svg{width:.8rem;height:.8rem;fill:none;stroke:currentColor;stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round}',
+    '.bx-nav .bx-url{flex:1;min-width:0;margin:0 0 0 .3rem}',
+    '.bx-addr{flex:1;min-width:0;background:none;border:0;outline:none;color:rgba(255,255,255,.88);font:inherit;font-size:.74rem}',
+    '.bx-addr::placeholder{color:rgba(255,255,255,.4)}',
+    '.bx-url:focus-within{box-shadow:0 0 0 2px rgba(138,180,248,.55)}',
+    '.bx-site{align-self:stretch;flex:1 0 auto;width:100%;background:#fff;color:#202124}',
+    '.bx.away .bx-pg{justify-content:flex-start;padding:0;gap:0}',
+    '.bx-site:has(.bx-w){background:#F4F3EF}',
+    '.bx-sr{padding:1rem 1.2rem 1.4rem;font-size:.78rem}',
+    '.bx-srh{display:flex;align-items:center;gap:.9rem;padding-bottom:.8rem;border-bottom:1px solid #ebebeb}',
+    '.bx-srh b{font-family:var(--serif,Georgia,serif);font-weight:400;font-size:1.2rem;color:#202124}',
+    '.bx-srh b i{display:inline-block;width:.18em;height:.18em;margin-left:.06em;background:var(--signal,#FF5A1F)}',
+    '.bx-srq{flex:1;min-width:0;padding:.45rem .9rem;border-radius:99px;border:1px solid #dfe1e5;box-shadow:0 1px 4px rgba(32,33,36,.12);font-size:.76rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}',
+    '.bx-srn{margin:.7rem 0 .4rem;font-size:.68rem;color:#70757a}',
+    '.bx-r{display:block;padding:.55rem 0 .7rem;text-decoration:none;color:inherit}',
+    '.bx-rs{display:flex;align-items:center;gap:.4rem;font-size:.66rem;color:#4d5156}',
+    '.bx-rs i{width:.9rem;height:.9rem;border-radius:50%;background:#f1f3f4;box-shadow:inset 0 0 0 3px #f1f3f4,inset 0 0 0 10px var(--signal,#FF5A1F)}',
+    '.bx-r b{display:block;margin:.2rem 0 .15rem;font-size:.95rem;font-weight:400;color:#1a0dab}',
+    '.bx-r:hover b{text-decoration:underline}',
+    '.bx-r small{display:block;font-size:.72rem;line-height:1.5;color:#4d5156;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}',
+    '.bx-w{max-width:30rem;margin:0 auto;padding:1rem 1.3rem 1.2rem;font-size:.8rem;line-height:1.6;color:#3c3c40;background:#F4F3EF;min-height:100%}',
+    '.bx-wh{display:flex;justify-content:space-between;align-items:center;padding-bottom:.6rem;margin-bottom:1rem;border-bottom:1px solid #1b1b1d;font:500 .6rem var(--mono,monospace);letter-spacing:.14em;text-transform:uppercase;color:#1b1b1d}',
+    '.bx-wh span{color:#8a8a8f}',
+    '.bx-k{display:flex;align-items:center;gap:.5rem;margin:0 0 .45rem;font:500 .6rem var(--mono,monospace);letter-spacing:.16em;text-transform:uppercase;color:#8a8a8f}',
+    '.bx-k i{width:.45rem;height:.45rem;background:var(--signal,#FF5A1F)}',
+    '.bx-w h6{margin:0;font-family:var(--serif,Georgia,serif);font-weight:400;font-size:1.75rem;line-height:1.05;color:#141416}',
+    '.bx-sub{margin:.3rem 0 .9rem;color:#8a8a8f;font-size:.74rem}',
+    '.bx-stat{display:flex;align-items:baseline;gap:.75rem;padding:.65rem 0;margin-bottom:.75rem;border-top:1px solid #dcdad3;border-bottom:1px solid #dcdad3}',
+    '.bx-stat b{flex:0 0 auto;font-family:var(--serif,Georgia,serif);font-weight:400;font-size:1.7rem;line-height:1;color:var(--signal,#E8480F)}',
+    '.bx-stat span{font-size:.72rem;color:#6e6e74;line-height:1.4}',
+    '.bx-w p{margin:0 0 .6rem}',
+    '.bx-acts{display:flex;flex-wrap:wrap;gap:.45rem;margin-top:.9rem}',
+    '.bx-acts a,.bx-acts button{display:inline-flex;align-items:center;height:1.9rem;padding:0 .85rem;border-radius:99px;border:1px solid #1b1b1d;background:none;color:#1b1b1d;font:inherit;font-size:.72rem;text-decoration:none;cursor:pointer;transition:background .15s,color .15s}',
+    '.bx-acts a:hover,.bx-acts button:hover{background:#1b1b1d;color:#F4F3EF}',
+    '.bx-acts .bx-go{background:#1b1b1d;color:#F4F3EF}',
+    '.bx-acts .bx-go:hover{background:#000}',
+    '.bx-wf{margin-top:1.4rem;padding-top:.6rem;border-top:1px solid #dcdad3;font:500 .56rem var(--mono,monospace);letter-spacing:.14em;text-transform:uppercase;color:#a3a3a8}',
+    /* the project pages follow the site: dark when the site is dark */
+    ':root[data-theme="dark"] .bx-site{background:#202124;color:#e8eaed}:root[data-theme="dark"] .bx-site:has(.bx-w){background:#0F1012}:root[data-theme="dark"] .bx-srh{border-color:#3c4043}:root[data-theme="dark"] .bx-srh b{color:#e8eaed}:root[data-theme="dark"] .bx-srq{background:#303134;border-color:#5f6368;box-shadow:none;color:#e8eaed}:root[data-theme="dark"] .bx-srn{color:#9aa0a6}:root[data-theme="dark"] .bx-rs{color:#bdc1c6}:root[data-theme="dark"] .bx-rs i{background:#303134;box-shadow:inset 0 0 0 3px #303134,inset 0 0 0 10px var(--signal,#FF5A1F)}:root[data-theme="dark"] .bx-r b{color:#8ab4f8}:root[data-theme="dark"] .bx-r small{color:#bdc1c6}:root[data-theme="dark"] .bx-w{background:#0F1012;color:#C9C9C6}:root[data-theme="dark"] .bx-wh{border-color:#ECECEA;color:#ECECEA}:root[data-theme="dark"] .bx-wh span{color:#8C8C92}:root[data-theme="dark"] .bx-k{color:#8C8C92}:root[data-theme="dark"] .bx-w h6{color:#ECECEA}:root[data-theme="dark"] .bx-sub{color:#8C8C92}:root[data-theme="dark"] .bx-stat{border-color:#26262B}:root[data-theme="dark"] .bx-stat b{color:#FF5A1F}:root[data-theme="dark"] .bx-stat span{color:#8C8C92}:root[data-theme="dark"] .bx-acts a,:root[data-theme="dark"] .bx-acts button{border-color:#ECECEA;color:#ECECEA}:root[data-theme="dark"] .bx-acts a:hover,:root[data-theme="dark"] .bx-acts button:hover{background:#ECECEA;color:#0F1012}:root[data-theme="dark"] .bx-acts .bx-go{background:#ECECEA;color:#0F1012}:root[data-theme="dark"] .bx-acts .bx-go:hover{background:#fff}:root[data-theme="dark"] .bx-wf{border-color:#26262B;color:#5A5A60}',
+    '@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .bx-site{background:#202124;color:#e8eaed}:root:not([data-theme="light"]) .bx-site:has(.bx-w){background:#0F1012}:root:not([data-theme="light"]) .bx-srh{border-color:#3c4043}:root:not([data-theme="light"]) .bx-srh b{color:#e8eaed}:root:not([data-theme="light"]) .bx-srq{background:#303134;border-color:#5f6368;box-shadow:none;color:#e8eaed}:root:not([data-theme="light"]) .bx-srn{color:#9aa0a6}:root:not([data-theme="light"]) .bx-rs{color:#bdc1c6}:root:not([data-theme="light"]) .bx-rs i{background:#303134;box-shadow:inset 0 0 0 3px #303134,inset 0 0 0 10px var(--signal,#FF5A1F)}:root:not([data-theme="light"]) .bx-r b{color:#8ab4f8}:root:not([data-theme="light"]) .bx-r small{color:#bdc1c6}:root:not([data-theme="light"]) .bx-w{background:#0F1012;color:#C9C9C6}:root:not([data-theme="light"]) .bx-wh{border-color:#ECECEA;color:#ECECEA}:root:not([data-theme="light"]) .bx-wh span{color:#8C8C92}:root:not([data-theme="light"]) .bx-k{color:#8C8C92}:root:not([data-theme="light"]) .bx-w h6{color:#ECECEA}:root:not([data-theme="light"]) .bx-sub{color:#8C8C92}:root:not([data-theme="light"]) .bx-stat{border-color:#26262B}:root:not([data-theme="light"]) .bx-stat b{color:#FF5A1F}:root:not([data-theme="light"]) .bx-stat span{color:#8C8C92}:root:not([data-theme="light"]) .bx-acts a,:root:not([data-theme="light"]) .bx-acts button{border-color:#ECECEA;color:#ECECEA}:root:not([data-theme="light"]) .bx-acts a:hover,:root:not([data-theme="light"]) .bx-acts button:hover{background:#ECECEA;color:#0F1012}:root:not([data-theme="light"]) .bx-acts .bx-go{background:#ECECEA;color:#0F1012}:root:not([data-theme="light"]) .bx-acts .bx-go:hover{background:#fff}:root:not([data-theme="light"]) .bx-wf{border-color:#26262B;color:#5A5A60}}',
     '.bx-tiles{display:grid;grid-template-columns:repeat(4,minmax(0,5.2rem));gap:.6rem}',
     '.bx-tiles a{background:rgba(14,15,17,.62);border:1px solid rgba(255,255,255,.08);display:flex;flex-direction:column;align-items:center;gap:.45rem;padding:.7rem .3rem;border-radius:10px;text-decoration:none;color:rgba(255,255,255,.85);font-size:.7rem;transition:background .15s}',
     '.bx-tiles a:hover{background:rgba(255,255,255,.07)}',
@@ -182,7 +259,12 @@
     '.win.full>.desk .wide{grid-area:wide!important;align-self:stretch!important;aspect-ratio:auto!important;height:auto;min-height:0}',
     /* phones: folders in a row along the top, widgets stacked at the bottom where a thumb reaches */
     '@media (max-width:700px){.win.full>.desk{--ww:100%;grid-template-columns:minmax(0,.4fr) minmax(0,.6fr)!important;grid-template-rows:auto minmax(0,1fr) auto auto auto!important;grid-template-areas:"icons icons" ". ." "clock clock" "aura aura" "tall wide"!important;align-items:end!important}',
-    '.win.full>.desk .icons{flex-direction:row!important;justify-content:flex-start!important;width:auto;gap:.3rem!important}.win.full>.desk .icons a{width:5.6rem}}',
+    '.win.full>.desk .icons{flex-direction:row!important;justify-content:flex-start!important;width:auto;gap:.3rem!important}.win.full>.desk .icons a{width:5.6rem}',
+    /* on a phone the widgets sit in a narrower column with room around them, like a home screen, instead of filling the glass edge to edge */
+    '.win.full>.desk{grid-template-columns:repeat(2,minmax(0,min(9.4rem,calc(50vw - 1.6rem))))!important;justify-content:center!important;column-gap:.65rem!important;row-gap:.65rem!important;padding-bottom:.4rem!important}',
+    '.win.full>.desk .icons{justify-self:start}',
+    '.win.full>.desk .aura-slot .ac{--h:clamp(80px,26cqw,112px)}',
+    '.win.full>.desk .tall,.win.full>.desk .wide{max-height:9.4rem}}',
     '.win.full>.desk .aura-slot .ac{--h:clamp(92px,30cqw,calc(150px * var(--mk,1)))}',
     'html.os-full{overflow:hidden}',
     '.win.flat{transition:none!important;--rx:0deg!important;--ry:0deg!important}',
@@ -385,8 +467,8 @@
   var fx = el('div', 'fx');
   (function () {
     var items = [].slice.call(document.querySelectorAll('#proj-menu a')).map(function (l) {
-      var id = l.getAttribute('href'), sec = document.querySelector(id), gh = sec && sec.querySelector('.links a[href*="github.com/MatinNikoo/"]');
-      return { id: id, no: (l.querySelector('i') || {}).textContent || '', name: (l.querySelector('b') || l).textContent, sub: (l.querySelector('span') || {}).textContent || '', gh: gh && gh.href };
+      var id = l.getAttribute('data-p') ? '#' + l.getAttribute('data-p') : l.getAttribute('href'), sec = document.querySelector(id), gh = sec && sec.querySelector('.links a[href*="github.com/MatinNikoo/"]');
+      return { id: id, no: (l.querySelector('i') || {}).textContent || '', name: (l.querySelector('b') ? l.querySelector('b').firstChild.textContent : l.textContent).trim(), sub: (l.querySelector('span') || {}).textContent || '', gh: gh && gh.href };
     });
     var gh = document.querySelector('a[href="https://github.com/MatinNikoo"]');
     fx.innerHTML = '<div class="fx-path"><span>Matin</span>›<span>Projects</span></div>' +
@@ -424,6 +506,148 @@
   })();
   var web = App('web', 'Browser', bx, 640, 420);
 
+  /* ---------- the browser searches the projects and opens a short page on each one ---------- */
+  (function () {
+    var SUM = {
+      '#p-skeptic': ['p 0.236', 'what a "significant" win looks like once all nine metrics count', ['Skeptic is an AI analyst I\'m building. You give it a claim, the data or a whole report, and it picks the right checks, runs them, and tells you what holds up.', 'It covers A/B tests, causal studies and backtests, writes its own Python when it needs to, and every number the AI writes gets checked against the math first.'], [['Open Skeptic', 'skeptic/'], ['Python package', 'https://github.com/MatinNikoo/skeptic-checks']]],
+      '#p-apps': ['31% vs 1.7%', 'free apps with ads and in-app purchases vs paid apps, reaching 100K installs', ['I followed 815K apps from launch to see which ones ever reach 100K installs. Only about 6 in 100 do.', 'How an app makes money mattered more than almost anything else, and it held in all 48 categories. I turned the model into a simulator you can play with.'], [['Simulator', 'simulator.html'], ['Code', 'https://github.com/MatinNikoo/play-store-analysis']]],
+      '#p-backtest': ['3 of 89', 'moving average pairs that beat just holding SPY', ['I wrote the 50/200 day crossover on SPY from scratch, with next day trades and real costs. Tuned on 2000 to 2017, tested on 2018 to 2026.', 'It lost to buy and hold. Then I checked whether picking the windows was luck, and the overfitting odds came out around a coin flip.'], [['Full report', 'https://matinnikoo.github.io/momentum-backtest/'], ['Code', 'https://github.com/MatinNikoo/momentum-backtest']]],
+      '#p-unchart': ['130 charts', 'in the benchmark it gets scored on', ['People retype numbers off charts all the time. Unchart reads the axes, follows every line and bar, and gives you back a table you can paste.', 'It also flags charts drawn to mislead and redraws them honestly.'], [['Try it', 'unchart/'], ['Code', 'https://github.com/MatinNikoo/unchart']]],
+      '#p-abkit': ['90,189', 'players in the Cookie Cats test it was run on', ['Real A/B tests break in boring, predictable ways. People peek every day, splits come out uneven, dashboards track twenty metrics at once.', 'abkit handles each of those, and I checked every method on thousands of simulated tests. On Cookie Cats it found a 4.3% drop in day 7 retention and an uneven split.'], [['Code', 'https://github.com/MatinNikoo/abkit'], ['Paper', 'https://github.com/MatinNikoo/abkit/blob/main/paper/abkit.pdf']]],
+      '#p-shutdowns': ['69% below', 'its twin, Iran\'s GitHub activity during the 2026 blackouts', ['You can\'t A/B test a government turning off the internet, so I built each country a twin out of 106 that stayed online, using GitHub activity.', 'Every day offline cost about 1.3 days of work, so people never caught up. I planted 1,500 fake shutdowns first to make sure the method finds them.'], [['Interactive', 'shutdowns.html'], ['Code', 'https://github.com/MatinNikoo/internet-shutdowns']]],
+      '#p-household': ['3rd of 23', 'teams in the class Kaggle competition', ['We predicted how many people live in a household from their Amazon orders. Classifying the count and taking the average beat plain regression.', 'TF-IDF on product titles beat our hand picked keywords, and a stack of seven models got us third.'], []],
+      '#p-aura': ['Near 0%', 'idle CPU, even with the album art recoloring live', ['Windows widgets I built for my own desktop. The main one shows the song that\'s playing and recolors itself from the album art.', 'It goes to sleep when a game is fullscreen, so it barely uses the CPU.'], [['Code', 'https://github.com/MatinNikoo/aura-widgets']]]
+    };
+    var items = [].slice.call(document.querySelectorAll('#proj-menu a')).map(function (l) {
+      var b = l.querySelector('b'), id = l.getAttribute('data-p') ? '#' + l.getAttribute('data-p') : l.getAttribute('href');
+      return { id: id, slug: id.replace('#p-', ''), no: (l.querySelector('i') || {}).textContent || '', name: b ? (b.firstChild.textContent || '').trim() : l.textContent, sub: (l.querySelector('span') || {}).textContent || '', s: SUM[id] };
+    }).filter(function (p) { return p.s });
+    if (!items.length) return;
+    var HOST = 'matinnikoo.github.io';
+    var pg = bx.querySelector('.bx-pg'), urlBox = bx.querySelector('.bx-url'), tabs = bx.querySelector('.bx-tabs');
+    /* the new tab page keeps the globe, the name and the shortcuts, with a search box under the name */
+    var home = el('div', 'bx-home'); [].slice.call(pg.children).forEach(function (c) { if (!c.classList.contains('bx-bg')) home.appendChild(c) }); pg.appendChild(home);
+    var qw = el('div', 'bx-qw', '<label class="bx-q"><svg viewBox="0 0 16 16"><circle cx="7" cy="7" r="4.6"/><path d="M10.4 10.4 14 14"/></svg><input type="text" placeholder="Search my projects" aria-label="Search my projects" autocomplete="off" spellcheck="false" enterkeyhint="search"></label><div class="bx-sug" role="listbox" hidden></div>');
+    home.querySelector('h5').insertAdjacentElement('afterend', qw);
+    var inp = qw.querySelector('input'), sug = qw.querySelector('.bx-sug');
+    /* any other page is a website of its own, drawn on top of the globe */
+    var site = el('div', 'bx-site'); site.hidden = true; pg.appendChild(site);
+    /* toolbar: back, forward, reload, then an address bar you can type in */
+    var nav = el('div', 'bx-nav', '<button type="button" class="bx-nb" data-n="b" aria-label="Back"><svg viewBox="0 0 16 16"><path d="M10 3 5 8l5 5"/></svg></button><button type="button" class="bx-nb" data-n="f" aria-label="Forward"><svg viewBox="0 0 16 16"><path d="M6 3l5 5-5 5"/></svg></button><button type="button" class="bx-nb" data-n="r" aria-label="Reload"><svg viewBox="0 0 16 16"><path d="M13 8a5 5 0 1 1-1.5-3.6"/><path d="M13 3v3h-3"/></svg></button>');
+    urlBox.parentNode.insertBefore(nav, urlBox); nav.appendChild(urlBox);
+    var oldSpan = urlBox.querySelector('span'), addr = document.createElement('input'); addr.type = 'text'; addr.className = 'bx-addr'; addr.spellcheck = false; addr.autocomplete = 'off'; addr.setAttribute('aria-label', 'Address'); addr.setAttribute('enterkeyhint', 'go');
+    oldSpan.replaceWith(addr);
+    var B = nav.querySelector('[data-n="b"]'), Fw = nav.querySelector('[data-n="f"]');
+
+    /* tabs, each with its own history */
+    var T = [], cur = 0;
+    function newTab(pageObj) { T.push({ h: [pageObj || { k: 'home' }], i: 0 }); cur = T.length - 1; drawTabs(); render(0, true) }
+    function pageTitle(p) { return p.k === 'home' ? 'New tab' : p.k === 'q' ? p.q + ' · Search' : byId(p.id).name }
+    function pageUrl(p) { return p.k === 'home' ? '' : p.k === 'q' ? HOST + '/search?q=' + encodeURIComponent(p.q).replace(/%20/g, '+') : HOST + '/projects/' + byId(p.id).slug }
+    function byId(id) { for (var i = 0; i < items.length; i++) if (items[i].id === id) return items[i]; return items[0] }
+    function drawTabs() {
+      tabs.innerHTML = T.map(function (t, i) { var p = t.h[t.i]; return '<button type="button" class="bx-tab' + (i === cur ? ' on' : '') + '" data-t="' + i + '"><i></i><span class="bx-tt">' + esc(pageTitle(p)) + '</span>' + (T.length > 1 ? '<em class="bx-tx" data-x="' + i + '" aria-label="Close tab">×</em>' : '') + '</button>' }).join('') +
+        '<button type="button" class="bx-plus" aria-label="New tab">+</button>';
+    }
+    function go(pageObj) { var t = T[cur]; t.h = t.h.slice(0, t.i + 1); t.h.push(pageObj); t.i++; drawTabs(); render(1) }
+    function render(dir, instant) {
+      var t = T[cur], p = t.h[t.i];
+      B.disabled = t.i === 0; Fw.disabled = t.i >= t.h.length - 1;
+      if (document.activeElement !== addr) addr.value = pageUrl(p);
+      addr.placeholder = 'Search my projects or type a page';
+      var toHome = p.k === 'home', from = home.hidden ? site : home, to = toHome ? home : site;
+      if (!toHome) site.innerHTML = p.k === 'q' ? results(p.q) : page(byId(p.id));
+      bx.classList.toggle('away', !toHome); closeSug();
+      if (instant || reduce || from === to && toHome) { home.hidden = !toHome; site.hidden = toHome; pg.scrollTop = 0; return }
+      var outEl = from === to ? null : from;
+      if (outEl) A(outEl, [{ opacity: 1, transform: 'none' }, { opacity: 0, transform: 'translateX(' + (-12 * dir) + 'px)' }], { duration: 150, easing: SOFT }, swapIn); else swapIn();
+      function swapIn() { home.hidden = !toHome; site.hidden = toHome; pg.scrollTop = 0; A(to, [{ opacity: 0, transform: 'translateX(' + (16 * (dir || 1)) + 'px)' }, { opacity: 1, transform: 'none' }], { duration: 300, easing: OUT }) }
+    }
+    /* a results page that looks like a search engine */
+    function match(q) { q = (q || '').trim().toLowerCase(); return items.filter(function (p) { return !q || (p.name + ' ' + p.sub + ' ' + p.slug + ' ' + p.s[2].join(' ')).toLowerCase().indexOf(q) > -1 }) }
+    function results(q) {
+      var m = match(q);
+      return '<div class="bx-sr"><div class="bx-srh"><b>Matin<i></i></b><span class="bx-srq">' + esc(q) + '</span></div><p class="bx-srn">' + (m.length ? 'About ' + m.length + ' result' + (m.length > 1 ? 's' : '') : 'No results for that one') + '</p>' +
+        (m.length ? m : items.slice(0, 3)).map(function (p) {
+          return '<a class="bx-r" href="' + p.id + '" data-p="' + p.id + '"><span class="bx-rs"><i></i>' + HOST + ' › projects › ' + esc(p.slug) + '</span><b>' + esc(p.name) + '</b><small>' + esc(p.s[2][0]) + '</small></a>';
+        }).join('') + (m.length ? '' : '<p class="bx-srn">Other projects</p>') + '</div>';
+    }
+    /* each project gets a small website of its own */
+    function page(p) {
+      var s = p.s;
+      return '<article class="bx-w"><header class="bx-wh"><b>Matin Nikoomanzar</b><span>Projects</span></header>' +
+        '<p class="bx-k"><i></i>Project ' + esc(p.no) + '</p><h6>' + esc(p.name) + '</h6><p class="bx-sub">' + esc(p.sub) + '</p>' +
+        '<div class="bx-stat"><b>' + esc(s[0]) + '</b><span>' + esc(s[1]) + '</span></div>' + s[2].map(function (t) { return '<p>' + esc(t) + '</p>' }).join('') +
+        '<div class="bx-acts"><button type="button" class="bx-go" data-j="' + p.id + '">See it on the page</button>' + s[3].map(function (l) {
+          var ext = /^https?:/.test(l[1]); return '<a href="' + esc(l[1]) + '"' + (ext ? ' target="_blank" rel="noopener"' : '') + '>' + esc(l[0]) + '</a>' }).join('') + '</div>' +
+        '<footer class="bx-wf">' + HOST + '</footer></article>';
+    }
+    function jump(id) {
+      var to = document.querySelector(id); if (!to) return;
+      function g2() { var y = to.getBoundingClientRect().top + scrollY - (parseFloat(getComputedStyle(root).scrollPaddingTop) || 72); scrollTo({ top: y, behavior: reduce ? 'auto' : 'smooth' }) }
+      if (full) exitFull(g2); else g2();
+    }
+    function submit(text) {
+      var q = (text || '').trim(); if (!q) return;
+      var low = q.toLowerCase().replace(/^https?:\/\//, '').replace(HOST, '').replace(/^\/+|\/+$/g, '').replace(/^projects\//, '');
+      var exact = items.filter(function (p) { return p.slug === low || p.name.toLowerCase() === low })[0];
+      go(exact ? { k: 'p', id: exact.id } : { k: 'q', q: q });
+    }
+    /* suggestions under the new tab search box */
+    var shown = [], hi = -1;
+    function list(q) {
+      shown = match(q); hi = shown.length ? 0 : -1;
+      sug.innerHTML = (q.trim() ? '' : '<p class="bx-sh">Projects</p>') + (shown.length ? shown.map(function (p, i) {
+        return '<button type="button" role="option" class="bx-si' + (i === hi ? ' hi' : '') + '" data-i="' + i + '"><i>' + esc(p.no) + '</i><b>' + esc(p.name) + '</b><small>' + esc(p.sub) + '</small></button>';
+      }).join('') : '<p class="bx-none">Nothing by that name yet. Press enter to search anyway</p>');
+    }
+    function openSug() {
+      if (!sug.hidden) return; list(inp.value); sug.hidden = false; fitSug();
+      if (!reduce) { A(sug, [{ opacity: 0, transform: 'translateY(-6px)' }, { opacity: 1, transform: 'none' }], { duration: 220, easing: OUT });
+        [].forEach.call(sug.querySelectorAll('.bx-si'), function (b, i) { b.animate([{ opacity: 0, transform: 'translateY(4px)' }, { opacity: 1, transform: 'none' }], { duration: 260, delay: 30 + i * 26, easing: OUT, fill: 'backwards' }) }) }
+    }
+    /* the list never runs past the bottom of the window: it gets exactly the room that\'s left and scrolls inside */
+    function fitSug() {
+      var k = K(), pr = pg.getBoundingClientRect(), sr = sug.getBoundingClientRect(), room = (pr.bottom - sr.top) / k - 10;
+      if (room < 190 && pg.scrollHeight > pg.clientHeight) { pg.scrollTop += (sr.top - pr.top) / k - 60; pr = pg.getBoundingClientRect(); sr = sug.getBoundingClientRect(); room = (pr.bottom - sr.top) / k - 10 }
+      sug.style.maxHeight = Math.max(130, Math.min(room, 15.5 * 16)) + 'px';
+    }
+    addEventListener('resize', function () { if (!sug.hidden) fitSug() });
+    function closeSug() { if (sug.hidden) return; if (reduce) { sug.hidden = true; return } A(sug, [{ opacity: 1 }, { opacity: 0, transform: 'translateY(-4px)' }], { duration: 140, easing: SOFT }, function () { sug.hidden = true }) }
+    function markHi() { [].forEach.call(sug.querySelectorAll('.bx-si'), function (b, i) { b.classList.toggle('hi', i === hi); if (i === hi) b.scrollIntoView({ block: 'nearest' }) }) }
+    function pick(p) { inp.value = ''; inp.blur(); go({ k: 'p', id: p.id }) }
+    inp.addEventListener('focus', openSug); inp.addEventListener('click', openSug);
+    inp.addEventListener('input', function () { if (sug.hidden) openSug(); else { list(inp.value); fitSug() } });
+    inp.addEventListener('keydown', function (e) {
+      if (e.key === 'ArrowDown' || e.key === 'ArrowUp') { e.preventDefault(); if (sug.hidden) openSug(); if (!shown.length) return; hi = (hi + (e.key === 'ArrowDown' ? 1 : -1) + shown.length) % shown.length; markHi() }
+      else if (e.key === 'Enter') { e.preventDefault(); var q = inp.value.trim(); if (!q && shown[hi]) pick(shown[hi]); else if (q) { inp.value = ''; inp.blur(); submit(q) } }
+      else if (e.key === 'Escape') { closeSug(); inp.blur() }
+    });
+    sug.addEventListener('pointerdown', function (e) { e.preventDefault() });
+    sug.addEventListener('click', function (e) { var b = e.target.closest('.bx-si'); if (b) pick(shown[+b.getAttribute('data-i')]) });
+    sug.addEventListener('pointermove', function (e) { var b = e.target.closest('.bx-si'); if (b && +b.getAttribute('data-i') !== hi) { hi = +b.getAttribute('data-i'); markHi() } });
+    bx.addEventListener('pointerdown', function (e) { if (!qw.contains(e.target)) closeSug() });
+    /* the address bar */
+    addr.addEventListener('focus', function () { setTimeout(function () { addr.select() }, 0) });
+    addr.addEventListener('keydown', function (e) { if (e.key === 'Enter') { e.preventDefault(); var v = addr.value; addr.blur(); submit(v) } else if (e.key === 'Escape') { addr.blur(); addr.value = pageUrl(T[cur].h[T[cur].i]) } });
+    addr.addEventListener('blur', function () { addr.value = pageUrl(T[cur].h[T[cur].i]) });
+    /* buttons, links and tabs */
+    nav.addEventListener('click', function (e) {
+      var n = e.target.closest('[data-n]'); if (!n || n.disabled) return; var t = T[cur], k = n.getAttribute('data-n');
+      if (k === 'b' && t.i > 0) { t.i--; drawTabs(); render(-1) } else if (k === 'f' && t.i < t.h.length - 1) { t.i++; drawTabs(); render(1) } else if (k === 'r') { var spin = n.querySelector('svg'); if (spin.animate && !reduce) spin.animate([{ transform: 'rotate(0)' }, { transform: 'rotate(360deg)' }], { duration: 500, easing: SOFT }); render(0) }
+    });
+    site.addEventListener('click', function (e) {
+      var r = e.target.closest('[data-p]'); if (r) { e.preventDefault(); go({ k: 'p', id: r.getAttribute('data-p') }); return }
+      var j = e.target.closest('[data-j]'); if (j) jump(j.getAttribute('data-j'));
+    });
+    tabs.addEventListener('click', function (e) {
+      var x = e.target.closest('[data-x]'); if (x) { e.stopPropagation(); var k = +x.getAttribute('data-x'); T.splice(k, 1); if (cur >= T.length) cur = T.length - 1; else if (k < cur) cur--; drawTabs(); render(0, true); return }
+      if (e.target.closest('.bx-plus')) { newTab(); setTimeout(function () { inp.focus() }, 50); return }
+      var t = e.target.closest('[data-t]'); if (t && +t.getAttribute('data-t') !== cur) { cur = +t.getAttribute('data-t'); drawTabs(); render(0) }
+    });
+    newTab();
+  })();
+
   /* the browser's own live wallpaper: a dotted globe turning slowly, drawn tiny and scaled up in the same
      pixel style as the desktop. A scan band sweeps its latitudes and a satellite rides an orbit ring.
      It only runs while the browser window is open and on screen, at about 30 frames a second */
@@ -434,7 +658,7 @@
     function color() { var x = document.createElement('canvas').getContext('2d'); x.fillStyle = '#FF5A1F'; x.fillStyle = getComputedStyle(root).getPropertyValue('--signal').trim() || '#FF5A1F'; var v = x.fillStyle;
       if (v[0] === '#') sig = [parseInt(v.slice(1, 3), 16), parseInt(v.slice(3, 5), 16), parseInt(v.slice(5, 7), 16)] }
     color(); addEventListener('themechange', color);
-    function on() { return web.open && !web.min && seen && !document.hidden && !win.classList.contains('off') && !win.classList.contains('dmin') }
+    function on() { return web.open && !web.min && !bx.classList.contains('away') && seen && !document.hidden && !win.classList.contains('off') && !win.classList.contains('dmin') }
     function frame(now) {
       raf = 0; if (!on()) return;
       if (!reduce) raf = requestAnimationFrame(frame);
@@ -475,7 +699,7 @@
   function buildMusic() {
     P = window.mnPlayer; if (!P || !P.tracks) return false;
     var tr = P.tracks, total = tr.reduce(function (s, t) { return s + (t.d || 0) }, 0), hr = Math.floor(total / 3600), mn = Math.round((total % 3600) / 60);
-    sp.innerHTML = '<div class="sp-hd"><img class="sp-art" alt="" decoding="async"><div><small>Playlist</small><h4>Matin’s playlist</h4><p><b>Matin</b> · ' + tr.length + ' songs, ' + (hr ? hr + ' hr ' : '') + mn + ' min</p></div></div>' +
+    sp.innerHTML = '<div class="sp-hd"><img class="sp-art" alt="" decoding="async"><div><small>Playlist</small><h4>Matin\'s playlist</h4><p><b>Matin</b> · ' + tr.length + ' songs, ' + (hr ? hr + ' hr ' : '') + mn + ' min</p></div></div>' +
       '<div class="sp-bar"><button type="button" class="sp-play" aria-label="Play">' + I.play + '</button><button type="button" class="sp-sk pv" aria-label="Previous song">' + I.prev + '</button><button type="button" class="sp-sk nx" aria-label="Next song">' + I.next + '</button><span class="sp-now"></span></div>' +
       '<div class="sp-cols" aria-hidden="true"><span>#</span><span>Title</span><span>Time</span></div>' +
       '<ol class="sp-list">' + tr.map(function (t, k) {
@@ -512,7 +736,7 @@
   music.onopen = function () {
     if (!sp.firstChild) buildMusic();
     paintMusic(true);
-    /* start at the top, unless the song that's on is further down the list */
+    /* start at the top, unless the song that\'s on is further down the list */
     var r = sp.querySelector('.sp-row.cur'), b = music.w.querySelector('.os-b');
     if (r && b) b.scrollTop = r.offsetTop + r.offsetHeight > b.clientHeight - 20 ? r.offsetTop - b.clientHeight / 2 : 0;
   };
@@ -600,10 +824,14 @@
   function appGlide(a, b, D, run) {
     var lr = layer.getBoundingClientRect(), s = Math.sqrt((b.width * b.height) / Math.max(1, a.ww * a.hh));
     var tx = b.left + b.width / 2 - lr.left - a.ww * s / 2, ty = b.top + b.height / 2 - lr.top - a.hh * s / 2;
-    run.push(a.w.animate([{ transform: T(tx, ty, s) }, { transform: T(a.x, a.y) }], { duration: D, easing: OUT }));
+    a._from = T(tx, ty, s); run.push(a.w.animate([{ transform: a._from }, { transform: T(a.x, a.y) }], { duration: D, easing: OUT, fill: 'both' }));
   }
+  /* moving the window to a new parent resets every scroll position inside it, so lists would jump back to the top for a
+     frame. These remember where each one was and put it back straight after the move */
+  function scrolls() { return [].slice.call(win.querySelectorAll('.os-w *')).filter(function (e) { return e.scrollTop || e.scrollLeft }).map(function (e) { return [e, e.scrollTop, e.scrollLeft] }) }
+  function unscroll(list) { list.forEach(function (x) { x[0].scrollTop = x[1]; x[0].scrollLeft = x[2] }) }
   function enterFull() {
-    if (full) return; full = true; closeStart();
+    if (full) return; full = true; closeStart(); win.classList.add('glide');
     win.classList.add('flat'); win.style.setProperty('--rx', '0deg'); win.style.setProperty('--ry', '0deg');
     var P = pieces(), all = P.fit.concat(P.slide, [win]); settle(all); var OA = openApps(); OA.forEach(function (a) { settle([a.w]) }); var a0 = OA.map(function (a) { return a.w.getBoundingClientRect() });
     root.classList.add('os-full');
@@ -612,30 +840,40 @@
     ph = el('div', 'win-ph'); ph.style.height = w0.height + 'px'; fig.insertBefore(ph, win);
     memo.ph = ph.getBoundingClientRect();
     win.style.setProperty('--rx', '0deg'); win.style.setProperty('--ry', '0deg');
+    var sk = scrolls();
     host.hidden = false; host.appendChild(win); win.classList.add('full');
-    layout(); wallNow();
+    layout(); wallNow(); unscroll(sk);
+
     ctl.max.setAttribute('aria-label', 'Leave full screen'); ctl.max.innerHTML = I.res;
-    if (reduce || !win.animate) { return }
+    if (reduce || !win.animate) { win.classList.remove('glide'); return }
     var f1 = rects(P.fit), s1 = rects(P.slide), D = 640, run = [];
-    P.fit.forEach(function (e, i) { e.style.transformOrigin = '0 0'; run.push(e.animate([{ transform: move(e, f0[i], f1[i]) }, { transform: 'none' }], { duration: D, easing: OUT })) });
-    P.slide.forEach(function (e, i) { run.push(e.animate([{ transform: fromTo(s0[i], s1[i]) }, { transform: 'none' }], { duration: D, easing: OUT })) });
-    OA.forEach(function (a, i) { appGlide(a, a0[i], D, run) });
-    var wa = win.animate([{ clipPath: inset(w0, 14) }, { clipPath: inset({ top: 0, left: 0, right: innerWidth, bottom: innerHeight }, 0) }], { duration: D, easing: OUT });
+    /* every piece also gets its starting look as a plain style, so the very first frame is already the start of the move
+       and nothing can show its final spot for a frame before the animation takes over */
+    var held = [];
+    function hold(e, from) { held.push([e, e.style.transform]); e.style.transform = from }
+    P.fit.forEach(function (e, i) { e.style.transformOrigin = '0 0'; var fr = move(e, f0[i], f1[i]); hold(e, fr); run.push(e.animate([{ transform: fr }, { transform: 'none' }], { duration: D, easing: OUT, fill: 'both' })) });
+    P.slide.forEach(function (e, i) { var fr = fromTo(s0[i], s1[i]); hold(e, fr); run.push(e.animate([{ transform: fr }, { transform: 'none' }], { duration: D, easing: OUT, fill: 'both' })) });
+    OA.forEach(function (a, i) { appGlide(a, a0[i], D, run); hold(a.w, a._from) });
+    var c0 = inset(w0, 14); win.style.clipPath = c0;
+    var wa = win.animate([{ clipPath: c0 }, { clipPath: inset({ top: 0, left: 0, right: innerWidth, bottom: innerHeight }, 0) }], { duration: D, easing: OUT, fill: 'both' });
     win._a = wa;
-    wa.onfinish = function () { if (win._a === wa) win._a = null; run.forEach(function (r) { r.cancel() }); P.fit.forEach(function (e) { e.style.transformOrigin = '' }) };
+    function done() { win.style.clipPath = ''; win.classList.remove('glide'); held.forEach(function (h) { h[0].style.transform = h[1] }); OA.forEach(function (a) { a.w.style.transform = T(a.x, a.y) }); run.forEach(function (r) { r.cancel() }); wa.cancel(); P.fit.forEach(function (e) { e.style.transformOrigin = '' }) }
+    wa._done = done;
+    wa.onfinish = function () { if (win._a === wa) win._a = null; done() };
   }
   /* leaving full screen: the window takes its small layout at its final spot straight away, so every piece knows where
      it is going, then each one glides there from where it was. Behind them a copy of the wallpaper frame closes down
      onto the window. Nothing fades out and nothing snaps at the end */
   function exitFull(then) {
     if (!full) { then && then(); return }
+    win.classList.add('glide');
     var P = pieces(); settle(P.fit.concat(P.slide, [win]));
     ctl.max.setAttribute('aria-label', 'Full screen'); ctl.max.innerHTML = I.max;
     var f1 = rects(P.fit), s1 = rects(P.slide), wr = win.getBoundingClientRect(), OA = openApps(); OA.forEach(function (a) { settle([a.w]) }); var a1 = OA.map(function (a) { return a.w.getBoundingClientRect() });
     root.classList.remove('os-full');
     var pn = ph.getBoundingClientRect();
     function home() {
-      full = false; fig.insertBefore(win, ph); ph.remove(); ph = null; host.hidden = true;
+      full = false; win.classList.remove('glide'); var sk2 = scrolls(); fig.insertBefore(win, ph); unscroll(sk2); ph.remove(); ph = null; host.hidden = true;
       win.classList.remove('exiting'); win.style.position = win.style.left = win.style.top = win.style.width = win.style.zIndex = '';
       requestAnimationFrame(function () { requestAnimationFrame(function () { win.classList.remove('flat') }) });
       layout(); then && then();
@@ -693,6 +931,12 @@
   /* ---------- the title bar buttons ---------- */
   if (ctl.min) ctl.min.addEventListener('click', minDesk);
   if (ctl.max) ctl.max.addEventListener('click', function () { full ? exitFull() : enterFull() });
+  /* full screen on a phone: some apps lay their own bar over the top of the page, which can hide the window's buttons.
+     A leave button also sits in the dock, always within thumb reach */
+  var exitB = document.createElement('button'); exitB.type = 'button'; exitB.className = 'tb-app tb-exit'; exitB.setAttribute('aria-label', 'Leave full screen');
+  exitB.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M9 4v5H4M15 4v5h5M9 20v-5H4M15 20v-5h5"/></svg>';
+  var dockEl = tb.querySelector('.dock'); if (dockEl) dockEl.insertBefore(exitB, dockEl.firstChild);
+  exitB.addEventListener('click', function () { if (full) exitFull() });
   if (ctl.cls) ctl.cls.addEventListener('click', shutDown);
   bar.addEventListener('dblclick', function (e) { if (!e.target.closest('button')) full ? exitFull() : enterFull() });
 

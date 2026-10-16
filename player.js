@@ -31,7 +31,7 @@
     '@property --abar{syntax:"<color>";inherits:true;initial-value:#e6e2ea}',
     /* the card itself: sizes follow aura_widget.pyw (400 x 132, radius 26, art as tall as the card) */
     '.ac{--h:calc(132px*var(--mk,1));--r:calc(var(--h)*.197);-webkit-tap-highlight-color:transparent;position:relative;height:var(--h);border-radius:var(--r);isolation:isolate;background:var(--ab);',
-      'transition:--ab .9s ease,--at .9s ease,--as .9s ease,--abar .9s ease;',
+      'transition:--ab .8s cubic-bezier(.4,0,.2,1),--at .8s cubic-bezier(.4,0,.2,1),--as .8s cubic-bezier(.4,0,.2,1),--abar .8s cubic-bezier(.4,0,.2,1);',
       'font-family:"Segoe UI Variable Display","Segoe UI",Geist,Inter,system-ui,sans-serif;color:var(--at);-webkit-font-smoothing:antialiased;user-select:none;-webkit-user-select:none;text-align:left;line-height:normal;letter-spacing:normal}',
     '.ac *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}',
     /* everything inside is clipped by its own rounded layer; phones (Safari) otherwise let the blur leak past the corners */
@@ -43,7 +43,7 @@
     /* phones and older Safari: the fade is baked into the cover image itself, so no mask is needed to draw it */
     '.ac.baked .ac-art{-webkit-mask-image:none!important;mask-image:none!important;background-image:var(--art)!important}',
     '@supports not (color:color-mix(in srgb,red,blue)){.ac-blur::after{background:linear-gradient(90deg,transparent 0%,var(--ab) 85%)}}',
-    '.ac-art{position:absolute;left:0;top:0;width:var(--h);height:var(--h);background:var(--cover) center/cover;',
+    '.ac-art{position:absolute;left:0;top:0;width:var(--h);height:var(--h);transition:width .45s ' + E + ',height .45s ' + E + ',border-radius .45s ' + E + ';background:var(--cover) center/cover;',
       /* Aura's fade to the right, plus a soft feather on the other three sides so the cover melts into its own glow */
       '-webkit-mask-image:linear-gradient(90deg,rgba(0,0,0,.55) 0%,#000 9%,#000 30%,rgba(0,0,0,.894) 45%,rgba(0,0,0,.647) 60%,rgba(0,0,0,.345) 75%,rgba(0,0,0,.118) 88%,transparent 100%),linear-gradient(180deg,rgba(0,0,0,.55) 0%,#000 10%,#000 90%,rgba(0,0,0,.55) 100%);',
       '-webkit-mask-composite:source-in;mask-composite:intersect;',
@@ -51,7 +51,8 @@
     /* a song without a cover yet gets a plain note */
     '.ac.nocov .ac-art{background:radial-gradient(circle at 35% 35%,rgba(255,255,255,.14),transparent 60%)}',
     '.ac.nocov .ac-art::after{content:"\\266A";position:absolute;inset:0;display:grid;place-items:center;font-size:calc(var(--h)*.3);color:var(--as);opacity:.6}',
-    '.ac.swap .ac-art,.ac.swap .ac-blur{animation:acswap .6s ease}',
+    '.ac.swap .ac-in>.ac-art,.ac.swap .ac-in>.ac-blur{animation:acswap .8s cubic-bezier(.4,0,.2,1)}',
+    '.ac-ghost{position:absolute;inset:0;pointer-events:none;z-index:-1;transition:opacity .8s cubic-bezier(.4,0,.2,1)}.ac-ghost.out{opacity:0}.ac-ghost .ac-blur{z-index:0}.ac-ghost.baked .ac-art{-webkit-mask-image:none!important;mask-image:none!important;background-image:var(--art)!important}',
     '@keyframes acswap{from{opacity:0}}',
     '.ac-body{position:absolute;left:calc(var(--h) + 8px);right:calc(var(--h)*.182);top:0;bottom:0}',
     '.ac-t{position:absolute;left:0;right:0;top:calc(var(--h)*.227);font-size:calc(var(--h)*.121);font-weight:600;line-height:1.35;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}',
@@ -84,7 +85,7 @@
     '@media (hover:none){.ac-ctl{opacity:1}.ac-knob{opacity:1;transform:scale(.8)}}',
     /* the floating one */
     '.mp{position:fixed;right:max(16px,env(safe-area-inset-right));bottom:max(16px,env(safe-area-inset-bottom));z-index:60;width:min(calc(400px*var(--mk,1)),calc(100vw - 32px));',
-      'box-shadow:0 6px 26px rgba(0,0,0,.47);transition:--ab .9s ease,--at .9s ease,--as .9s ease,--abar .9s ease,width .45s ' + E + ',height .45s ' + E + ',border-radius .45s ' + E + ',transform .5s ' + E + ',opacity .5s ease}',
+      'box-shadow:0 6px 26px rgba(0,0,0,.47);transition:--ab .8s cubic-bezier(.4,0,.2,1),--at .8s cubic-bezier(.4,0,.2,1),--as .8s cubic-bezier(.4,0,.2,1),--abar .8s cubic-bezier(.4,0,.2,1),width .45s ' + E + ',height .45s ' + E + ',border-radius .45s ' + E + ',transform .5s ' + E + ',opacity .5s ease}',
     '.mp.mp-in{transform:translateY(12px);opacity:0}',
     /* drag it to any corner: it tilts with the motion and springs into the nearest corner */
     '.mp{cursor:grab;touch-action:none}.mp button,.mp input,.mp .ac-seek{cursor:pointer}',
@@ -113,9 +114,9 @@
     '.mp-open{display:none}',
     '.mp.min{width:calc(64px*var(--mk,1));--h:calc(64px*var(--mk,1));--r:calc(18px*var(--mk,1))}',
     '@media (max-width:600px){.mp{--h:104px;width:min(340px,calc(100vw - 24px));right:12px;bottom:12px}.mp.c-bl,.mp.c-tl{left:12px}.mp.c-tr,.mp.c-tl{top:68px}.mp.min{width:50px;--h:50px;--r:14px}.mp-eq{right:6px;bottom:6px}.mp-cor{top:8px;right:10px}}',
-    '.mp.min .ac-body,.mp.min .mp-cor,.mp.min .ac-blur{display:none}',
+    '.mp .ac-body,.mp .ac-blur{transition:opacity .28s ease .22s,visibility 0s 0s}.mp.min .ac-body,.mp.min .ac-blur{opacity:0;visibility:hidden;pointer-events:none;transition:opacity .12s ease,visibility 0s .12s}.mp.min .mp-cor{display:none}',
     '.mp.min .ac-art{width:100%;height:100%;-webkit-mask-image:none;mask-image:none;background-image:var(--cover)!important}',
-    '.mp.min .ac-blur{display:none}',
+    '',
     '.mp.min .mp-open{display:block;position:absolute;inset:0;border-radius:inherit}',
     '.mp-eq{position:absolute;right:10px;bottom:10px;display:none;gap:2px;align-items:flex-end;height:12px;padding:3px;border-radius:5px;background:rgba(0,0,0,.45)}',
     '.mp-eq b{width:2px;height:8px;background:var(--abar);border-radius:1px;transform-origin:50% 100%;transform:scaleY(.35)}',
@@ -207,13 +208,31 @@
   }
   function dress(v, anim) {
     var tr = cur(), el = v.el, p = tr.p;
-    v.t.innerHTML = '<span>' + esc(tr.t) + '</span>'; v.t.title = tr.t;
+    var setTitle = function () { v.t.innerHTML = '<span>' + esc(tr.t) + '</span>'; v.t.title = tr.t; if (!el.classList.contains('wait')) v.ar.textContent = tr.a };
     requestAnimationFrame(function () { var over = v.t.firstChild.offsetWidth - v.t.clientWidth; v.t.classList.toggle('long', over > 2);
-      if (over > 2) { v.t.style.setProperty('--gx', -(over + 12) + 'px'); v.t.style.setProperty('--gt', Math.max(7, over / 12 + 6) + 's') } }); if (!el.classList.contains('wait')) v.ar.textContent = tr.a;
-    el.style.setProperty('--ab', p.bg); el.style.setProperty('--at', p.text); el.style.setProperty('--as', p.sub); el.style.setProperty('--abar', p.bar);
-    el.style.setProperty('--cover', tr.c ? 'url("' + BASE + tr.c + '")' : 'none'); el.classList.toggle('nocov', !tr.c);
-    if (tr.c) bake(BASE + tr.c, function (u) { if (cur() !== tr) return; if (u) { el.style.setProperty('--art', 'url("' + u + '")'); el.classList.add('baked') } else el.classList.remove('baked') });
-    if (anim) { el.classList.remove('swap'); void el.offsetWidth; el.classList.add('swap') }
+      if (over > 2) { v.t.style.setProperty('--gx', -(over + 12) + 'px'); v.t.style.setProperty('--gt', Math.max(7, over / 12 + 6) + 's') } });
+    /* the cover swap: the new art is loaded first, then it fades in over the old one, which stays put underneath
+       until the fade is done. Nothing ever shows the bare card between songs */
+    function show(u) {
+      if (cur() !== tr) return;
+      var inn = el.querySelector('.ac-in');
+      if (anim && inn && el.style.getPropertyValue('--cover') && el.style.getPropertyValue('--cover') !== 'none') {
+        var old = inn.querySelector('.ac-ghost'); if (old) old.remove();
+        var gh = document.createElement('div'); gh.className = 'ac-ghost' + (el.classList.contains('baked') ? ' baked' : '') + (el.classList.contains('nocov') ? ' nocov' : '');
+        gh.style.setProperty('--cover', el.style.getPropertyValue('--cover')); gh.style.setProperty('--art', el.style.getPropertyValue('--art')); gh.style.setProperty('--ab', el.style.getPropertyValue('--ab'));
+        gh.innerHTML = '<div class="ac-blur" aria-hidden="true"></div><div class="ac-art" aria-hidden="true"></div>';
+        inn.insertBefore(gh, inn.firstChild);
+        requestAnimationFrame(function () { requestAnimationFrame(function () { gh.classList.add('out') }) }); setTimeout(function () { gh.remove() }, 1000);
+      }
+      setTitle();
+      /* the colors change in the same beat as the art, so the card never recolors around an old cover */
+      el.style.setProperty('--ab', p.bg); el.style.setProperty('--at', p.text); el.style.setProperty('--as', p.sub); el.style.setProperty('--abar', p.bar);
+      el.style.setProperty('--cover', tr.c ? 'url("' + BASE + tr.c + '")' : 'none'); el.classList.toggle('nocov', !tr.c);
+      if (u) { el.style.setProperty('--art', 'url("' + u + '")'); el.classList.add('baked') } else el.classList.remove('baked');
+      if (anim) { el.classList.remove('swap'); void el.offsetWidth; el.classList.add('swap') }
+    }
+    if (!anim) setTitle();
+    if (tr.c) bake(BASE + tr.c, show); else show(null);
   }
   function paint() {
     var t = st.t, d = D(), f = Math.max(0, Math.min(1, t / d)) * 100;

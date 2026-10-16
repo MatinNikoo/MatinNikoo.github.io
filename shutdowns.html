@@ -372,14 +372,28 @@ var D={"labels":["2020Q1","2020Q2","2020Q3","2020Q4","2021Q1","2021Q2","2021Q3",
   function get(){try{return localStorage.getItem(K)||''}catch(e){return ''}}
   // the homepage CSS was written for the homepage, so map its pieces onto this page:
   // color variables win over this page's theme, and the contact headline becomes this page's headline
-  function adapt(t){return t.replace(/\.contact\s+h2\s+span/g,'h1 em, h1 i').replace(/\.contact\s+h2/g,'h1')
-    .replace(/\{([^{}]*)\}/g,function(m,b){return '{'+b.replace(/([\w-]+\s*:\s*[^;!{}]+?)\s*(;|$)/g,'$1 !important$2')+'}'})}
-  function sync(){var t=get();st.textContent=adapt(t);chip.hidden=!t.trim()}
+  function adapt(t){
+    // the homepage and these pages name the same things differently, so each homepage selector also reaches its twin here
+    var MAP=[
+      [/\.contact\s+h2\s+span|\.sk-cap\s+h3\s+em|\.proj\s+h3\s+em|\.hero\s+h1\s+\.n2|\bh[123]\s+(?:em|span|i)\b/,'h1 em, h1 i, h2 em, .note'],
+      [/\.contact\s+h2|\.sec-head\s+h2|\.sk-title|\.hero\s+h1|\.proj\s+h3|\bh[23]\b/,'h1, h2'],
+      [/\.ucx-nums\s+b|\.stats\s+b|\.sim-pct|\.cap\s+\.big|\.xp-m\s+b|\bb\b|\bstrong\b/,'.big, .fact b, .nums b, .val, .delta'],
+      [/\.btn\.primary|\.cta\s+\.btn\.primary/,'.btn.primary, .result label, .seg input:checked + label'],
+      [/\.btn\b|\.email\s+\.btn|\.ct-links\s+a|\.cta\s+\.btn/,'.btn, button.reset, button.chip, .chip, .seg label'],
+      [/\.visual|\.sim\b|\.ucx\b|\.uca\b|\.lab-cta|\.subject|\.src-box/,'.card, .result, .step, .fact'],
+      [/\.chart|\bsvg\b|\bcanvas\b|\.uca-line|\.hbars/,'svg, canvas, .bars, .bar'],
+      [/\.tags\s+li|\.feat|\.meta|\.when/,'.small, .legend, .lab'],
+      [/\.nav\b|\.wm\b|\.mark\b/,'.roomhead, .mark']];
+    t=t.replace(/([^{}]+)\{([^{}]*)\}/g,function(m,sel,body){var out=sel.split(',').map(function(s){return s.trim()}).filter(Boolean),add=[];
+      out.forEach(function(s){MAP.forEach(function(p){if(p[0].test(s))add.push(p[1])})});
+      return out.concat(add).join(', ')+'{'+body+'}'});
+    return t.replace(/\{([^{}]*)\}/g,function(m,b){return '{'+b.replace(/([\w-]+\s*:\s*[^;!{}]+?)\s*(;|$)/g,'$1 !important$2')+'}'})}
+  function sync(){var t=get();st.textContent=adapt(t);chip.hidden=!t.trim();var m='';try{m=localStorage.getItem('mn-live-theme')||''}catch(e){}var R=document.documentElement;if(R0===null)R0=R.getAttribute('data-theme')||'';if(t.trim()&&m)R.setAttribute('data-theme',m);else if(R0)R.setAttribute('data-theme',R0);else R.removeAttribute('data-theme')}
   chip.className='live-chip';chip.hidden=true;chip.innerHTML='<span>Your CSS from the homepage is on</span><button type="button">Reset</button>';
-  chip.querySelector('button').addEventListener('click',function(){try{localStorage.removeItem(K)}catch(e){}sync()});
+  chip.querySelector('button').addEventListener('click',function(){try{localStorage.removeItem(K);localStorage.removeItem('mn-live-theme')}catch(e){}sync()});
   function mount(){document.body.appendChild(st);document.body.appendChild(chip);sync()}
   if(document.body)mount();else document.addEventListener('DOMContentLoaded',mount);
-  addEventListener('storage',function(e){if(e.key===K)sync()});addEventListener('pageshow',sync);
+  addEventListener('storage',function(e){if(e.key===K||e.key==='mn-live-theme')sync()});addEventListener('pageshow',sync);
 })();
 </script>
 <style>
