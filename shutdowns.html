@@ -116,7 +116,7 @@ nav,.nav,header.top{border-bottom:1px solid var(--ink)!important}
 button,.btn,a.btn{font-family:"Geist Mono",ui-monospace,monospace;text-transform:uppercase;letter-spacing:.1em;font-size:.72rem}
 nav a,.nav a,header.top a{font-family:"Geist Mono",ui-monospace,monospace;text-transform:uppercase;letter-spacing:.12em;font-size:.72rem}
 
-/* gallery pass, shared with the homepage */
+/* gallery style, shared with the homepage */
 body{background-color:var(--bg)!important;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.95' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .07 0 0 0 0 .07 0 0 0 0 .06 0 0 0 .11 0'/%3E%3C/filter%3E%3Crect width='180' height='180' filter='url(%23n)'/%3E%3C/svg%3E"),url(stone.png)!important;background-size:180px 180px,512px 512px!important}
 @media (prefers-color-scheme:dark){:root:not([data-theme="light"]) body{background-image:radial-gradient(circle at 1px 1px,#1E1E23 1px,transparent 1.4px)!important;background-size:20px 20px!important}}
 :root[data-theme="dark"] body{background-image:radial-gradient(circle at 1px 1px,#1E1E23 1px,transparent 1.4px)!important;background-size:20px 20px!important}
@@ -388,6 +388,7 @@ var D={"labels":["2020Q1","2020Q2","2020Q3","2020Q4","2021Q1","2021Q2","2021Q3",
       out.forEach(function(s){MAP.forEach(function(p){if(p[0].test(s))add.push(p[1])})});
       return out.concat(add).join(', ')+'{'+body+'}'});
     return t.replace(/\{([^{}]*)\}/g,function(m,b){return '{'+b.replace(/([\w-]+\s*:\s*[^;!{}]+?)\s*(;|$)/g,'$1 !important$2')+'}'})}
+  var R0=null;
   function sync(){var t=get();st.textContent=adapt(t);chip.hidden=!t.trim();var m='';try{m=localStorage.getItem('mn-live-theme')||''}catch(e){}var R=document.documentElement;if(R0===null)R0=R.getAttribute('data-theme')||'';if(t.trim()&&m)R.setAttribute('data-theme',m);else if(R0)R.setAttribute('data-theme',R0);else R.removeAttribute('data-theme')}
   chip.className='live-chip';chip.hidden=true;chip.innerHTML='<span>Your CSS from the homepage is on</span><button type="button">Reset</button>';
   chip.querySelector('button').addEventListener('click',function(){try{localStorage.removeItem(K);localStorage.removeItem('mn-live-theme')}catch(e){}sync()});
