@@ -2,6 +2,13 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
+<script>/* moving between pages of the site: the new page starts under the last page's colour and fades up out of it */
+try{(function(){var d=document.documentElement,c=sessionStorage.getItem('mn-pg'),t=+sessionStorage.getItem('mn-pg-t')||0;sessionStorage.removeItem('mn-pg');
+if(c&&Date.now()-t<5000&&!matchMedia('(prefers-reduced-motion: reduce)').matches){d.classList.add('pg-in');d.style.setProperty('--pg-c',c);setTimeout(function(){d.classList.remove('pg-in')},900)}})()}catch(e){}</script>
+<style>html.pg-in::after,.pg-veil{content:"";position:fixed;inset:0;z-index:2147483000;pointer-events:none;background:var(--pg-c,#ECE9E2)}
+html.pg-in::after{animation:pgup .55s cubic-bezier(.4,0,.2,1) .04s both}
+@keyframes pgup{from{opacity:1}to{opacity:0}}
+.pg-veil{opacity:0;transition:opacity .26s cubic-bezier(.4,0,1,1)}.pg-veil.on{opacity:1}</style>
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Internet Shutdowns</title>
 <meta name="description" content="What happens to a country's coding when its government turns off the internet. Synthetic twins built from GitHub data for nine shutdowns.">
@@ -404,5 +411,19 @@ var D={"labels":["2020Q1","2020Q2","2020Q3","2020Q4","2021Q1","2021Q2","2021Q3",
 @supports not (color:color-mix(in srgb,red,blue)){html .nav{background:var(--bg)}}
 </style>
 <script src="player.js" defer></script>
+<script>/* leaving for another page of the site: the page dims into its own colour first, then the next one fades up */
+(function(){if(matchMedia('(prefers-reduced-motion: reduce)').matches)return;var veil=null;
+  function clear(){if(veil){veil.remove();veil=null}}
+  addEventListener('pageshow',function(e){if(e.persisted)clear()});
+  addEventListener('click',function(e){if(e.defaultPrevented||e.button!==0||e.metaKey||e.ctrlKey||e.shiftKey||e.altKey)return;
+    var a=e.target.closest&&e.target.closest('a[href]');if(!a||(a.target&&a.target!=='_self')||a.hasAttribute('download'))return;
+    var u;try{u=new URL(a.href,location.href)}catch(x){return}
+    if(u.origin!==location.origin||!/(\/|\.html)$/.test(u.pathname)||u.pathname===location.pathname)return;
+    e.preventDefault();var c=getComputedStyle(document.body).backgroundColor;if(!c||c==='rgba(0, 0, 0, 0)'||c==='transparent')c=getComputedStyle(document.documentElement).backgroundColor;
+    try{sessionStorage.setItem('mn-pg',c);sessionStorage.setItem('mn-pg-t',String(Date.now()))}catch(x){}
+    clear();veil=document.createElement('div');veil.className='pg-veil';veil.style.setProperty('--pg-c',c);document.body.appendChild(veil);
+    requestAnimationFrame(function(){requestAnimationFrame(function(){veil.classList.add('on')})});
+    setTimeout(function(){location.href=u.href},280)});
+})();</script>
 </body>
 </html>

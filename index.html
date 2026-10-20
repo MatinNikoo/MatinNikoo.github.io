@@ -3,6 +3,13 @@
 <head>
 <script>window.MN_DESK=function(){return matchMedia("(pointer:coarse)").matches?innerWidth>900:innerWidth>=700}</script>
 <meta charset="utf-8">
+<script>/* moving between pages of the site: the new page starts under the last page's colour and fades up out of it */
+try{(function(){var d=document.documentElement,c=sessionStorage.getItem('mn-pg'),t=+sessionStorage.getItem('mn-pg-t')||0;sessionStorage.removeItem('mn-pg');
+if(c&&Date.now()-t<5000&&!matchMedia('(prefers-reduced-motion: reduce)').matches){d.classList.add('pg-in');d.style.setProperty('--pg-c',c);setTimeout(function(){d.classList.remove('pg-in')},900)}})()}catch(e){}</script>
+<style>html.pg-in::after,.pg-veil{content:"";position:fixed;inset:0;z-index:2147483000;pointer-events:none;background:var(--pg-c,#ECE9E2)}
+html.pg-in::after{animation:pgup .55s cubic-bezier(.4,0,.2,1) .04s both}
+@keyframes pgup{from{opacity:1}to{opacity:0}}
+.pg-veil{opacity:0;transition:opacity .26s cubic-bezier(.4,0,1,1)}.pg-veil.on{opacity:1}</style>
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Matin Nikoomanzar</title>
 <meta name="description" content="Matin Nikoomanzar, statistics and data science student at UCLA. I'm building Skeptic, an AI analyst that checks claims made with data.">
@@ -90,9 +97,11 @@ a:hover{color:var(--accent);text-decoration-color:var(--accent)}
 
 .hero{position:relative;isolation:isolate}
 .hero-bg{position:absolute;z-index:-1;top:6%;height:84%;right:calc(-1 * clamp(1rem,4vw,2.5rem));width:50%;pointer-events:none;
-  -webkit-mask-image:linear-gradient(90deg,transparent 0,#000 38%,#000 85%,transparent 100%);mask-image:linear-gradient(90deg,transparent 0,#000 38%,#000 85%,transparent 100%)}
+  -webkit-mask-image:linear-gradient(90deg,transparent 0,#000 16%,#000 92%,transparent 100%);mask-image:linear-gradient(90deg,transparent 0,#000 16%,#000 92%,transparent 100%)}
 @media (max-width:900px) and (pointer:coarse),(max-width:699px){.hero-bg{width:75%}}
 @media (max-width:640px){.hero-bg{width:100%;top:2%;height:60%;--bg-dim:.45}}
+/* computers: the specimen's canvas runs from the middle of the page to the window's right edge, so a wide screen never clips it */
+@media (min-width:700px) and (pointer:fine),(min-width:900px){.hero-bg{left:50%;right:auto;width:calc(50% + max(clamp(1rem,4vw,2.5rem),50vw - 50%))}}
 /* simulator card */
 .sim{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:1.4rem;box-shadow:0 1px 0 var(--line),0 24px 48px -32px color-mix(in srgb,var(--accent) 45%,transparent)}
 .sim-head{display:flex;justify-content:space-between;align-items:baseline;gap:1rem;margin-bottom:1rem}
@@ -1074,7 +1083,7 @@ html.lite .dock,html.lite .gctl,html.lite .gchip{backdrop-filter:none!important;
 .sk-claim{margin:1.2rem 0 .4rem;max-width:30rem;padding:.85rem 1rem;border:1px solid var(--k-line2);border-left:2px solid var(--k-sig);border-radius:4px 10px 10px 4px;background:rgba(255,255,255,.025);font-size:.98rem;line-height:1.45;color:var(--k-ink)}
 .sk-claim span{display:block;font-size:.6rem;letter-spacing:.18em;text-transform:uppercase;color:var(--k-mute);margin-bottom:.3rem}
 
-@media (max-width:900px) and (pointer:coarse),(max-width:699px){
+@media (max-width:699px),(max-aspect-ratio:20/21){
   .sk{height:500vh}
   .sk-in{grid-template-columns:1fr;grid-template-rows:auto 1fr;align-items:start;gap:1.1rem;padding:calc(3.6rem + 3.2rem) 1rem 1.2rem}
   .sk-caps{align-self:start;min-height:12.5rem}
@@ -1113,15 +1122,17 @@ html.in-sk .mp:has(:focus-visible){opacity:1!important}
 html:not(.js-sk) .sk-skip{display:none}
 
 .sk-skip{white-space:nowrap}@media (max-height:700px){.sk-skip{bottom:.6rem;padding:.45rem .8rem .45rem .7rem;font-size:.56rem;gap:.45rem}}
-@media (max-width:900px) and (pointer:coarse),(max-width:699px){.sk-in{padding-bottom:4.4rem}}@media (max-width:900px) and (max-height:700px) and (pointer:coarse),(max-width:699px) and (max-height:700px){.sk-in{padding-bottom:3.2rem}}
-@media (max-width:900px) and (max-height:700px) and (pointer:coarse),(max-width:699px) and (max-height:700px){.sk-in{padding-top:calc(3.6rem + 2.5rem)}.sk-caps{min-height:0}.sk-cap h3{font-size:1.75rem;margin-bottom:.45rem}.sk-cap p{font-size:.84rem;line-height:1.5}.sk-title{font-size:3.2rem;margin-bottom:.5rem}.sk-claim{font-size:.8rem;padding:.5rem .65rem;margin-top:.45rem}.sk-k{margin-bottom:.6rem}.sk-cta{margin-top:.6rem}.sk-stage{margin-top:1.6rem}}
+@media (max-width:699px),(max-aspect-ratio:20/21){.sk-in{padding-bottom:4.4rem}}@media (max-width:699px) and (max-height:700px),(max-aspect-ratio:20/21) and (max-height:700px){.sk-in{padding-bottom:3.2rem}}
+@media (max-width:699px) and (max-height:700px),(max-aspect-ratio:20/21) and (max-height:700px){.sk-in{padding-top:calc(3.6rem + 2.5rem)}.sk-caps{min-height:0}.sk-cap h3{font-size:1.75rem;margin-bottom:.45rem}.sk-cap p{font-size:.84rem;line-height:1.5}.sk-title{font-size:3.2rem;margin-bottom:.5rem}.sk-claim{font-size:.8rem;padding:.5rem .65rem;margin-top:.45rem}.sk-k{margin-bottom:.6rem}.sk-cta{margin-top:.6rem}.sk-stage{margin-top:1.6rem}}
 /* grain off inside the room */
 body::before{transition:opacity .4s ease}html.in-sk body::before{opacity:0!important}
 /* player at full opacity on overlay pages */
 html.in-sk.mp-framed .mp{opacity:1!important}
+/* short screens: the player card would cover the figure, so it waits outside the room */
+@media (max-height:560px){html.in-sk:not(.mp-framed) .mp{opacity:0!important;pointer-events:none!important}}
 /* phones: caption spacing */
-@media (max-width:900px) and (pointer:coarse),(max-width:699px){.sk-caps{align-items:end}}
-@media (max-width:900px) and (min-height:760px) and (pointer:coarse),(max-width:699px) and (min-height:760px){.sk-in{padding-top:calc(3.6rem + 4.2rem)}}
+@media (max-width:699px),(max-aspect-ratio:20/21){.sk-caps{align-items:start}}
+@media (max-width:699px) and (min-height:760px),(max-aspect-ratio:20/21) and (min-height:760px){.sk-in{padding-top:calc(3.6rem + 4.2rem)}}
 /* highlighted words: mono caps in the signal color */
 .sk-cap h3 em{font-family:var(--mono)!important;font-style:normal!important;font-weight:500;text-transform:uppercase;font-size:.56em;letter-spacing:.1em;color:var(--k-sig);
   vertical-align:.12em;white-space:nowrap;margin-left:.06em}
@@ -1138,7 +1149,7 @@ html.lite .sk-cap,html.touch .sk-cap{filter:none!important}
 .sk-rd span{white-space:nowrap;clip-path:inset(0 100% 0 0);transition:clip-path 1s steps(32) .65s}
 .sk-cap.on .sk-rd i{transform:none}.sk-cap.on .sk-rd span{clip-path:inset(0 0 0 0)}
 html:not(.js-sk) .sk-rd span{clip-path:none}html:not(.js-sk) .sk-rd i{transform:none}
-@media (max-width:900px) and (pointer:coarse),(max-width:699px),(max-height:700px){.sk-rd{display:none!important}}
+@media (max-width:699px),(max-aspect-ratio:20/21),(max-height:700px){.sk-rd{display:none!important}}
 /* readout glyphs */
 .sk-rd b{position:relative;flex:none;width:12px;height:12px;margin-right:.1rem}
 .sk-rd:has(b)::before{display:none}
@@ -1276,6 +1287,33 @@ html:not(.js-sk) .sk-rd span{clip-path:none}html:not(.js-sk) .sk-rd i{transform:
 .skx-sim-k i{display:inline-block;width:.5rem;height:.5rem}
 .skx-sim-k i.w{background:var(--signal,#FF5A1F)}.skx-sim-k i.h{background:var(--signal,#FF5A1F);outline:1.2px solid var(--ink);outline-offset:1px}.skx-sim-k i.n{background:var(--line)}
 @media (max-width:520px){.skx-sim-n b{font-size:1.25rem}.skx .skx-sim-l{font-size:.76rem}.skx-sim-b{gap:.5rem;padding:.6rem}}
+/* the tilt switch */
+.sk-tilt{position:absolute;z-index:4;display:inline-flex;align-items:center;gap:.55rem;height:30px;padding:0 .85rem 0 .7rem;border-radius:999px;border:1px solid color-mix(in srgb,var(--k-sig) 60%,var(--k-line2));background:rgba(12,12,14,.74);-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);color:var(--k-ink);font:500 .6rem var(--mono);letter-spacing:.16em;text-transform:uppercase;pointer-events:auto;cursor:pointer;-webkit-tap-highlight-color:transparent;transition:opacity .45s ease,transform .5s cubic-bezier(.2,.8,.2,1),border-color .3s,color .3s,box-shadow .3s}
+.sk-tilt:active{transform:scale(.96)}
+.sk-tilt.gone{opacity:0;transform:translateY(-6px);pointer-events:none}
+.sk-tilt[data-s=need]{animation:sktpulse 2.6s ease-in-out infinite}
+@keyframes sktpulse{0%,100%{box-shadow:0 0 0 0 color-mix(in srgb,var(--k-sig) 45%,transparent)}55%{box-shadow:0 0 0 8px color-mix(in srgb,var(--k-sig) 0%,transparent)}}
+.sk-tilt-ph{position:relative;flex:none;width:11px;height:17px;border:1.5px solid var(--k-sig);border-radius:3px;box-shadow:0 0 8px color-mix(in srgb,var(--k-sig) 45%,transparent)}
+.sk-tilt-ph i{position:absolute;left:50%;top:50%;width:4px;height:4px;margin:-2px 0 0 -2px;border-radius:50%;background:var(--k-sig);transform:translate(calc(var(--tx,0) * 3px),calc(var(--ty,0) * 5px));transition:transform .12s linear}
+.sk-tilt[data-s=need] .sk-tilt-ph,.sk-tilt[data-s=asking] .sk-tilt-ph{animation:sktrock 1.9s ease-in-out infinite}
+@keyframes sktrock{0%,100%{transform:rotate(-16deg)}50%{transform:rotate(16deg)}}
+.sk-tilt[data-s=on] .sk-tilt-t::after,.sk-tilt[data-s=wait] .sk-tilt-t::after{content:"";display:inline-block;width:5px;height:5px;margin-left:.55rem;vertical-align:1px;border-radius:50%;background:var(--k-sig);box-shadow:0 0 6px var(--k-sig);animation:skpulse 2s ease-in-out infinite}
+.sk-tilt[data-s=off],.sk-tilt[data-s=denied]{border-color:var(--k-line2);color:var(--k-mute)}
+.sk-tilt[data-s=off] .sk-tilt-ph,.sk-tilt[data-s=denied] .sk-tilt-ph{border-color:var(--k-mute);box-shadow:none}
+.sk-tilt[data-s=off] .sk-tilt-ph i,.sk-tilt[data-s=denied] .sk-tilt-ph i{background:var(--k-mute)}
+@media (prefers-reduced-motion:reduce){.sk-tilt,.sk-tilt-ph{animation:none!important}}
+html:not(.js-sk) .sk-tilt{display:none}
+/* the room on wide but short screens (a phone on its side, a small laptop): two columns, tighter type, nothing lost under the bar */
+@media (min-width:700px) and (min-aspect-ratio:21/20) and (max-height:560px){
+  .sk-in{padding:calc(3.6rem + 1.4rem) clamp(1rem,4vw,2.5rem) 3.2rem;gap:clamp(1.2rem,4vw,3rem);align-items:center}
+  .sk-cap h3{font-size:clamp(1.6rem,4.2vh + 1rem,2.4rem);margin-bottom:.5rem}
+  .sk-cap p{font-size:.84rem;line-height:1.5;margin-bottom:.35rem}.sk-cap p+p{display:none}
+  .sk-title{font-size:clamp(2.4rem,9vh,3.4rem)!important;margin-bottom:.4rem!important}
+  .sk-claim{font-size:.78rem!important;padding:.45rem .6rem!important;margin-top:.4rem!important}
+  .sk-k{margin-bottom:.45rem!important}.sk-cap .sk-by,.sk-rd{display:none!important}
+  .sk-hud .tl,.sk-hud .tr{top:calc(3.6rem + .45rem)}.sk-hud .bl,.sk-hud .br{display:none}
+  .sk-skip{bottom:.5rem;padding:.4rem .75rem .4rem .65rem;font-size:.54rem}
+}
 /* the small live checker in the Skeptic project entry */
 .skq-h{display:flex;justify-content:space-between;align-items:baseline;gap:1rem;margin-bottom:1rem}
 .skq-h b{font-family:var(--serif);font-weight:400;font-size:1.5rem;line-height:1}
@@ -1836,7 +1874,7 @@ html:not(.js-edu) .edu-n .wd{-webkit-clip-path:none;clip-path:none}
 .mnav-b,.mnav,.mnav-veil{display:none}
 /* notch: solid safe area strip */
 .nav::before{content:"";position:absolute;left:0;right:0;bottom:100%;height:env(safe-area-inset-top,0px);background:var(--bg);pointer-events:none}
-@media (max-width:760px) and (pointer:coarse),(max-width:699px){
+@media (max-width:1100px) and (pointer:coarse),(max-width:699px){
   .nav ul>li:not(.keep-ph){display:none!important}
   .nav ul{gap:.55rem!important}
   .mnav-b{display:grid;place-items:center;width:2.25rem;height:2.25rem;margin-right:-.35rem;border:0;background:none;color:var(--ink);cursor:pointer;-webkit-tap-highlight-color:transparent}
@@ -1878,7 +1916,7 @@ html:not(.js-edu) .edu-n .wd{-webkit-clip-path:none;clip-path:none}
   .mnav a.ext::after{content:" \2197";color:var(--signal,#E8480F);font-family:var(--mono);font-size:.7em}
 }
 @media (prefers-reduced-motion:reduce){.mnav,.mnav-veil,.mg-p,.mg-in a{transition:none!important}}
-@media (max-width:760px) and (pointer:coarse),(max-width:699px){html.mnav-open .mp{opacity:0!important;pointer-events:none!important;transition:opacity .2s}}
+@media (max-width:1100px) and (pointer:coarse),(max-width:699px){html.mnav-open .mp{opacity:0!important;pointer-events:none!important;transition:opacity .2s}}
 /* touch: solid sticky header, no backdrop blur */
 html.touch .nav{backdrop-filter:none!important;-webkit-backdrop-filter:none!important;background:var(--bg)!important}
 html.touch .exhibit.room .motes{mix-blend-mode:normal}
@@ -1926,7 +1964,7 @@ html .mp.ac::after{z-index:3;box-shadow:inset 0 1px 0 rgba(255,255,255,.3),inset
 html .mp.ac.min::before{opacity:.6}
 
 /* phone menu */
-@media (max-width:760px) and (pointer:coarse),(max-width:699px){
+@media (max-width:1100px) and (pointer:coarse),(max-width:699px){
   html .mnav{background:color-mix(in srgb,var(--bg) 84%,transparent);-webkit-backdrop-filter:blur(34px) saturate(1.8);backdrop-filter:blur(34px) saturate(1.8);
     border:1px solid var(--gl-rim);border-radius:10px;box-shadow:inset 0 1px 0 var(--gl-hi),0 26px 50px -22px rgba(0,0,0,.45),0 2px 8px -4px rgba(0,0,0,.15);
     background-image:linear-gradient(180deg,var(--gl-sheen),transparent 4.5rem)}
@@ -2287,7 +2325,8 @@ html.lite .hero-melt .sweep b{animation-duration:8s}html.lite .hero-melt .sweep 
 .polaroid{transition-property:transform,scale,rotate,box-shadow;transition-duration:.9s,.5s,.5s,.3s}
 @media (prefers-reduced-motion:reduce){.polaroid,.polaroid img{transition:none!important}}
 /* slope background on desktop */
-@media (max-width:899px) and (pointer:coarse) and (pointer:coarse),(max-width:699px) and (pointer:coarse),(max-width:699px){#hero-bg{display:none!important}}
+/* phones and tablets: the specimen covers the whole intro and settles around the photo wherever the layout puts it */
+@media (max-width:899px) and (pointer:coarse),(max-width:699px){#hero-bg{top:0!important;left:0!important;right:0!important;width:100%!important;height:100%!important;--bg-dim:.85;-webkit-mask-image:none!important;mask-image:none!important}}
 
 /* intro layout */
 .hero-hud{display:none!important}
@@ -2529,7 +2568,7 @@ button.nav-lab{display:inline-flex;align-items:center;gap:.3rem;padding-right:.7
   <p class="wall-label mono" aria-hidden="true"><b>Fig. 1</b><span>A chart losing its shape, 2026</span><span>3D render, dithered to one bit</span></p>
   <div class="printmark" aria-hidden="true"><svg viewBox="0 0 16 16"><circle cx="8" cy="8" r="5"/><circle class="dot" cx="8" cy="8" r="2"/><path d="M8 0v16M0 8h16"/></svg><span>N° 01, 2026</span><span class="printbar"><i></i><i></i><i></i><i></i></span></div>
   <canvas class="hero-bg" id="hero-bg" aria-hidden="true"></canvas>
-  <div class="lab" aria-hidden="true"><span class="hint" id="hint"><span class="t1">Drag a dot or click to add one<br>The line refits and gets checked live</span><span class="t2">Tap to add a dot</span><svg class="arrow" viewBox="0 0 60 70"><path d="M48 4 C 58 30, 40 52, 10 62"/><path d="M10 62 L 22 52 M10 62 L 24 66"/></svg></span><span class="fit mono" id="fit"></span></div>
+  <div class="lab" aria-hidden="true"><span class="hint" id="hint"><span class="t1">Click near it to feed it a point<br>It keeps what fits and spits out the rest</span><span class="t2">Tap to feed it a point</span><svg class="arrow" viewBox="0 0 60 70"><path d="M48 4 C 58 30, 40 52, 10 62"/><path d="M10 62 L 22 52 M10 62 L 24 66"/></svg></span><span class="fit mono" id="fit"></span></div>
   <div class="hero-in" id="hero-in">
     <p class="note rise">Portfolio, 2026<svg viewBox="0 0 220 14" preserveAspectRatio="none" aria-hidden="true"><path d="M2 9 C 40 3, 80 12, 120 7 S 190 4, 218 8"/></svg></p>
     <h1 class="rise d1"><i class="n1">Matin</i> <span class="n2">Nikoomanzar</span></h1>
@@ -2592,13 +2631,13 @@ button.nav-lab{display:inline-flex;align-items:center;gap:.3rem;padding-right:.7
           <p class="sk-k mono">02 · Fact check</p>
           <h3>It reads the fine <em>print.</em></h3>
           <p>Articles, reports, charts, even another AI's summary. Every number gets traced back to the data. Two of these came from nowhere.</p>
-          <p>It can't make up a number, because every figure it gives you is computed, not guessed.</p>
+          <p>Every number it gives you is recomputed or traced back to your data, and anything it can't verify gets flagged.</p>
           <p class="sk-rd mono" aria-hidden="true"><b class="gth"></b><i></i><span>313 figures · 8 claims · 2 flagged</span></p>
         </div>
         <div class="sk-cap" data-i="3">
           <p class="sk-k mono">03 · Gosset</p>
           <h3>Its own brain. <em>On your chip.</em></h3>
-          <p>Gosset is a model I trained myself on about 15,000 worked checks. It runs offline on your graphics chip, and the files you show it never leave your computer.</p>
+          <p>Gosset is my own model, fine tuned on about 15,000 worked checks. It runs offline on your graphics chip, and the files you show it never leave your computer.</p>
           <p>Rather use the cloud? Tukey does the same checks from any browser.</p>
           <p class="sk-rd mono" aria-hidden="true"><b class="gch"></b><i></i><span>WebGPU · 2.3 GB once · offline</span></p>
         </div>
@@ -2632,7 +2671,7 @@ button.nav-lab{display:inline-flex;align-items:center;gap:.3rem;padding-right:.7
         <li><p><b>Shows its work,</b> with the Python and R code that proves it.</p></li>
         <li><p><b>Lets you change anything it makes,</b> by hand.</p></li>
       </ul>
-      <p>It can't make up a number, because every figure is checked against the statistics engine I wrote from scratch. Tukey runs it in the cloud. Gosset is my own model, trained on about 15,000 examples from that engine, and runs offline on your own graphics chip.</p>
+      <p>Every figure is checked against the statistics engine I wrote from scratch, and anything it can't verify gets flagged. Tukey runs it in the cloud. Gosset is my own model, fine tuned on about 15,000 worked checks from that engine, and runs offline on your own graphics chip.</p>
       <p class="skdev" id="skdev" aria-live="polite"><span class="skdev-k mono"><i></i>This device</span><span id="skdev-t">Checking your hardware.</span></p>
       <div class="links"><a href="https://getskeptic.pages.dev" target="_blank" rel="noopener">Join the waitlist</a><a href="https://github.com/MatinNikoo/skeptic-checks" target="_blank" rel="noopener">Python package</a></div>
     </div>
@@ -3039,82 +3078,156 @@ button.nav-lab{display:inline-flex;align-items:center;gap:.3rem;padding-right:.7
 </main>
 
 <script>
-// hero background: a slow, faint scatter plot with its fitted trend line
+// hero background: a specimen. A cloud of data held inside its own 95% region, a membrane that breathes around the photo,
+// leans toward the cursor and reaches for anything you feed it. Points that fit are kept; outliers get spat back out
 (function(){
   var c=document.getElementById('hero-bg'); if(!c||!c.getContext) return;
-  var hero=c.parentNode, hint=document.getElementById('hint'), rd=document.getElementById('fit');
-  var ctx=c.getContext('2d'), reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
-  var N=72, pts=[], seed=7;
-  function rnd(){seed=(seed*16807)%2147483647;return (seed-1)/2147483646}
-  function gauss(){var u=rnd()||1e-9,v=rnd();return Math.sqrt(-2*Math.log(u))*Math.cos(2*Math.PI*v)}
-  function mk(x,y,born){return {hx:x,hy:y,x:x,y:y,vx:0,vy:0,a:rnd()*6.28,s:.25+.5*rnd(),r:1.8+2.4*rnd(),born:born||0,user:!!born}}
-  for(var i=0;i<N;i++){var x=.06+.88*rnd();pts.push(mk(x,Math.max(.04,Math.min(.96,.86-.72*x+.09*gauss()))))}
-  var W=0,H=0,dpr=1,hk=1,col={},visible=true,start=performance.now(),pad=24;
-  var mouse={x:-9,y:-9,on:false}, touched=false, fitA=0,fitB=0,shownB=null,shownA=null;
-  function colors(){var cs=getComputedStyle(document.documentElement);col.a=cs.getPropertyValue('--accent').trim()||'#2F4BC4';col.m=cs.getPropertyValue('--bench').trim()||'#9AA3B2';col.g=cs.getPropertyValue('--good').trim()||'#1E7A4E'}
-  var dim=1;function size(){dim=parseFloat(getComputedStyle(c).getPropertyValue('--bg-dim'))||1;var r=c.getBoundingClientRect();hk=MN_K();dpr=MN_FIT(r.width,r.height);W=r.width/hk;H=r.height/hk;c.width=Math.round(r.width*dpr);c.height=Math.round(r.height*dpr);ctx.setTransform(dpr*hk,0,0,dpr*hk,0,0)}
-  function toN(e){var r=c.getBoundingClientRect();return {x:(e.clientX-r.left-pad*hk)/(r.width-pad*2*hk),y:(e.clientY-r.top-pad*hk)/(r.height-pad*2*hk),inside:e.clientX>=r.left&&e.clientX<=r.right&&e.clientY>=r.top&&e.clientY<=r.bottom}}
+  var hero=c.parentNode, hint=document.getElementById('hint'), rd=document.getElementById('fit'), photo=hero.querySelector('.polaroid');
+  var ctx=c.getContext('2d'), reduce=matchMedia('(prefers-reduced-motion: reduce)').matches, TAU=Math.PI*2;
+  var seed=11;function rnd(){seed=(seed*16807)%2147483647;return (seed-1)/2147483646}
+  function gauss(){var u=rnd()||1e-9,v=rnd();return Math.sqrt(-2*Math.log(u))*Math.cos(TAU*v)}
+  function wrap(a){while(a>Math.PI)a-=TAU;while(a<-Math.PI)a+=TAU;return a}
+  function ease(k){return k<=0?0:k>=1?1:1-Math.pow(1-k,3)}
+  var W=0,H=0,dpr=1,hk=1,col={},visible=true,start=performance.now(),last=0,dim=1,SC=1,HM=null;
+  var pts=[],feeds=[],fed=0,kept=0,rej=0,touched=false,mouse={x:-1e4,y:-1e4,on:false},sp=0;
+  var B={cx:0,cy:0,a:120,b:150,ang:0,ok:false},M={x:0,y:0,sxx:1,syy:1,sxy:0},pod={a:0,amp:0,tA:0,tAmp:0},swell=0,recoil={a:0,amp:0},shiver=0,beat=0,near=0;
+  var TD=[];for(var i0=0;i0<5;i0++)TD.push({a:-2.4+i0*1.05+(i0%2?.25:-.15),L:92+i0*23%70,ph:i0*1.7,reach:0});
+  function colors(){var cs=getComputedStyle(document.documentElement);col.a=cs.getPropertyValue('--accent').trim()||'#FF5A1F';col.ink=cs.getPropertyValue('--ink').trim()||'#121212';col.font='500 9.5px '+(cs.getPropertyValue('--mono').trim()||'monospace')}
+  // where it lives: wrapped around the photo wherever the layout puts it, in proportion to it, and never past its canvas
+  function home(){var r=c.getBoundingClientRect(),cx=W*.6,cy=H*.48,hw=W*.16,hh=H*.2;
+    if(photo){var p=photo.getBoundingClientRect();if(p.width>40&&p.left>=r.left-4&&p.right<=r.right+4){cx=(p.left+p.width/2-r.left)/hk;cy=(p.top+p.height/2-r.top)/hk;hw=p.width/2/hk;hh=p.height/2/hk}}
+    SC=Math.max(.4,Math.min(1,hw/88));
+    var ax=Math.max(hw+18,Math.min(hw+Math.min(112,hw*1.25),W-cx-44,cx-44)),ay=Math.max(hh+14,Math.min(hh+Math.min(92,hh*.75),cy-40,H-cy-40));
+    return {cx:cx,cy:cy,ax:ax,ay:ay,hw:hw,hh:hh}}
+  function seedCloud(h){pts=[];seed=11;var k=Math.sqrt(5.99),sx=h.ax/k,sy=h.ay/k,rho=.24,tries=0;
+    while(pts.length<150&&tries++<6000){var g1=gauss(),g2=gauss(),x=g1,y=rho*g1+Math.sqrt(1-rho*rho)*g2;if(x*x+(y-rho*x)*(y-rho*x)/(1-rho*rho)>5.3)continue;
+      var px=h.cx+x*sx,py=h.cy+y*sy;if(Math.abs(px-h.cx)<h.hw+6&&Math.abs(py-h.cy)<h.hh+6)continue;
+      pts.push({hx:px,hy:py,x:px,y:py,vx:0,vy:0,s:.35+.55*rnd(),a:rnd()*TAU,r:.8+1.1*rnd(),z:.35+.65*rnd(),born:.15+rnd()*.9,user:0})}
+    B.ok=false;HM=h}
+  // a resize that leaves the photo where it was (a phone's address bar sliding away) only moves the body; a real layout change grows a new one
+  function size(){CR=null;dim=parseFloat(getComputedStyle(c).getPropertyValue('--bg-dim'))||1;var r=c.getBoundingClientRect();hk=window.MN_K?MN_K():1;dpr=window.MN_FIT?MN_FIT(r.width,r.height):Math.min(2,devicePixelRatio||1);
+    W=r.width/hk;H=r.height/hk;c.width=Math.max(1,Math.round(r.width*dpr));c.height=Math.max(1,Math.round(r.height*dpr));ctx.setTransform(dpr*hk,0,0,dpr*hk,0,0);
+    var h=home();if(!HM||Math.abs(h.hw-HM.hw)>HM.hw*.15||Math.abs(h.hh-HM.hh)>HM.hh*.15||!pts.length){seedCloud(h);return}
+    var dx=h.cx-HM.cx,dy=h.cy-HM.cy;if(Math.abs(dx)>.5||Math.abs(dy)>.5){pts.forEach(function(p){p.hx+=dx;p.hy+=dy});HM=h}}
   function used(){if(!touched){touched=true;if(hint)hint.classList.add('gone')}}
-  hero.addEventListener('pointermove',function(e){if(e.pointerType!=='mouse')return;var p=toN(e);mouse.x=p.x;mouse.y=p.y;mouse.on=p.inside;if(p.inside)used()});
-  hero.addEventListener('pointerleave',function(){mouse.on=false});
-  hero.addEventListener('click',function(e){
-    if(e.target.closest&&e.target.closest('a,button,input,select,label,.polaroid'))return;
-    var p=toN(e); if(!p.inside)return; used();
-    var u=pts.filter(function(q){return q.user}); if(u.length>=24){pts.splice(pts.indexOf(u[0]),1)}
-    var q=mk(Math.max(0,Math.min(1,p.x)),Math.max(0,Math.min(1,p.y)),performance.now()); q.r=4.2; pts.push(q);
-  });
-  var sp=0;
-  var hg=null;function scrollP(){if(!hg&&window.mnGeo)hg=mnGeo(hero);if(!hg){var h=hero.getBoundingClientRect();sp=Math.max(0,Math.min(1,-h.top/Math.max(1,h.height*.9)));return}sp=Math.max(0,Math.min(1,(window.MN_SY-hg.top)/Math.max(1,hg.h*.9)))}
-  function fit(){var n=pts.length,mx=0,my=0,sxy=0,sxx=0,syy=0;pts.forEach(function(p){mx+=p.x;my+=p.y});mx/=n;my/=n;
-    pts.forEach(function(p){var dx=p.x-mx,dy=p.y-my;sxy+=dx*dy;sxx+=dx*dx;syy+=dy*dy});
-    var b=sxy/(sxx||1e-9);return {a:my-b*mx,b:b,r2:sxx&&syy?(sxy*sxy)/(sxx*syy):0}}
+  function stats(){var n=0,mx=0,my=0;pts.forEach(function(p){mx+=p.x;my+=p.y;n++});if(n<3)return;mx/=n;my/=n;var a=0,b=0,d=0;pts.forEach(function(p){var dx=p.x-mx,dy=p.y-my;a+=dx*dx;b+=dy*dy;d+=dx*dy});M.x=mx;M.y=my;M.sxx=a/(n-1);M.syy=b/(n-1);M.sxy=d/(n-1)}
+  function d2(x,y){var dx=x-M.x,dy=y-M.y,det=M.sxx*M.syy-M.sxy*M.sxy;if(det<=0)return 0;return (dx*dx*M.syy-2*dx*dy*M.sxy+dy*dy*M.sxx)/det}
+  function angTo(x,y){return Math.atan2(y-B.cy,x-B.cx)}
+  var CR=null;function cr(){if(!CR)CR=c.getBoundingClientRect();return CR}
+  function toC(e){var r=cr();return {x:(e.clientX-r.left)/hk,y:(e.clientY-r.top)/hk,inside:visible&&e.clientX>=r.left&&e.clientX<=Math.min(r.right,innerWidth)&&e.clientY>=r.top&&e.clientY<=r.bottom}}
+  var BUSY='a,button,input,select,textarea,label,nav,.polaroid,.subject,.mp,.ac,[role=dialog]';
+  document.addEventListener('pointermove',function(e){if(e.pointerType!=='mouse')return;var p=toC(e);mouse.x=p.x;mouse.y=p.y;if(p.inside!==mouse.on){mouse.on=p.inside;if(p.inside)wake()}},{passive:true});
+  document.documentElement.addEventListener('pointerleave',function(){mouse.on=false});
+  document.addEventListener('pointerdown',function(e){if(e.pointerType==='mouse')return;var p=toC(e);mouse.x=p.x;mouse.y=p.y;mouse.on=p.inside;if(p.inside)wake()},{passive:true});
+  document.addEventListener('pointermove',function(e){if(e.pointerType==='mouse'||!mouse.on)return;var p=toC(e);mouse.x=p.x;mouse.y=p.y},{passive:true});
+  ['pointerup','pointercancel'].forEach(function(t){document.addEventListener(t,function(e){if(e.pointerType!=='mouse')mouse.on=false},{passive:true})});
+  document.addEventListener('click',function(e){
+    if(e.defaultPrevented||(e.target.closest&&e.target.closest(BUSY)))return;
+    var p=toC(e);if(!p.inside)return;used();stats();var dd=d2(p.x,p.y);fed++;
+    feeds.push({x:p.x,y:p.y,vx:0,vy:0,t0:performance.now(),d:Math.sqrt(dd),fit:dd<5.99,st:'test',rot:0});if(feeds.length>8)feeds.shift();
+    wake()});
+  var spD=true;function scrollP(){if(!spD)return;spD=false;CR=null;var h=hero.getBoundingClientRect();sp=Math.max(0,Math.min(1,-h.top/Math.max(1,h.height*.9)))}
+  addEventListener('scroll',function(){spD=true;CR=null},{passive:true});var lastT='',lastO='';
+  // the membrane: the 95% ellipse of the cloud, alive. It breathes, has a slow heartbeat, a ripple that crawls around it,
+  // and it reaches toward the cursor and toward food
+  function radius(th,t){var ct=Math.cos(th-B.ang),st=Math.sin(th-B.ang),r=1/Math.sqrt(ct*ct/(B.a*B.a)+st*st/(B.b*B.b));
+    r*=1+.018*Math.sin(3*th+t*.62)+.011*Math.sin(5*th-t*.97)+.006*Math.sin(8*th+t*1.6)+.01*Math.sin(t*1.1)+swell*.06+beat*.02;
+    var dp=wrap(th-pod.a);r+=pod.amp*Math.exp(-dp*dp/(2*.21*.21));var dr=wrap(th-recoil.a);r-=recoil.amp*Math.exp(-dr*dr/(2*.32*.32));
+    var cw=wrap(th-t*.45);r+=6*SC*Math.exp(-cw*cw/(2*.3*.3));if(shiver>.01)r+=shiver*2*Math.sin(th*23+t*29);return r}
+  // a closed curve through the points, smoothed through their midpoints so the outline never shows a corner
+  function smooth(P,X){X=X||ctx;var n=P.length;X.beginPath();var m0x=(P[n-1][0]+P[0][0])/2,m0y=(P[n-1][1]+P[0][1])/2;X.moveTo(m0x,m0y);
+    for(var i=0;i<n;i++){var p=P[i],q=P[(i+1)%n];X.quadraticCurveTo(p[0],p[1],(p[0]+q[0])/2,(p[1]+q[1])/2)}X.closePath()}
+  // the soft shading inside the body is painted small and scaled up, since it has no edges of its own to keep sharp
+  var GL=document.createElement('canvas'),gx=GL.getContext('2d'),GK=.25;
   function draw(now){
-    var t=(now-start)/1000;
-    c.style.transform=reduce?'':'translateY('+(sp*90).toFixed(1)+'px)';
-    c.style.opacity=((1-sp*.85)*dim).toFixed(3);
-    ctx.clearRect(0,0,W,H);
-    var w=W-pad*2,h=H-pad*2,RP=120;
-    ctx.globalAlpha=.16;ctx.strokeStyle=col.m;ctx.lineWidth=1;
-    ctx.beginPath();for(var g=1;g<5;g++){var gy=pad+h*g/5;ctx.moveTo(pad,gy);ctx.lineTo(W-pad,gy)}ctx.stroke();
-    // physics: cursor pushes points away, springs pull them home
-    pts.forEach(function(p){
-      if(!reduce){
-        var tx=p.hx+Math.sin(t*p.s+p.a)*.006, ty=p.hy+Math.cos(t*p.s*.8+p.a)*.01+sp*.22*(p.a-3.14)/3.14;
-        p.vx+=(tx-p.x)*.06; p.vy+=(ty-p.y)*.06;
-        if(mouse.on){var dx=(p.x-mouse.x)*w, dy=(p.y-mouse.y)*h, d=Math.sqrt(dx*dx+dy*dy);
-          if(d<RP&&d>.5){var f=(1-d/RP)*7;p.vx+=dx/d*f/w;p.vy+=dy/d*f/h}}
-        p.vx*=.82;p.vy*=.82;p.x+=p.vx;p.y+=p.vy;
-      }
-    });
-    var F=fit(); if(shownB===null){shownA=F.a;shownB=F.b} shownA+=(F.a-shownA)*.15; shownB+=(F.b-shownB)*.15;
-    // residuals near the cursor
-    if(mouse.on){ctx.globalAlpha=.35;ctx.strokeStyle=col.a;ctx.lineWidth=1;ctx.beginPath();pts.forEach(function(p){var d=Math.hypot((p.x-mouse.x)*w,(p.y-mouse.y)*h);if(d<RP*1.5){ctx.moveTo(pad+p.x*w,pad+p.y*h);ctx.lineTo(pad+p.x*w,pad+(shownA+shownB*p.x)*h)}});ctx.stroke()}
-    // static dots share one path
-    ctx.globalAlpha=.42;ctx.fillStyle=col.m;ctx.beginPath();
-    pts.forEach(function(p){if(p.user)return;var X=pad+p.x*w,Y=pad+p.y*h;ctx.moveTo(X+p.r,Y);ctx.arc(X,Y,p.r,0,6.283)});ctx.fill();
-    pts.forEach(function(p){if(!p.user)return;
-      var fresh=Math.max(0,1-(now-p.born)/600);
-      ctx.globalAlpha=.95; ctx.fillStyle=col.a;
-      ctx.beginPath();ctx.arc(pad+p.x*w,pad+p.y*h,p.r*(1+fresh*1.5),0,6.283);ctx.fill();
-      if(fresh>0){ctx.globalAlpha=fresh*.5;ctx.strokeStyle=col.a;ctx.lineWidth=1.5;ctx.beginPath();ctx.arc(pad+p.x*w,pad+p.y*h,4+(1-fresh)*26,0,6.283);ctx.stroke()}
-    });
-    var k=reduce?1:Math.min(1,t/1.6), e=1-Math.pow(1-k,3);
-    var x1=0,x2=e;
-    ctx.globalAlpha=.75;ctx.strokeStyle=col.a;ctx.lineWidth=2.6;ctx.lineCap='round';
-    ctx.beginPath();ctx.moveTo(pad+x1*w,pad+(shownA+shownB*x1)*h);ctx.lineTo(pad+x2*w,pad+(shownA+shownB*x2)*h);ctx.stroke();
+    var dtf=last?Math.min(3,Math.max(.25,(now-last)/16.667)):1;last=now;var K=function(x){return reduce?1:1-Math.pow(1-x,dtf)};
+    var t=(now-start)/1000,e=reduce?1:ease(t/1.9);
+    var sT=reduce?'':'translateY('+(sp*90).toFixed(1)+'px)',sO=((1-sp*.85)*dim).toFixed(3);if(sT!==lastT){c.style.transform=sT;lastT=sT}if(sO!==lastO){c.style.opacity=sO;lastO=sO}
+    ctx.clearRect(0,0,W,H);if(!pts.length)return;
+    // the body follows its own data: centre and shape are measured from the points every frame
+    stats();var tr=M.sxx+M.syy,det=M.sxx*M.syy-M.sxy*M.sxy,l1=tr/2+Math.sqrt(Math.max(0,tr*tr/4-det)),l2=Math.max(1,tr-l1),ang=.5*Math.atan2(2*M.sxy,M.sxx-M.syy);
+    var ta=Math.sqrt(5.99*l1)+8,tb=Math.sqrt(5.99*l2)+8;if(!B.ok){B.a=ta;B.b=tb;B.ang=ang;B.cx=M.x;B.cy=M.y;B.ok=true}
+    var q=K(.05);B.a+=(ta-B.a)*q;B.b+=(tb-B.b)*q;B.ang+=wrap(ang-B.ang)*q;B.cx+=(M.x-B.cx)*q;B.cy+=(M.y-B.cy)*q;
+    // the cursor: it leans toward you from a distance and shivers if you come inside
+    var md=Math.hypot(mouse.x-B.cx,mouse.y-B.cy),mth=angTo(mouse.x,mouse.y),edge=radius(mth,t),inside=mouse.on&&md<edge,tn=mouse.on&&!inside?Math.max(0,1-(md-edge)/(240*Math.max(.6,SC))):0;
+    near+=(tn-near)*K(.08);if(tn>0)used();
+    var food=null;feeds.forEach(function(f){if(f.st==='test'&&!f.fit)food=f});
+    if(food){pod.tA=angTo(food.x,food.y);pod.tAmp=Math.min(70*SC+20,Math.max(0,Math.hypot(food.x-B.cx,food.y-B.cy)-radius(pod.tA,t)+pod.amp)*.85)}
+    else if(near>.01){pod.tA=mth;pod.tAmp=near*near*56*SC}else pod.tAmp=0;
+    pod.a+=wrap(pod.tA-pod.a)*K(.1);pod.amp+=(pod.tAmp-pod.amp)*K(.08);
+    var bt=t%2.1;beat=reduce?0:Math.exp(-bt*bt/.006)+.5*Math.exp(-(bt-.27)*(bt-.27)/.006);
+    shiver+=((inside?1:0)-shiver)*K(.08);swell*=reduce?0:Math.pow(.955,dtf);recoil.amp*=reduce?0:Math.pow(.93,dtf);
+    // the points drift on soft springs, lean with the body and part around a cursor inside
+    var br=1+.016*Math.sin(t*1.1)+beat*.008,lx=Math.cos(mth)*near*9,ly=Math.sin(mth)*near*9,kS=K(.045),kD=Math.pow(.84,dtf);
+    pts.forEach(function(p){if(reduce){p.x=p.hx;p.y=p.hy;return}
+      var hx=M.x+(p.hx-M.x)*br+lx*p.z+Math.sin(t*p.s+p.a)*1.5,hy=M.y+(p.hy-M.y)*br+ly*p.z+Math.cos(t*p.s*.8+p.a)*1.5;
+      p.vx+=(hx-p.x)*kS;p.vy+=(hy-p.y)*kS;
+      if(inside){var dx=p.x-mouse.x,dy=p.y-mouse.y,dd=Math.hypot(dx,dy);if(dd<70&&dd>.5){var f=(1-dd/70)*1.5*dtf;p.vx+=dx/dd*f;p.vy+=dy/dd*f}}
+      p.vx*=kD;p.vy*=kD;p.x+=p.vx*dtf;p.y+=p.vy*dtf});
+    // the skin
+    var N=200,R=[];for(var i=0;i<N;i++){var th=i/N*TAU,rr=radius(th,t)*(.86+.14*e);R.push([B.cx+Math.cos(th)*rr,B.cy+Math.sin(th)*rr,th])}
+    var bx=Math.max(B.a,B.b)*1.25+pod.amp+16,x0=Math.max(0,B.cx-bx),y0=Math.max(0,B.cy-bx),x1=Math.min(W,B.cx+bx),y1=Math.min(H,B.cy+bx),gw=Math.ceil((x1-x0)*GK)+2,gh=Math.ceil((y1-y0)*GK)+2;
+    if(gw>2&&gh>2){if(GL.width<gw||GL.height<gh){GL.width=Math.max(GL.width,gw+16);GL.height=Math.max(GL.height,gh+16)}
+      gx.setTransform(1,0,0,1,0,0);gx.clearRect(0,0,gw,gh);gx.setTransform(GK,0,0,GK,-x0*GK,-y0*GK);
+      smooth(R,gx);var gr=gx.createRadialGradient(B.cx,B.cy,Math.min(B.a,B.b)*.35,B.cx,B.cy,Math.max(B.a,B.b)*1.05);gr.addColorStop(0,'rgba(0,0,0,0)');gr.addColorStop(1,col.ink);
+      gx.globalAlpha=.07*e;gx.fillStyle=gr;gx.fill();
+      if(pod.amp>1.5){var gx0=B.cx+Math.cos(pod.a)*B.a*.72,gy0=B.cy+Math.sin(pod.a)*B.b*.72,g2=gx.createRadialGradient(gx0,gy0,0,gx0,gy0,Math.max(B.a,B.b)*.95);g2.addColorStop(0,col.a);g2.addColorStop(1,'rgba(0,0,0,0)');
+        gx.save();gx.clip();gx.globalAlpha=Math.min(.17,pod.amp/260)*e;gx.fillStyle=g2;gx.fillRect(x0,y0,x1-x0,y1-y0);gx.restore()}
+      ctx.globalAlpha=1;ctx.imageSmoothingEnabled=true;ctx.drawImage(GL,0,0,gw,gh,x0,y0,gw/GK,gh/GK)}
+    // the wall: one firm line drawn in as it is born, a faint second line just inside it, small pores along it
+    ctx.lineCap='round';ctx.lineJoin='round';
+    if(e<1){var per=0;for(i=0;i<N;i++){var a2=R[i],b2=R[(i+1)%N];per+=Math.hypot(b2[0]-a2[0],b2[1]-a2[1])}ctx.setLineDash([per*e,per]);ctx.lineDashOffset=0}
+    smooth(R);ctx.globalAlpha=.42;ctx.strokeStyle=col.ink;ctx.lineWidth=1.15;ctx.stroke();ctx.setLineDash([]);
+    var I=R.map(function(p){var k=.955+.012*Math.sin(p[2]*5+t*1.3);return [B.cx+(p[0]-B.cx)*k,B.cy+(p[1]-B.cy)*k]});
+    smooth(I);ctx.globalAlpha=.13*e;ctx.lineWidth=1;ctx.stroke();
+    ctx.globalAlpha=.6*e;ctx.fillStyle=col.ink;ctx.beginPath();for(i=0;i<N;i+=10){var p0=R[i],s0=1.6+.6*Math.sin(t*1.7+i);ctx.moveTo(p0[0]+s0,p0[1]);ctx.arc(p0[0],p0[1],s0,0,TAU)}ctx.fill()
+    // fine hairs that sway, longer where it reaches
+    ctx.globalAlpha=.26*e;ctx.lineWidth=.9;ctx.beginPath();for(i=0;i<N;i+=5){var h0=R[i],nb=wrap(h0[2]-pod.a),L=(5+3.5*Math.sin(t*2.6+i*.7))*Math.max(.6,SC)+pod.amp*.14*Math.exp(-nb*nb/.1),sw=Math.sin(t*1.9+i*.37)*.55;
+      var mx2=h0[0]+Math.cos(h0[2])*L*.55,my2=h0[1]+Math.sin(h0[2])*L*.55;ctx.moveTo(h0[0],h0[1]);ctx.quadraticCurveTo(mx2,my2,h0[0]+Math.cos(h0[2]+sw)*L,h0[1]+Math.sin(h0[2]+sw)*L)}ctx.stroke();
+    // a sensor at the tip of the reach
+    if(pod.amp>12){var trr=radius(pod.a,t),tx=B.cx+Math.cos(pod.a)*trr,ty=B.cy+Math.sin(pod.a)*trr,pa=Math.min(1,(pod.amp-12)/22),g3=ctx.createRadialGradient(tx,ty,0,tx,ty,14);g3.addColorStop(0,col.a);g3.addColorStop(1,'rgba(0,0,0,0)');
+      ctx.globalAlpha=pa*.45;ctx.fillStyle=g3;ctx.fillRect(tx-14,ty-14,28,28);ctx.globalAlpha=pa;ctx.fillStyle=col.a;ctx.beginPath();ctx.arc(tx,ty,2.6,0,TAU);ctx.fill()}
+    // feelers: long, thin, tapering, curling on their own; the one nearest the cursor reaches out and lights at the tip
+    var best=-1,bd=9;if(near>.02)TD.forEach(function(d,j){var da=Math.abs(wrap(d.a-mth));if(da<bd){bd=da;best=j}});
+    TD.forEach(function(d,j){d.a+=reduce?0:Math.sin(t*.07+d.ph)*.0008*dtf;d.reach+=((j===best?near:0)-d.reach)*K(.05);
+      var rr=radius(d.a,t),x=B.cx+Math.cos(d.a)*rr,y=B.cy+Math.sin(d.a)*rr,hd=d.a,Ld=d.L*SC,L=(Ld+d.reach*Math.max(0,Math.hypot(mouse.x-x,mouse.y-y)-Ld-6))*ease((t-.9-j*.12)/1.4),n=30,seg=L/n,goal=Math.atan2(mouse.y-y,mouse.x-x);
+      if(L<1)return;var px=x,py=y;
+      ctx.strokeStyle=col.ink;var GS=5;
+      for(var q2=0;q2<n;q2++){var f=q2/n,curl=Math.sin(t*.5+d.ph+f*3.1)*.085+Math.sin(t*.21+d.ph*2+f*5.6)*.045;hd+=curl*(1-d.reach*.85);if(d.reach>.01)hd+=wrap(goal-hd)*d.reach*.17;
+        if(q2%GS===0){if(q2)ctx.stroke();var fm=(q2+GS/2)/n;ctx.globalAlpha=(1-fm*.8)*.55*e;ctx.lineWidth=Math.max(.35,1.9*(1-fm));ctx.beginPath();ctx.moveTo(px,py)}
+        x+=Math.cos(hd)*seg;y+=Math.sin(hd)*seg;ctx.lineTo(x,y);px=x;py=y}ctx.stroke();
+      if(d.reach>.12){var gt=ctx.createRadialGradient(x,y,0,x,y,12);gt.addColorStop(0,col.a);gt.addColorStop(1,'rgba(0,0,0,0)');ctx.globalAlpha=Math.min(1,d.reach*1.4)*.5;ctx.fillStyle=gt;ctx.fillRect(x-12,y-12,24,24);
+        ctx.globalAlpha=Math.min(1,d.reach*1.4);ctx.fillStyle=col.a;ctx.beginPath();ctx.arc(x,y,2.4,0,TAU);ctx.fill()}});
+    // the data inside, each point fading in on its own as the body is born
+    ctx.fillStyle=col.ink;if(reduce||t>1.9){for(var zb=0;zb<4;zb++){ctx.globalAlpha=.18+.42*(.35+.65*(zb+.5)/4);ctx.beginPath();pts.forEach(function(p){if(p.user||Math.min(3,Math.floor((p.z-.35)/.65*4))!==zb)return;ctx.moveTo(p.x+p.r,p.y);ctx.arc(p.x,p.y,p.r,0,TAU)});ctx.fill()}}
+    else pts.forEach(function(p){if(p.user)return;var b0=ease((t-p.born)/.8);if(b0<=0)return;ctx.globalAlpha=(.18+.42*p.z)*b0;ctx.beginPath();ctx.arc(p.x,p.y,p.r,0,TAU);ctx.fill()});
+    pts.forEach(function(p){if(!p.user)return;var w=Math.max(0,1-(now-p.user)/1600);ctx.globalAlpha=.45+.5*w;ctx.fillStyle=w>.04?col.a:col.ink;ctx.beginPath();ctx.arc(p.x,p.y,p.r+w*1.6,0,TAU);ctx.fill();
+      if(w>0){ctx.globalAlpha=w*.45;ctx.strokeStyle=col.a;ctx.lineWidth=1;ctx.beginPath();ctx.arc(p.x,p.y,4+(1-w)*18,0,TAU);ctx.stroke()}});
+    // food: tested, then kept or spat out
+    feeds.forEach(function(f){var a=(now-f.t0)/1000;
+      if(f.st==='test'){var ring=ease(a/.5);ctx.globalAlpha=.85*(1-ring*.4);ctx.strokeStyle=col.a;ctx.lineWidth=1.2;ctx.beginPath();ctx.arc(f.x,f.y,20-ring*15,0,TAU);ctx.stroke();
+        ctx.globalAlpha=1;ctx.fillStyle=col.a;ctx.beginPath();ctx.arc(f.x,f.y,3.2,0,TAU);ctx.fill();
+        if(a>.5||reduce){if(f.fit){f.st='kept';kept++;swell=1;var u=pts.filter(function(p){return p.user});if(u.length>=24)pts.splice(pts.indexOf(u[0]),1);pts.push({hx:f.x,hy:f.y,x:f.x,y:f.y,vx:0,vy:0,s:.5,a:rnd()*TAU,r:2,z:.9,born:0,user:now})}
+          else{f.st='spat';rej++;f.t0=now;var aw=angTo(f.x,f.y);f.vx=Math.cos(aw)*5.2;f.vy=Math.sin(aw)*5.2-1.2;recoil.a=aw;recoil.amp=20*Math.max(.6,SC);pod.amp*=.3}}}
+      else if(f.st==='spat'){f.x+=f.vx*dtf;f.y+=f.vy*dtf;var fr=Math.pow(.93,dtf);f.vx*=fr;f.vy=f.vy*fr+.06*dtf;f.rot+=f.vx*.03*dtf;var fade=1-ease(a/1.9);if(fade<=.01){f.st='gone';return}
+        ctx.save();ctx.translate(f.x,f.y);ctx.rotate(f.rot);ctx.globalAlpha=fade;ctx.strokeStyle=col.a;ctx.lineWidth=1.3;ctx.beginPath();ctx.moveTo(-6,-6);ctx.lineTo(6,6);ctx.moveTo(6,-6);ctx.lineTo(-6,6);ctx.stroke();ctx.restore();
+        ctx.globalAlpha=fade*.9;ctx.fillStyle=col.a;ctx.font=col.font;ctx.textAlign=f.vx>=0?'left':'right';ctx.fillText('OUTLIER  d '+f.d.toFixed(1),f.x+(f.vx>=0?13:-13),f.y+3)}});
+    feeds=feeds.filter(function(f){return f.st!=='gone'&&f.st!=='kept'});
     ctx.globalAlpha=1;
-    if(rd&&e>=1){var slope=-shownB;var nn=pts.length,tz=Math.sqrt(Math.max(0,F.r2)*(nn-2)/Math.max(1e-9,1-F.r2)),pz=2*(1-.5*(1+Math.tanh(tz*.7978*(1+.044715*tz*tz)))),vd=nn<8?'too few to tell':pz<.001&&F.r2>.3?'holds':pz<.05?'weak':'no real trend';rd.textContent='live fit  n='+nn+'  slope '+slope.toFixed(2)+'  R² '+F.r2.toFixed(2)+'  ·  '+vd}
+    if(rd&&e>=1){var txt='specimen  n='+pts.length+'  fed '+fed+'  kept '+kept+'  rejected '+rej;if(rd.textContent!==txt)rd.textContent=txt}
   }
-  var hr=0;function loop(now){hr=0;if(!visible||document.hidden)return;scrollP();draw(now);if(!reduce)hr=requestAnimationFrame(loop)}
-  function wakeHero(){if(!hr&&!reduce&&visible&&!document.hidden)hr=requestAnimationFrame(loop)}
-  document.addEventListener('visibilitychange',wakeHero);
+  var hr=0;function loop(now){hr=0;if(!visible||document.hidden){last=0;return}scrollP();draw(now);if(!reduce)hr=requestAnimationFrame(loop)}
+  function wake(){if(reduce){draw(performance.now());return}if(!hr&&visible&&!document.hidden)hr=requestAnimationFrame(loop)}
+  document.addEventListener('visibilitychange',wake);
   colors();size();
-  if('IntersectionObserver' in window)new IntersectionObserver(function(es){visible=es[0].isIntersecting;wakeHero()}).observe(c);
-  window.addEventListener('resize',function(){size();if(reduce)draw(performance.now())});
-  if('ResizeObserver' in window)new ResizeObserver(function(){size();if(reduce)draw(performance.now())}).observe(c);
-  var mq=matchMedia('(prefers-color-scheme: dark)');if(mq.addEventListener)mq.addEventListener('change',function(){colors();if(reduce)draw(performance.now())});addEventListener('themechange',function(){colors();if(reduce)draw(performance.now())});
-  new MutationObserver(function(){colors();if(reduce)draw(performance.now())}).observe(document.documentElement,{attributes:true,attributeFilter:['data-theme']});
-  if(reduce){hero.addEventListener('click',function(){draw(performance.now())});draw(performance.now())}else wakeHero();
+  if('IntersectionObserver' in window)new IntersectionObserver(function(es){visible=es[0].isIntersecting;wake()}).observe(c);
+  var rz=0;function resized(){clearTimeout(rz);rz=setTimeout(function(){size();wake()},120)}
+  window.addEventListener('resize',resized);if('ResizeObserver' in window)new ResizeObserver(resized).observe(c);
+  // the photo can be moved by the intro's own fitting code after load, so the specimen settles around it again
+  setTimeout(resized,400);setTimeout(resized,1600);if(document.fonts&&document.fonts.ready)document.fonts.ready.then(resized);
+  var mq=matchMedia('(prefers-color-scheme: dark)');if(mq.addEventListener)mq.addEventListener('change',function(){colors();wake()});addEventListener('themechange',function(){colors();wake()});
+  new MutationObserver(function(){colors();wake()}).observe(document.documentElement,{attributes:true,attributeFilter:['data-theme']});
+  wake();
 })();
 </script>
 <script>
@@ -4387,20 +4500,26 @@ noir:["/* Noir. Black and white, heavy grain. */","",
 <script>
 // phones: how the phone is being held, shared by the intro and the Skeptic room.
 // Android sends it on its own. iOS asks once, after a tap, and remembers for the rest of the visit
-(function(){var T=window.mnTilt={x:0,y:0,on:false,need:false,asked:false,ask:function(){}};
+(function(){var T=window.mnTilt={x:0,y:0,on:false,need:false,asked:false,state:'none',paused:false,ask:function(){},toggle:function(){}};
   if(!('DeviceOrientationEvent' in window)||!matchMedia('(pointer:coarse)').matches||matchMedia('(prefers-reduced-motion: reduce)').matches)return;
   var bx=null,by=null,DO=window.DeviceOrientationEvent,live=false;
-  function on(e){if(e.gamma==null||e.beta==null)return;var gm=e.gamma,bt=e.beta,o=(screen.orientation&&screen.orientation.angle)||window.orientation||0,t;
+  function fire(){try{dispatchEvent(new Event('mntilt'))}catch(x){}}
+  function wait(){T.state='wait';fire();setTimeout(function(){if(T.state==='wait'){T.state='nodata';fire()}},2600)}
+  function on(e){if(e.gamma==null||e.beta==null)return;if(T.state==='wait'||T.state==='nodata'){T.state=T.paused?'off':'on';fire()}if(T.paused){T.on=false;return}var gm=e.gamma,bt=e.beta,o=(screen.orientation&&screen.orientation.angle)||window.orientation||0,t;
     if(o===90){t=gm;gm=-bt;bt=t}else if(o===-90||o===270){t=gm;gm=bt;bt=-t}
     // whatever angle the phone is held at becomes the middle, and it slowly re-centres if that changes
     if(bx===null){bx=gm;by=bt}bx+=(gm-bx)*.003;by+=(bt-by)*.003;
     T.x=Math.max(-1,Math.min(1,(gm-bx)/20));T.y=Math.max(-1,Math.min(1,(bt-by)/20));T.on=true}
   function listen(){if(live)return;live=true;T.need=false;addEventListener('deviceorientation',on,{passive:true})}
   if(typeof DO.requestPermission==='function'){T.need=true;
-    T.ask=function(){if(T.asked)return;T.asked=true;DO.requestPermission().then(function(s){if(s==='granted'){try{sessionStorage.setItem('mn-tilt','1')}catch(e){}listen()}}).catch(function(){})};
+    T.state='need';
+    T.ask=function(){if(T.asked)return;T.asked=true;T.state='asking';fire();var q;
+      try{q=DO.requestPermission()}catch(x){T.asked=false;T.state='need';fire();return}
+      q.then(function(s){if(s==='granted'){try{sessionStorage.setItem('mn-tilt','1')}catch(e){}listen();wait()}else{T.state='denied';fire()}}).catch(function(){T.asked=false;T.state='need';fire()})};
     var ok=false;try{ok=sessionStorage.getItem('mn-tilt')==='1'}catch(e){}
-    if(ok)DO.requestPermission().then(function(s){if(s==='granted')listen()}).catch(function(){})}
-  else listen();
+    if(ok)DO.requestPermission().then(function(s){if(s==='granted'){T.asked=true;listen();wait()}}).catch(function(){})}
+  else{listen();wait()}
+  T.toggle=function(){if(T.state!=='on'&&T.state!=='off')return;T.paused=!T.paused;if(T.paused)T.on=false;T.state=T.paused?'off':'on';fire()};
 })();
 
 </script>
@@ -4430,7 +4549,7 @@ noir:["/* Noir. Black and white, heavy grain. */","",
 // flags the outliers with a leader line and reads out what it found. Without a mouse it drifts on its own.
 (function(){var hero=document.querySelector('.hero');if(!hero)return;var PH=matchMedia('(pointer:coarse)').matches,BAND=[0,1],TAP=0,Y1=0;
   // phones: no lens. Light passes over the sculpture instead, like a lamp moving across chrome
-  {var hb=document.getElementById('hero-bg');if(hb&&PH)hb.style.display='none';var lb=hero.querySelector('.lab');if(lb&&PH)lb.style.display='none';var mt=hero.querySelector('.hero-melt');if(mt&&!mt.querySelector('.sweep')){var sw=document.createElement('i');sw.className='sweep';sw.innerHTML='<b></b><b class="b2"></b><u></u>';mt.appendChild(sw);
+  {var hb=document.getElementById('hero-bg');var lb=hero.querySelector('.lab');if(lb&&PH)lb.style.display='none';var mt=hero.querySelector('.hero-melt');if(mt&&!mt.querySelector('.sweep')){var sw=document.createElement('i');sw.className='sweep';sw.innerHTML='<b></b><b class="b2"></b><u></u>';mt.appendChild(sw);
       // a warm light on the sculpture: it follows the finger anywhere in the intro, and the way the phone leans when it is still
       var lt=sw.querySelector('u'),TL=window.mnTilt||{on:false},fx=0,fy=0,ft=false,lx=-1,ly=-1,lo=0,run=false,vis=true,mr=null;
       function geo(){mr=mt.getBoundingClientRect()}
@@ -4682,13 +4801,16 @@ noir:["/* Noir. Black and white, heavy grain. */","",
     ACT=GZ.b>0||GZ.tw!==0||Math.abs(GZ.sqT-GZ.sq)>.004||Math.abs(GZ.tx-GZ.x)+Math.abs(GZ.ty-GZ.y)>.004||Math.abs(GZ.dilT-GZ.dil)>.004}
 
   /* ---------- layout: every formation is a list of targets, one per dot ---------- */
+  var RS=null,PHL=matchMedia('(max-width:699px),(max-aspect-ratio:20/21)');
   function layout(){lastLK='';
     var d=Math.min(lowFx?(COARSE?2:1.25):window.MN_LITE?(COARSE?2:1.5):(COARSE?3:1.5),devicePixelRatio||1);DP=d, sr=stick.getBoundingClientRect(), r=stage.getBoundingClientRect();
     W=sr.width; H=sr.height; LW=W; LH=H; [cv,g2.canvas].forEach(function(c){c.width=Math.round(W*d);c.height=Math.round(H*d)}); g.setTransform(d,0,0,d,0,0); g2.setTransform(d,0,0,d,0,0);
     R={x:r.left-sr.left,y:r.top-sr.top,w:r.width,h:Math.max(160,r.height)};
     var small=W<700; n=lowFx?(small?440:620):window.MN_LITE?(small?600:700):(small?720:1100);
     VH=innerHeight;var rr=rnd(7),old=P; P=[]; for(var i=0;i<n;i++){var a0=rr(),b0=rr(),o=old[i];P.push({d:rr(),k:rr()*2-1,j:rr()*6.28,a:a0,b:b0,c:rr(),x:o?o.x:a0*W,y:o?o.y:b0*H,vx:0,vy:0})}
-    F=[scatter(),eye(),clusters(),doc(),chip(),stamp()];
+    RS=null;if(PHL.matches){var capsEl=sec.querySelector('.sk-caps'),capEls=capsEl?[].slice.call(capsEl.querySelectorAll('.sk-cap')):[];
+      if(capEls.length===5){var cTop=capsEl.getBoundingClientRect().top-sr.top,sBot=r.bottom-sr.top;RS=[R];capEls.forEach(function(c,i){var y=Math.round(cTop+c.offsetHeight+54);RS[i+1]={x:R.x,y:y,w:R.w,h:Math.max(160,sBot-y)}})}}
+    var R0=R,BF=[eye,clusters,doc,chip,stamp];F=[scatter()];BF.forEach(function(fn,i){R=RS?RS[i+1]:R0;F.push(fn())});R=R0;tbR=null;
     snaps();
   }
   // one swipe moves one scene. A bigger swipe or a fling stops at the next scene; quick repeated swipes,
@@ -4700,10 +4822,12 @@ noir:["/* Noir. Black and white, heavy grain. */","",
   function brake(to){braking=true;var hs=html.style,ov=hs.overflow,sb=hs.scrollBehavior;if(COARSE)hs.overflow='hidden';hs.scrollBehavior='auto';scrollTo(0,to);
     requestAnimationFrame(function(){requestAnimationFrame(function(){hs.overflow=ov;hs.scrollBehavior=sb;braking=false;hold()})})}
   addEventListener('touchstart',function(){G.on=true;G.touch=true;G.held=true;bounds(scrollY)},{passive:true});
-  function lift(){if(!G.touch)return;G.held=false;G.end=performance.now()+2600;var y=scrollY;
+  function lift(){if(!G.touch)return;G.held=false;G.end=performance.now()+1800;var y=scrollY;
     // the finger itself carried it past a scene: the fling stops at the scene now showing, never one further
     if(stopY.length&&(y>G.hi||y<G.lo)){var k=sceneAt(y),sy=stopY[k];if(y>G.hi){G.hi=Math.max(sy,G.hi);G.lo=-1e9}else{G.lo=Math.min(sy,G.lo);G.hi=1e9}if(y>G.hi)brake(G.hi);else if(y<G.lo)brake(G.lo)}}
   addEventListener('touchend',lift,{passive:true});addEventListener('touchcancel',lift,{passive:true});
+  // a click or a key press is a new intent (a menu link, a button that scrolls), so the last swipe stops steering the page
+  addEventListener('click',function(){G.on=false},true);addEventListener('keydown',function(){G.on=false},true);
   addEventListener('wheel',function(e){var d=e.deltaY*(e.deltaMode===1?16:e.deltaMode===2?VH:1),ad=Math.abs(d),t=performance.now(),dir=d>0?1:d<0?-1:0;if(!dir)return;
     var fresh=!G.on||G.touch||t-G.last>220||dir!==G.dir||(ad>G.pd*1.7&&ad>12);
     // held on: a scroll that keeps its strength well after the stop counts as asking for the next scene
@@ -4715,6 +4839,14 @@ noir:["/* Noir. Black and white, heavy grain. */","",
     if(G.held)return;
     var y=scrollY,to=y>G.hi?G.hi:y<G.lo?G.lo:null;if(to===null)return;if(!G.lock){G.lock=true;G.lt=t}brake(to)}
   addEventListener('scroll',hold,{passive:true});
+  // phones: a drag that stops half way into or out of the room settles it, so a caption is never left cut off under the bar
+  if(COARSE){var snT=0,lastSY=scrollY,sDir=1,settle=function(){if(!G.on||G.held||!G.touch||!stopY.length||performance.now()>G.end+400)return;
+      var y=scrollY,top=ST.top,end=ST.top+ST.span,to=null;
+      if(y<stopY[0]-2&&y>top-VH*.92)to=sDir>0&&y>top-VH*.6?stopY[0]:sDir<0&&y<top-VH*.4?top-VH:null;
+      else if(y>end+2&&y<end+VH-2)to=sDir>0&&y>end+VH*.4?end+VH:sDir<0&&y<end+VH*.6?end:null;
+      if(to!==null&&Math.abs(to-y)>2){try{scrollTo({top:to,behavior:'smooth'})}catch(e){scrollTo(0,to)}}};
+    addEventListener('scroll',function(){var y=scrollY;if(y!==lastSY){sDir=y>lastSY?1:-1;lastSY=y}if(!G.on||!G.touch||G.held||braking)return;clearTimeout(snT);snT=setTimeout(settle,170)},{passive:true});
+    addEventListener('touchend',function(){clearTimeout(snT);snT=setTimeout(settle,220)},{passive:true})}
   function T(x,y,c,a,s,grp){return {x:x,y:y,c:c,a:a,s:s,g:grp||0}}
   function dust(p,a){return T(R.x+p.a*R.w,R.y+p.b*R.h,'soft',a||.14,1.1,'dust')}
   function scatter(){return P.map(function(p){return T(p.a*W,p.b*H,'soft',.12,1.2,'dust')})}
@@ -4926,7 +5058,7 @@ noir:["/* Noir. Black and white, heavy grain. */","",
   function frameMarks(fi,al){var m=10,x0=R.x-8,y0=R.y-8,x1=R.x+R.w+8,y1=R.y+R.h+8;g.globalAlpha=al*.7;g.strokeStyle=C.dim;g.lineWidth=1;g.beginPath();
     [[x0,y0,1,1],[x1,y0,-1,1],[x0,y1,1,-1],[x1,y1,-1,-1]].forEach(function(q){g.moveTo(q[0],q[1]+q[3]*m);g.lineTo(q[0],q[1]);g.lineTo(q[0]+q[2]*m,q[1])});g.stroke();
     var nm=['','Fig. 01 · Subject','Fig. 02 · Nine tests','Fig. 03 · Fact check','Fig. 04 · Gosset','Fig. 05 · Verdict'][fi];if(nm)txt(nm.toUpperCase(),R.x,R.y-22,C.soft,al*.9,9);
-    if(TL.need&&!TL.asked&&COARSE)txt('TAP TO TILT',R.x+R.w,R.y-22,C.sig,al*.85,9,'right',600)}
+}
   function labels(fi,tt,al){if(al<=0.01)return;frameMarks(fi,al);
     if(fi===1){var L=K.logo,yb=L.cy+L.Bh+30,trk=GZ.mode==='you';
       txt(trk?'TRACKING YOU':'SCANNING',R.x,R.y-6,trk?C.sig:C.soft,al,9,'left',600);
@@ -4981,8 +5113,7 @@ noir:["/* Noir. Black and white, heavy grain. */","",
       call(S.cx-S.bw*.42,S.cy-S.bh*.55,S.cx-S.bw*.62,Math.max(S.cy-S.bh*1.35,R.y+22),'9 METRICS AT ONCE','p 0.026 BECOMES 0.236',seg(tt,.3,.55));
       if(W<520)call(S.cx+S.bw*.4,S.cy-S.bh*.55,S.cx+S.bw*.62,Math.max(S.cy-S.bh*1.35,R.y+22),'2 OF 10 NUMBERS','NOT IN THE DATA',seg(tt,.4,.65));else call(S.cx+S.bw*.4,S.cy+S.bh*.55,S.cx+S.bw*.6,Math.min(S.cy+S.bh*1.3,R.y+R.h-18),'2 OF 10 NUMBERS','NOT IN THE DATA',seg(tt,.4,.65));
       var line='THE CLAIM DOES NOT HOLD UP',nch=Math.round(line.length*seg(tt,.22,.48));txt(line.slice(0,nch)+(nch<line.length&&nch>0?'_':''),S.cx,S.cy+S.bh*.5+40,C.ink,al,11,'center',600);
-      txt('DO NOT SHIP IT MONDAY',S.cx,S.cy+S.bh*.5+57,C.soft,al*seg(tt,.48,.6),9,'center');
-      if(TL.need&&!TL.asked)txt('TAP, THEN TILT YOUR PHONE',S.cx,S.cy+S.bh*.5+84,C.sig,al*seg(tt,.62,.8)*(.6+.4*Math.sin(performance.now()*.004)),9,'center',600)}
+      txt('DO NOT SHIP IT MONDAY',S.cx,S.cy+S.bh*.5+57,C.soft,al*seg(tt,.48,.6),9,'center')}
     g.globalAlpha=1}
 
   /* ---------- the frame: scroll picks the formation, dots fly between them ---------- */
@@ -4991,11 +5122,22 @@ noir:["/* Noir. Black and white, heavy grain. */","",
   sec.addEventListener('pointerleave',function(e){if(e.pointerType!=='mouse')return;ptr.on=0;ptr.nx=0});
   // touch: stir dots, spark trail, steer gaze
   var TL=window.mnTilt||{on:false},tapX=0,tapY=0,tapM=false,burst=0;
-  if(COARSE){var tch=function(e){var t=e.touches[0];if(!t)return;var b=stick.getBoundingClientRect();ptr.x=t.clientX-b.left;ptr.y=t.clientY-b.top;ptr.on=1;ptr.tch=1;ptr.moved=true;if(Math.abs(t.clientX-tapX)+Math.abs(t.clientY-tapY)>10)tapM=true};
-    sec.addEventListener('touchstart',function(e){var t=e.touches[0];if(t){tapX=t.clientX;tapY=t.clientY;tapM=false}ptr.lx=null;tch(e);burst=1;GZ.poke=1},{passive:true});
-    sec.addEventListener('touchmove',tch,{passive:true});
-    var tend=function(){ptr.on=0;ptr.tch=0;ptr.lx=null};sec.addEventListener('touchcancel',tend,{passive:true});
-    sec.addEventListener('touchend',function(){tend();if(!tapM&&TL.need&&!TL.asked)TL.ask()},{passive:true});sec.addEventListener('click',function(){if(TL.need&&!TL.asked)TL.ask()})}
+  if(COARSE){var tT0=0,tFirst=false,steer=false,onFig=false,tch=function(e){var t=e.touches[0];if(!t)return;var b=stick.getBoundingClientRect();ptr.x=t.clientX-b.left;ptr.y=t.clientY-b.top;ptr.on=1;ptr.tch=1;ptr.moved=true;if(Math.abs(t.clientX-tapX)+Math.abs(t.clientY-tapY)>10)tapM=true};
+    sec.addEventListener('touchstart',function(e){var t=e.touches[0];if(t){tapX=t.clientX;tapY=t.clientY;tapM=false;var b=stick.getBoundingClientRect(),lx=t.clientX-b.left,ly=t.clientY-b.top;onFig=e.touches.length===1&&!e.target.closest('a,button')&&b.top<=1&&lx>=R.x-10&&lx<=R.x+R.w+10&&ly>=R.y-10&&ly<=R.y+R.h+10}tT0=performance.now();tFirst=true;steer=false;ptr.lx=null;tch(e);burst=1;GZ.poke=1},{passive:true});
+    sec.addEventListener('touchmove',function(e){var t=e.touches[0];if(tFirst&&t){tFirst=false;var dx=Math.abs(t.clientX-tapX),dy=Math.abs(t.clientY-tapY);steer=onFig&&e.touches.length===1&&(performance.now()-tT0>260||dx>dy*1.4)}if(steer&&e.cancelable)e.preventDefault();tch(e)},{passive:false});
+    var tend=function(){ptr.on=0;ptr.tch=0;ptr.lx=null;steer=false};sec.addEventListener('touchcancel',tend,{passive:true});
+    sec.addEventListener('touchend',tend,{passive:true})}
+  /* ---------- the tilt switch: a small lit pill above the figure. Tap it once to let the phone's motion steer the room, tap again to pause */
+  var TB=null,tbR=null,tbS='',tbHide=0;
+  if(COARSE&&window.mnTilt){TB=document.createElement('button');TB.type='button';TB.className='sk-tilt gone';TB.setAttribute('aria-live','polite');
+    TB.innerHTML='<span class="sk-tilt-ph" aria-hidden="true"><i></i></span><span class="sk-tilt-t"></span>';stick.appendChild(TB);
+    TB.addEventListener('click',function(e){e.stopPropagation();if(TL.state==='need')TL.ask();else TL.toggle()});
+    var tbSet=function(){var st=TL.state||'none',lab={need:'Tilt to steer',asking:'Allow motion',wait:'Tilt on',on:'Tilt on',off:'Tilt off',denied:'Motion blocked'}[st];
+      if(st===tbS)return;tbS=st;clearTimeout(tbHide);TB.setAttribute('data-s',st);
+      if(!lab){TB.classList.add('gone');return}
+      TB.querySelector('.sk-tilt-t').textContent=lab;TB.setAttribute('aria-label',st==='need'?'Turn on tilt to steer the eye':st==='on'||st==='wait'?'Tilt is on. Tap to pause':st==='off'?'Tilt is paused. Tap to turn it back on':lab);
+      TB.classList.remove('gone');if(st==='denied')tbHide=setTimeout(function(){TB.classList.add('gone')},4200)};
+    addEventListener('mntilt',tbSet);setTimeout(tbSet,0)}
   var STIFF={flick:1,crease:1,lid:1,lash:1,iris:1,cl:1,car:1,vein:1,sc:1,ol:1,pin:1,core:1,orb3:1,tend:1,cell:1},STILL={flick:1,crease:1,lid:1,lash:1,cl:1,ol:1,pin:1,core:1,orb3:1,tend:1,cell:1},FLAT={iris:1,sc:1,vein:1,car:1};
   var VX=[],lastNow=0,lastTk='',frameEl=document.getElementById('sk-frame');
   function draw(now){var dtf=lastNow?clamp((now-lastNow)/16.67,.5,3):1;lastNow=now;var kk=1-Math.pow(.83,dtf),dmp=Math.pow(.72,dtf);
@@ -5014,6 +5156,8 @@ noir:["/* Noir. Black and white, heavy grain. */","",
       var el=now-TS.t0,mv=TS.from!==fsc,uu=mv?clamp(el/TU,0,1):1;
       if(uu<1){a=TS.from+1;b=fsc+1;u=uu;tt=1}else{a=b=fsc+1;u=0;tt=clamp((el-(mv?TU*.75:0))/TP[fsc],0,1)}
       TS.shown=uu>.5?fsc:TS.from;TS.busy=el<TU+TP[fsc]+200}
+    if(RS){R=RS[u>.5?b:a]||RS[0]}
+    if(TB){if(tbR!==R){tbR=R;TB.style.top=Math.round(R.y-44)+'px';TB.style.right=Math.round(W-R.x-R.w)+'px'}if(TL.on){TB.style.setProperty('--tx',TL.x.toFixed(2));TB.style.setProperty('--ty',TL.y.toFixed(2))}}
     var ccx=R.x+R.w/2,ccy=R.y+R.h/2,has=function(k){return a===k||b===k};
     // the eyes: one gaze shared by every eye in the room
     ACT=false;if(has(1)||has(2)||has(4)){var gc=has(1)?K.logo:has(4)?K.ch:{cx:ccx,cy:ccy,rad:K.cl.cr};gaze(now,dtf,gc.cx,gc.cy,gc.rad||gc.ir||40);if(!gpuName.t&&has(4))gpuName()}
@@ -5754,5 +5898,19 @@ noir:["/* Noir. Black and white, heavy grain. */","",
 })();
 
 </script>
+<script>/* leaving for another page of the site: the page dims into its own colour first, then the next one fades up */
+(function(){if(matchMedia('(prefers-reduced-motion: reduce)').matches)return;var veil=null;
+  function clear(){if(veil){veil.remove();veil=null}}
+  addEventListener('pageshow',function(e){if(e.persisted)clear()});
+  addEventListener('click',function(e){if(e.defaultPrevented||e.button!==0||e.metaKey||e.ctrlKey||e.shiftKey||e.altKey)return;
+    var a=e.target.closest&&e.target.closest('a[href]');if(!a||(a.target&&a.target!=='_self')||a.hasAttribute('download'))return;
+    var u;try{u=new URL(a.href,location.href)}catch(x){return}
+    if(u.origin!==location.origin||!/(\/|\.html)$/.test(u.pathname)||u.pathname===location.pathname)return;
+    e.preventDefault();var c=getComputedStyle(document.body).backgroundColor;if(!c||c==='rgba(0, 0, 0, 0)'||c==='transparent')c=getComputedStyle(document.documentElement).backgroundColor;
+    try{sessionStorage.setItem('mn-pg',c);sessionStorage.setItem('mn-pg-t',String(Date.now()))}catch(x){}
+    clear();veil=document.createElement('div');veil.className='pg-veil';veil.style.setProperty('--pg-c',c);document.body.appendChild(veil);
+    requestAnimationFrame(function(){requestAnimationFrame(function(){veil.classList.add('on')})});
+    setTimeout(function(){location.href=u.href},280)});
+})();</script>
 </body>
 </html>

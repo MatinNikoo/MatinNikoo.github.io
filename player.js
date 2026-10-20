@@ -18,7 +18,7 @@
   var saved = load(), keepCorner = null; try { keepCorner = (JSON.parse(localStorage.getItem(KEY) || 'null') || {}).corner } catch (e) {}
   /* a new visit gets a new shuffle; moving between pages keeps the same song and spot */
   var st = saved ? { order: saved.order, i: saved.i | 0, t: saved.t || 0, playing: saved.playing, muted: saved.muted, min: saved.min, vol: saved.vol == null ? .8 : saved.vol, corner: saved.corner || 'br' }
-                 : { order: shuffle(), i: 0, t: 0, playing: false, muted: false, min: matchMedia('(max-width:600px)').matches, vol: .8, corner: keepCorner || 'br' };
+                 : { order: shuffle(), i: 0, t: 0, playing: false, muted: false, min: matchMedia('(max-width:600px),(max-height:500px)').matches, vol: .8, corner: keepCorner || 'br' };
   function save() { try { localStorage.setItem(KEY, JSON.stringify({ order: st.order, i: st.i, t: st.t, playing: st.playing, muted: st.muted, min: st.min, vol: st.vol, corner: st.corner, ts: Date.now() })) } catch (e) {} }
   function cur() { return TRACKS[st.order[st.i]] }
 
@@ -113,7 +113,7 @@
     '@media (hover:none){.mp-vr{display:none}}',
     '.mp-open{display:none}',
     '.mp.min{width:calc(64px*var(--mk,1));--h:calc(64px*var(--mk,1));--r:calc(18px*var(--mk,1))}',
-    '@media (max-width:600px){.mp{--h:104px;width:min(340px,calc(100vw - 24px));right:12px;bottom:12px}.mp.c-bl,.mp.c-tl{left:12px}.mp.c-tr,.mp.c-tl{top:68px}.mp.min{width:50px;--h:50px;--r:14px}.mp-eq{right:6px;bottom:6px}.mp-cor{top:8px;right:10px}}',
+    '@media (max-width:600px),(max-height:500px){.mp{--h:104px;width:min(340px,calc(100vw - 24px));right:12px;bottom:12px}.mp.c-bl,.mp.c-tl{left:12px}.mp.c-tr,.mp.c-tl{top:68px}.mp.min{width:50px;--h:50px;--r:14px}.mp-eq{right:6px;bottom:6px}.mp-cor{top:8px;right:10px}}',
     '.mp .ac-body,.mp .ac-blur{transition:opacity .28s ease .22s,visibility 0s 0s}.mp.min .ac-body,.mp.min .ac-blur{opacity:0;visibility:hidden;pointer-events:none;transition:opacity .12s ease,visibility 0s .12s}.mp.min .mp-cor{display:none}',
     '.mp.min .ac-art{width:100%;height:100%;-webkit-mask-image:none;mask-image:none;background-image:var(--cover)!important}',
     '',
