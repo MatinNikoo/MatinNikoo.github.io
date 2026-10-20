@@ -472,11 +472,11 @@
     });
     var gh = document.querySelector('a[href="https://github.com/MatinNikoo"]');
     fx.innerHTML = '<div class="fx-path"><span>Matin</span>›<span>Projects</span></div>' +
-      '<nav class="fx-side" aria-label="Places"><b>' + I.folder + 'Projects</b><a href="resume.pdf" target="_blank" rel="noopener">' + I.pdf + 'Resume</a>' +
+      '<nav class="fx-side" aria-label="Places"><b>' + I.folder + 'Projects</b><a href="Matin_Nikoomanzar_Resume.pdf" target="_blank" rel="noopener">' + I.pdf + 'Resume</a>' +
       (gh ? '<a href="' + gh.href + '" target="_blank" rel="noopener">' + I.folder + 'GitHub</a>' : '') + '</nav>' +
       '<div class="fx-main"><div class="fx-grid">' + items.map(function (p) {
         return '<a class="fx-it" href="' + p.id + '" data-go="' + p.id + '">' + I.folder + '<i>' + esc(p.no) + '</i><b>' + esc(p.name) + '</b><small>' + esc(p.sub) + '</small></a>';
-      }).join('') + '<a class="fx-it" href="resume.pdf" target="_blank" rel="noopener">' + I.pdf + '<i>PDF</i><b>resume.pdf</b><small>One page</small></a></div></div>' +
+      }).join('') + '<a class="fx-it" href="Matin_Nikoomanzar_Resume.pdf" target="_blank" rel="noopener">' + I.pdf + '<i>PDF</i><b>resume.pdf</b><small>One page</small></a></div></div>' +
       '<div class="fx-st">' + (items.length + 1) + ' items</div>';
     fx.addEventListener('click', function (e) {
       var g = e.target.closest('[data-go]'); if (!g) return;
@@ -496,7 +496,7 @@
       ['GitHub', link('a[href="https://github.com/MatinNikoo"]'), 'GH'],
       ['LinkedIn', link('a[href*="linkedin.com/in/"]'), 'in'],
       ['Email', link('a[href^="mailto:"]'), '@'],
-      ['Resume', 'resume.pdf', 'CV']
+      ['Resume', 'Matin_Nikoomanzar_Resume.pdf', 'CV']
     ].filter(function (t) { return t[1] });
     bx.innerHTML = '<div class="bx-tabs"><span class="bx-tab"><i></i>New tab</span></div>' +
       '<div class="bx-url">' + I.lock + '<span>matinnikoo.github.io</span></div>' +
