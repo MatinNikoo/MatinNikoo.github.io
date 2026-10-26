@@ -2930,7 +2930,7 @@ button.nav-lab{display:inline-flex;align-items:center;gap:.3rem;padding-right:.7
       <ul class="tags"><li>Python</li><li>pandas</li><li>block bootstrap</li><li>Reality Check</li><li>123 tests</li></ul>
       <p>I tested the 50/200 day moving average rule on a century of US stocks and 35 years of markets outside the US, to see if it works as insurance. I wrote the question, the rules and what would count as a pass down first and froze them before running anything.</p>
       <p>It lost less than buy and hold in 9 of the 10 big US bear markets since 1927, about $21,000 ahead per $100,000 at the bottom, and that cost about $5,400 a year in normal times. But just holding 69% stocks and the rest in T-bills did about as well for the same risk, and my precommitted test came out Mixed.</p>
-      <div class="links"><a href="https://matinnikoo.github.io/momentum-backtest/" target="_blank" rel="noopener">Full report</a><a href="https://github.com/MatinNikoo/momentum-backtest" target="_blank" rel="noopener">Code</a></div>
+      <div class="links"><a href="https://github.com/MatinNikoo/momentum-backtest" target="_blank" rel="noopener">Code and tests</a><a href="https://github.com/MatinNikoo/momentum-backtest/blob/main/paper/main.pdf" target="_blank" rel="noopener">Paper</a><a href="https://matinnikoo.github.io/momentum-backtest/" target="_blank" rel="noopener">First study</a></div>
     </div>
     <figure class="visual tf" id="tf">
       <div class="tf-head">
@@ -3051,7 +3051,7 @@ button.nav-lab{display:inline-flex;align-items:center;gap:.3rem;padding-right:.7
       <label for="s-name" class="sim-wide">App title<input id="s-name" type="text" value="Truck Driver" maxlength="80" autocomplete="off" spellcheck="false"></label>
       <div class="sim-ms" id="s-ms" aria-label="Chance of each milestone within a year"><span>10K <b id="s-m0">29.7%</b></span><span>100K <b id="s-m1">9.9%</b></span><span>1M <b id="s-m2">2.1%</b></span></div>
     </div>
-    <p class="sim-tip" id="s-tip">80% range <b>9.4% to 10.5%</b>, the model's own uncertainty.</p>
+    <p class="sim-tip" id="s-tip">80% sure the true chance is between <b>9.4% and 10.5%</b>. Any one app still either makes it or doesn't.</p>
     <p class="sim-foot"><span>Launch-day facts only</span><a href="simulator.html">Open the full simulator</a></p>
   </aside>
     <figure class="visual wide reveal ps">
@@ -3464,7 +3464,7 @@ button.nav-lab{display:inline-flex;align-items:center;gap:.3rem;padding-right:.7
     $("s-bar").style.width=Math.min(m.p/CAP,1)*100+"%";
     $("s-key").textContent=(k>=1.25?k.toFixed(1)+" times the average app":k>=0.8?"about the average app":(1/k).toFixed(1)+" times less likely than the average app")+", the line at 3.5%";
     MS.forEach(function(ms,i){$("s-m"+i).textContent=pct(r[ms].p)});
-    $("s-tip").innerHTML="80% range <b>"+pct(m.lo)+" to "+pct(m.hi)+"</b>, the model's own uncertainty.";
+    $("s-tip").innerHTML="80% sure the true chance is between <b>"+pct(m.lo)+" and "+pct(m.hi)+"</b>. Any one app still either makes it or doesn't.";
     if(user&&!counted){counted=true;try{if(window.goatcounter&&window.goatcounter.count)window.goatcounter.count({path:"simulator-used-home",title:"Simulator used (homepage)",event:true})}catch(e){}}
   }
   function load(){if(loading)return;loading=true;var sc=document.createElement("script");sc.src="simulator-model.js";sc.async=true;sc.onload=function(){render(want)};sc.onerror=function(){loading=false};document.head.appendChild(sc)}
