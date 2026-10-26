@@ -2,7 +2,7 @@
 
 My personal site. Live at [matinnikoo.github.io](https://matinnikoo.github.io).
 
-Plain HTML, CSS and JavaScript, no framework or build step. The charts are drawn on canvas by hand.
+Plain HTML, CSS and JavaScript, no framework or build step. The charts are drawn straight onto canvas, with no chart library.
 
 | Page | What it is |
 |---|---|
