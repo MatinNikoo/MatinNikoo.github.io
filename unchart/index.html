@@ -2,6 +2,7 @@
 <html lang="en" data-lab="unchart">
 <head>
 <meta charset="utf-8">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' 'wasm-unsafe-eval' https://gc.zgo.at; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' data: https://fonts.gstatic.com; img-src 'self' data: blob: https://matinnikoo.goatcounter.com https://lastfm.freetls.fastly.net; media-src 'self' blob:; connect-src 'self' data: blob: https://matinnikoo.goatcounter.com https://ws.audioscrobbler.com; worker-src 'self' blob:; frame-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self'; upgrade-insecure-requests">
 <script>/* moving between pages of the site: the new page starts under the last page's colour and fades up out of it */
 try{(function(){var d=document.documentElement,c=sessionStorage.getItem('mn-pg'),t=+sessionStorage.getItem('mn-pg-t')||0;sessionStorage.removeItem('mn-pg');
 if(c&&Date.now()-t<5000&&!matchMedia('(prefers-reduced-motion: reduce)').matches){d.classList.add('pg-in');d.style.setProperty('--pg-c',c);setTimeout(function(){d.classList.remove('pg-in')},900)}})()}catch(e){}</script>
@@ -925,7 +926,7 @@ window.MN_LIVE_MAP=[
   [/\.tags\s+li|\.feat|\.meta|\.when/,'.k'],
   [/\.nav\b|\.wm\b|\.mark\b/,'.roomhead, .mark']];
 </script>
-<script data-goatcounter="https://matinnikoo.goatcounter.com/count" async src="https://gc.zgo.at/count.js"></script>
+<script data-goatcounter="https://matinnikoo.goatcounter.com/count" async src="https://gc.zgo.at/count.v4.js" crossorigin="anonymous" integrity="sha384-nRw6qfbWyJha9LhsOtSb2YJDyZdKvvCFh0fJYlkquSFjUxp9FVNugbfy8q1jdxI+"></script>
 
 <script>
 // carry the CSS written in the homepage console over to this page, and keep it in sync across open tabs
