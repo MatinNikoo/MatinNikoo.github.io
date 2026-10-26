@@ -214,7 +214,7 @@
     '.os-start{position:absolute;left:50%;bottom:0;z-index:6;width:min(19rem,calc(100% - 1.2rem));margin-left:max(-9.5rem,calc(-50% + .6rem));padding:.9rem;border-radius:12px;background:rgba(22,22,24,.97);border:1px solid rgba(255,255,255,.1);box-shadow:0 24px 50px -16px rgba(0,0,0,.8);color:#ECECEA;transform-origin:50% 100%}',
     '.os-start[hidden]{display:none}',
     '.os-start h6{margin:0 0 .55rem;font-family:var(--mono,monospace);font-weight:500;font-size:.56rem;letter-spacing:.18em;text-transform:uppercase;color:rgba(255,255,255,.5)}',
-    '.os-pins{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:.2rem}',
+    '.os-pins{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:.2rem}',
     '.os-pins button{display:flex;flex-direction:column;align-items:center;gap:.35rem;padding:.6rem .2rem;border:0;border-radius:8px;background:none;color:rgba(255,255,255,.85);font:inherit;font-size:.66rem;cursor:pointer;transition:background .12s}',
     '.os-pins button:hover{background:rgba(255,255,255,.08);color:#fff}',
     '.os-pins svg{width:1.3rem;height:1.3rem}',
@@ -510,13 +510,13 @@
   (function () {
     var SUM = {
       '#p-skeptic': ['p 0.236', 'what a "significant" win looks like once all nine metrics count', ['Skeptic is an AI analyst I\'m building. You give it a claim, the data or a whole report, and it picks the right checks, runs them, and tells you what holds up.', 'It covers A/B tests, causal studies and backtests, writes its own Python when it needs to, and every number the AI writes gets checked against the math first.'], [['Join the waitlist', 'https://getskeptic.pages.dev'], ['Python package', 'https://github.com/MatinNikoo/skeptic-checks']]],
-      '#p-apps': ['31% vs 1.7%', 'free apps with ads and in-app purchases vs paid apps, reaching 100K installs', ['I followed 815K apps from launch to see which ones ever reach 100K installs. Only about 6 in 100 do.', 'How an app makes money mattered more than almost anything else, and it held in all 48 categories. I turned the model into a simulator you can play with.'], [['Simulator', 'simulator.html'], ['Code', 'https://github.com/MatinNikoo/play-store-analysis']]],
-      '#p-backtest': ['3 of 89', 'moving average pairs that beat just holding SPY', ['I wrote the 50/200 day crossover on SPY from scratch, with next day trades and real costs. Tuned on 2000 to 2017, tested on 2018 to 2026.', 'It lost to buy and hold. Then I checked whether picking the windows was luck, and the overfitting odds came out around a coin flip.'], [['Full report', 'https://matinnikoo.github.io/momentum-backtest/'], ['Code', 'https://github.com/MatinNikoo/momentum-backtest']]],
-      '#p-unchart': ['130 charts', 'in the benchmark it gets scored on', ['People retype numbers off charts all the time. Unchart reads the axes, follows every line and bar, and gives you back a table you can paste.', 'It also flags charts drawn to mislead and redraws them honestly.'], [['Try it', 'unchart/'], ['Code', 'https://github.com/MatinNikoo/unchart']]],
-      '#p-abkit': ['90,189', 'players in the Cookie Cats test it was run on', ['Real A/B tests break in boring, predictable ways. People peek every day, splits come out uneven, dashboards track twenty metrics at once.', 'abkit handles each of those, and I checked every method on thousands of simulated tests. On Cookie Cats it found a 4.3% drop in day 7 retention and an uneven split.'], [['Code', 'https://github.com/MatinNikoo/abkit'], ['Paper', 'https://github.com/MatinNikoo/abkit/blob/main/paper/abkit.pdf']]],
-      '#p-shutdowns': ['69% below', 'its twin, Iran\'s GitHub activity during the 2026 blackouts', ['You can\'t A/B test a government turning off the internet, so I built each country a twin out of 106 that stayed online, using GitHub activity.', 'Every day offline cost about 1.3 days of work, so people never caught up. I planted 1,500 fake shutdowns first to make sure the method finds them.'], [['Interactive', 'shutdowns.html'], ['Code', 'https://github.com/MatinNikoo/internet-shutdowns']]],
+      '#p-apps': ['0.84 AUC', 'ranking 2019 launches from launch-day facts alone, against 0.86 for a model that peeked at 2021 data', ['Most new Play Store apps go nowhere. Of the apps about a year old in June 2021, 13% had 10K installs, 3.5% had 100K and 0.6% had 1M.', 'A model on launch-day facts (category, title, the developer\'s history) ranks new apps at 0.84 AUC. My first version said 0.86 but used fields read long after launch. Monetization still goes with much higher odds, but that is an association.'], [['Simulator', 'simulator.html'], ['Code', 'https://github.com/MatinNikoo/play-store-analysis']]],
+      '#p-backtest': ['9 of 10', 'US bear markets since 1927 where the 50/200 rule lost less than buy and hold', ['I tested the 50/200 day moving average rule as portfolio insurance, on a century of US stocks and 35 years outside the US, with the rules frozen before running anything.', 'It paid out in bear markets and cost about $5,400 a year per $100,000 in normal times. Holding 69% stocks did about as well for the same risk, and the precommitted test came out Mixed.'], [['Full report', 'https://matinnikoo.github.io/momentum-backtest/'], ['Code', 'https://github.com/MatinNikoo/momentum-backtest']]],
+      '#p-unchart': ['618 charts', 'held out from tuning, and it reads 69.8% of the synthetic ones right', ['People retype numbers off charts all the time. Unchart reads the axes, traces the lines, bars, slices and dots, and gives you a table with an error bar on every number.', 'When it isn\'t sure it refuses instead of guessing. It flags charts drawn to mislead, and the editor redraws any chart as one of 16 types and exports it.'], [['Try it', 'unchart/'], ['Code', 'https://github.com/MatinNikoo/unchart']]],
+      '#p-abkit': ['91 of 127', 'checks on made up experiments that pass, with the other 36 explained', ['Real A/B tests break in predictable ways. People peek every day, revenue is skewed, users have many sessions and splits come out uneven.', 'abkit handles those, and I tested it on 22 kinds of messy data. On Cookie Cats, 90,189 players, the split came out uneven (p = 0.009), a warning sign worth chasing.'], [['Code', 'https://github.com/MatinNikoo/abkit'], ['Paper', 'https://github.com/MatinNikoo/abkit/blob/main/paper/abkit.pdf']]],
+      '#p-shutdowns': ['59 to 69%', 'below its twin, the GitHub activity placed in Iran during its 2026 blackouts', ['You can\'t A/B test a government turning off the internet, so I built each country a twin out of 106 donor countries, using GitHub\'s data on where code is pushed from.', 'Iran 2026 is a range because most countries jumped that quarter and sanctioned ones mostly didn\'t. OONI\'s daily network tests line up with the blackout dates.'], [['Interactive', 'shutdowns.html'], ['Code', 'https://github.com/MatinNikoo/internet-shutdowns']]],
       '#p-household': ['3rd of 23', 'teams in the class Kaggle competition', ['We predicted how many people live in a household from their Amazon orders. Classifying the count and taking the average beat plain regression.', 'TF-IDF on product titles beat our hand picked keywords, and a stack of seven models got us third.'], []],
-      '#p-aura': ['Near 0%', 'idle CPU, even with the album art recoloring live', ['Windows widgets I built for my own desktop. The main one shows the song that\'s playing and recolors itself from the album art.', 'It goes to sleep when a game is fullscreen, so it barely uses the CPU.'], [['Code', 'https://github.com/MatinNikoo/aura-widgets']]]
+      '#p-aura': ['253 tests', 'run offscreen with the Windows media session faked, plus real Windows checks in CI', ['Windows widgets I built for my own desktop. The main one shows the song that\'s playing and recolors itself from the album art.', 'Version 1.1 adds five card shapes, an analog clock, seeking by dragging, profiles, a hide shortcut and an installer, and fixes a leak of about 270 MB a day.'], [['Code', 'https://github.com/MatinNikoo/aura-widgets']]]
     };
     var items = [].slice.call(document.querySelectorAll('#proj-menu a')).map(function (l) {
       var b = l.querySelector('b'), id = l.getAttribute('data-p') ? '#' + l.getAttribute('data-p') : l.getAttribute('href');
@@ -744,12 +744,72 @@
 
   [files, web, music].forEach(function (a) { if (a.b) { a.b.addEventListener('click', function (e) { e.preventDefault(); openApp(a) }); a.b.setAttribute('aria-pressed', 'false') } });
 
+  /* ---------- a terminal with the command line tools from four of the projects, and what they print ---------- */
+  (function () {
+    var dock = tb.querySelector('.dock'), sep = dock && dock.querySelector('.tb-sep'); if (!dock || !sep) return;
+    var tbT = document.createElement('button'); tbT.type = 'button'; tbT.className = 'tb-app'; tbT.setAttribute('data-app', 'term'); tbT.setAttribute('aria-label', 'Terminal');
+    tbT.innerHTML = '<svg viewBox="0 0 24 24"><rect x="3.5" y="5" width="17" height="14" rx="2" stroke="currentColor" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/><path d="M7.5 10l2.5 2-2.5 2M12 14.5h4" stroke="currentColor" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+    dock.insertBefore(tbT, sep); appB.term = tbT;
+    // each one is a real command from the project's README and the output it printed
+    var RUNS = [
+      ['trendlab', 'momentum-backtest', 'python -m trendlab backtest configs/us_century_50_200.toml', 'us_century_50_200: us, ma_crossover fast=50 slow=200\n1927-09-01 to 2026-08-31 (99.0 years), trade 1 day after the signal, 5 bps a trade\n\n                         Strategy Buy and hold\nCAGR                         8.7%        10.1%\nVolatility                  12.8%        18.4%\nSharpe over T-bills          0.47         0.44\nMax drawdown                61.5%        83.9%\nUlcer index                 18.5%        21.5%\nWorst 12 months            -47.2%       -66.1%\nCVaR 5% (monthly)           -8.6%       -11.8%\nSkew                        -0.75         0.12\nLongest drawdown, months      192          185\nMonths                       1188         1188\n\nGrowth of $1 4014.96 against 13753.76. Average exposure 72%, position changed on 1.1 days a year.'],
+      ['shutdowns', 'internet-shutdowns', 'shutdowns estimate --event IR-2026', 'note: Holm adjusted p across the nine registry events is <0.001. Passes every check in the analysis plan.\nnote: The twin rises with the jump of about 30% most economies had this quarter. Of four economies under broad sanctions, Russia, Belarus and Cuba mostly didn\'t get it and Venezuela did (+48%). If Iran had grown like the four on average, or stayed flat, the drop is 59% (flat) to 64% (growing like those economies) instead of 69%.\nnote: What happened. Blackout from 8 Jan 2026 with partial return in late January, then a cut of more than 99 percent from 28 Feb 2026 that lasted past the end of the quarter. Source https://www.thenationalnews.com/future/technology/2026/05/07/iran-internet-blackout/\n§Iran, 2026, git pushes: -69.0% vs twin (95% -75.6% to -60.6%), p <0.001\n  wrote reports/custom/IR-2026-git_pushes.png\n  wrote reports/custom/IR-2026-git_pushes.md\n  wrote reports/custom/IR-2026-git_pushes.pdf\n  wrote reports/custom/IR-2026-git_pushes.json'],
+      ['playodds', 'play-store-analysis', 'playodds compare --a category=Puzzle "name=Block Drop" earlier_apps=3 --b category=Tools', 'Within 12 months of launch\n\n                A: Block Drop (Puzzle)  B: Block Drop (Tools)   gap (A minus B)\n  10K installs  11.2%                   11.7%                   -0.52 points, 0.96x\n 100K installs  2.5%                    2.4%                    +0.10 points, 1.04x\n   1M installs  0.31%                   0.24%                   +0.07 points, 1.30x\n\nWhere each lands among apps launched the same month (80% interval)\n  A: 11% to 88% mark\n  B: 11% to 88% mark\n\nInputs that differ: category (Puzzle vs Tools)\n\nThis compares two profiles of past apps. It does not say what changing an input would do.'],
+      ['abkit', 'abkit', 'abkit size --baseline 0.19 --mde 0.01 --daily-users 4000', '24,159 users per group (48,318 total) to detect a change of 0.01 with 80% power at alpha 0.05\n48,318 users at 4,000 a day: 13 days, run 14 to cover whole weeks']
+    ];
+    var st = document.createElement('style'); st.textContent = '.tx{display:flex;flex-direction:column;height:100%;min-height:0;background:#0C0C0E}' +
+      '.tx-tabs{flex:0 0 auto;display:flex;gap:.25rem;padding:.45rem .6rem;border-bottom:1px solid rgba(255,255,255,.07);overflow-x:auto;scrollbar-width:none}' +
+      '.tx-tabs button{font:500 .7rem/1 "Geist Mono",ui-monospace,monospace;color:#8C8C92;background:none;border:1px solid transparent;border-radius:6px;padding:.42rem .62rem;cursor:pointer;white-space:nowrap}' +
+      '.tx-tabs button:hover{color:#ECECEA}.tx-tabs button[aria-selected="true"]{color:#ECECEA;background:rgba(255,255,255,.06);border-color:rgba(255,255,255,.08)}' +
+      '.tx-out{flex:1;min-height:0;margin:0;padding:.8rem .95rem 1rem;overflow:auto;font:.72rem/1.6 "Geist Mono",ui-monospace,monospace;color:#B9B9BE;white-space:pre-wrap;overflow-wrap:anywhere;scrollbar-width:thin}' +
+      '.tx-nw{white-space:pre}.tx-out:focus{outline:none}.tx-p{color:#3DDC97}.tx-d{color:#8FA3FF}.tx-s{color:#8C8C92}.tx-out b{color:#ECECEA;font-weight:600}' +
+      '.tx-c{display:inline-block;width:.55em;height:1.05em;vertical-align:-.18em;background:#ECECEA;animation:txb 1.06s steps(1) infinite}@keyframes txb{50%{opacity:0}}' +
+      '@media (prefers-reduced-motion:reduce){.tx-c{animation:none}}';
+    document.head.appendChild(st);
+    var tx = el('div', 'tx'), tabs = el('div', 'tx-tabs'), out = el('pre', 'tx-out');
+    tabs.setAttribute('role', 'tablist'); tabs.setAttribute('aria-label', 'Commands');
+    tabs.innerHTML = RUNS.map(function (r, i) { return '<button type="button" role="tab" aria-selected="' + (i ? 'false' : 'true') + '" data-i="' + i + '">' + r[0] + '</button>' }).join('');
+    out.setAttribute('aria-live', 'polite'); out.tabIndex = 0;
+    tx.appendChild(tabs); tx.appendChild(out);
+    var term = appB.termApp = App('term', 'Terminal', tx, 680, 420), runId = 0, cur = 0, reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+    // table rows keep their columns and scroll sideways on a narrow window, long notes wrap
+    function line(s) { return s.charAt(0) === '§' ? '<b>' + esc(s.slice(1)) + '</b>' : /\S {2,}\S/.test(s) ? '<span class="tx-nw">' + esc(s) + '</span>' : esc(s) }
+    function prompt(r) { return '<span class="tx-p">matin@desk</span> <span class="tx-d">~/' + esc(r[1]) + '</span> <span class="tx-s">%</span> ' }
+    function show(i, typed) {
+      var my = ++runId, r = RUNS[i]; cur = i;
+      [].forEach.call(tabs.children, function (b, j) { b.setAttribute('aria-selected', String(j === i)) });
+      if (reduce || !typed) { out.innerHTML = prompt(r) + esc(r[2]) + '\n' + r[3].split('\n').map(line).join('\n') + '\n' + prompt(r) + '<i class="tx-c"></i>'; return }
+      var n = 0, cmd = r[2];
+      out.innerHTML = prompt(r) + '<i class="tx-c"></i>';
+      (function type() {
+        if (my !== runId) return;
+        n = Math.min(cmd.length, n + 2);
+        out.innerHTML = prompt(r) + esc(cmd.slice(0, n)) + '<i class="tx-c"></i>';
+        if (n < cmd.length) return setTimeout(type, 18);
+        var L = r[3].split('\n'), k = 0;
+        setTimeout(function more() {
+          if (my !== runId) return;
+          k = Math.min(L.length, k + 2);
+          out.innerHTML = prompt(r) + esc(cmd) + '\n' + L.slice(0, k).map(line).join('\n') + (k < L.length ? '' : '\n' + prompt(r)) + '<i class="tx-c"></i>';
+          out.scrollTop = out.scrollHeight;
+          if (k < L.length) setTimeout(more, 45);
+        }, 260);
+      })();
+    }
+    tabs.addEventListener('click', function (e) { var b = e.target.closest('[data-i]'); if (b) show(+b.getAttribute('data-i'), true) });
+    tabs.addEventListener('keydown', function (e) { var d = e.key === 'ArrowRight' ? 1 : e.key === 'ArrowLeft' ? -1 : 0; if (!d) return; e.preventDefault(); var i = (cur + d + RUNS.length) % RUNS.length; tabs.children[i].focus(); show(i, true) });
+    term.onopen = function () { show(cur, true) };
+    tbT.addEventListener('click', function (e) { e.preventDefault(); openApp(term) }); tbT.setAttribute('aria-pressed', 'false');
+    show(0, false);
+  })();
+
   /* ---------- start menu ---------- */
   var sm = el('div', 'os-start'); sm.hidden = true; sm.setAttribute('role', 'menu'); sm.setAttribute('aria-label', 'Start');
   sm.innerHTML = '<h6>Pinned</h6><div class="os-pins">' +
     '<button type="button" data-o="files">' + ico('files') + 'Projects</button>' +
     '<button type="button" data-o="web">' + ico('web') + 'Browser</button>' +
     '<button type="button" data-o="music">' + ico('music') + 'Music</button>' +
+    (appB.termApp ? '<button type="button" data-o="term">' + ico('term') + 'Terminal</button>' : '') +
     '<button type="button" data-o="full">' + I.full + 'Full screen</button></div>' +
     '<div class="os-me"><span><i></i>Matin Nikoomanzar</span><button type="button" data-o="off" aria-label="Shut down">' + I.power + '</button></div>';
   var me = document.querySelector('.hero img'); if (me && (me.currentSrc || me.src)) sm.querySelector('.os-me i').style.backgroundImage = 'url("' + (me.currentSrc || me.src) + '")';
@@ -758,7 +818,7 @@
     var b = e.target.closest('[data-o]'); if (!b) return; var o = b.getAttribute('data-o');
     if (o === 'full') { closeStart(); return full ? exitFull() : enterFull() }
     if (o === 'off') { closeStart(); return shutDown() }
-    openApp({ files: files, web: web, music: music }[o]);
+    var a = { files: files, web: web, music: music, term: appB.termApp }[o]; if (a) openApp(a);
   });
   function placeStart() { sm.style.bottom = (win.clientHeight - tb.offsetTop + 6) + 'px' }
   function openStart() {

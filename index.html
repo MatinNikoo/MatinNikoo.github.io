@@ -126,6 +126,12 @@ a:hover{color:var(--accent);text-decoration-color:var(--accent)}
 .sim .sim-foot{margin:0;max-width:none}
 .sim-tip b{color:var(--good);font-weight:600}
 .sim-foot{display:flex;justify-content:space-between;gap:1rem;flex-wrap:wrap;font-size:.85rem;color:var(--muted);margin:0}
+.sim-form .sim-wide{grid-column:1/-1}
+.sim-form input[type=text]{font:inherit;font-size:.92rem;color:var(--ink);background:var(--bg);border:1px solid var(--line);border-radius:7px;padding:.5rem .55rem;width:100%;min-width:0}
+.sim-ms{grid-column:1/-1;display:flex;flex-wrap:wrap;gap:.4rem 1.4rem;font-family:var(--mono);font-size:.72rem;letter-spacing:.06em;color:var(--muted)}
+.sim-ms b{font-weight:500;color:var(--ink);margin-left:.3rem;font-variant-numeric:tabular-nums}
+.sim-ms span:nth-child(2) b{color:var(--accent)}
+.sim .sim-tip b{color:var(--ink);font-weight:500}
 
 /* sections */
 section.block{padding-block:clamp(3rem,7vw,5rem);border-top:1px solid var(--line)}
@@ -1239,6 +1245,7 @@ html:not(.js-sk) .sk-rd span{clip-path:none}html:not(.js-sk) .sk-rd i{transform:
 /* phones: fixed footer bar height */
 @media (max-width:520px){.skx figcaption.skx-bar{display:grid;grid-template-columns:minmax(0,1fr);row-gap:.5rem}.skx-time{min-width:0}.skx-time span{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.skx-bar-r{justify-content:space-between}}
 .skx-time span{white-space:nowrap}
+.skx-time{max-width:100%}.skx-time span{min-width:0;white-space:normal;text-wrap:balance}
 .skq-rows li{transition:background .25s}
 @media (hover:hover){.skx .skq-rows li:hover{background:color-mix(in srgb,var(--ink) 4%,transparent)}}
 /* chart tab animations */
@@ -1449,6 +1456,8 @@ html:not(.js-sk) .sk-tilt{display:none}
 .rp-rows li:hover span{color:var(--ink)}
 .skx .skq-stamp.weak{color:#B57400}.skx .skq-stamp.holds{color:#11915A}.skx .skq-stamp.fails{color:var(--signal,#FF5A1F)}
 @media (max-width:520px){.rp-p{font-size:1.02rem;line-height:1.62}.skx-tabs{grid-template-columns:repeat(4,minmax(0,1fr))}.skx-tabs button i{display:none}}
+@media (min-width:700px) and (max-width:1060px){.skx-tabs button{font-size:.58rem;letter-spacing:.06em;padding:.55rem .15rem}.skx-tabs button i{display:none}}
+@media (max-width:360px){.skx-tabs button{letter-spacing:.02em;padding:.55rem .1rem}}
 @media (prefers-reduced-motion:reduce){.rp-c.ping,.rp-n.flash,.rp-w.flash,.rp-rows li{animation:none}}
 /* demo sizing */
 .skx .ag-me{margin:0 0 .55rem;padding:0;border:0;border-radius:0;max-width:none;display:flex;justify-content:flex-end;align-items:baseline;gap:.6rem}
@@ -1521,7 +1530,7 @@ html:not(.js-sk) .sk-tilt{display:none}
 @media (max-width:520px){
   .skx .ag-steps{display:grid;gap:.2rem}
   .skx .ag-steps li{white-space:nowrap;overflow:hidden}
-  .skx .rp-rows li span{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;display:block;min-width:0}
+  .skx .rp-rows li span{display:block;min-width:0}
   .skx .rp-rows li{align-items:center}
   .skx .rp-p{font-size:.95rem!important;line-height:1.7!important}
 }
@@ -1737,7 +1746,8 @@ html:not(.js-edu) .edu-n .wd{-webkit-clip-path:none;clip-path:none}
 .exhibit.room .cone{rotate:calc(var(--cr,0) * 1deg);transform-origin:50% 0}
 .exhibit.room .plinth .knot{translate:calc(var(--kx,0) * 1px) 0;transition:filter .9s ease}
 .exhibit.room.dark .cone{visibility:hidden}
-.exhibit.room.dark .plinth .knot,.exhibit.room.dark .refl{filter:brightness(.18)}
+.exhibit.room.dark .plinth .knot{filter:brightness(.18)}
+.exhibit.room.dark .refl .knot,.exhibit.room.dark .refl .slab{opacity:.18}
 .exhibit.room.dark .plinth::before{opacity:0}
 .exhibit.room .plinth::before{transition:opacity .8s ease}
 .exhibit.room .motes{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;mix-blend-mode:screen}
@@ -1756,6 +1766,13 @@ html:not(.js-edu) .edu-n .wd{-webkit-clip-path:none;clip-path:none}
 .exhibit.room .refl{-webkit-mask:none!important;mask:none!important}
 .exhibit.room .refl .knot{filter:none!important}
 .exhibit.room .refl canvas{display:block;width:100%;height:100%}
+/* the reflection sits under the plinth plate, mirrored about its foot, and turns with the knot */
+.exhibit.room .refl{top:calc((var(--fl,0) + var(--sl,0)) * 1px);transition:none}
+.exhibit.room .refl .knot{rotate:calc(var(--kr,0) * -1deg);margin-top:calc(var(--sl,0) * 1px + 1px);transition:opacity .9s ease}
+.exhibit.room .refl::after{content:"";position:absolute;inset:0;background:linear-gradient(rgba(11,11,12,0),#0B0B0C 80%);pointer-events:none}
+.exhibit.room .refl .slab{position:absolute;left:50%;top:0;width:clamp(10rem,22vw,16rem);height:calc(var(--sl,0) * 1px);transform:translateX(-50%);background:linear-gradient(rgba(167,166,161,.42),rgba(201,200,195,.16) 45%,rgba(228,227,223,.04));transition:opacity .9s ease}
+.exhibit.room .plinth::after{background:linear-gradient(#FFFFFF,#E4E3DF 2px,#C9C8C3 70%,#A7A6A1)}
+.exhibit.room .motes{z-index:1}
 /* last section: status, links, local time */
 .ct-status{display:flex;flex-wrap:wrap;align-items:center;gap:.5rem 1.2rem;margin:0 0 1.4rem;font-family:var(--mono);font-size:.66rem;letter-spacing:.16em;text-transform:uppercase;color:var(--muted)}
 .ct-status b{display:inline-flex;align-items:center;gap:.5rem;font-weight:500;color:var(--ink)}
@@ -2526,6 +2543,137 @@ button.nav-lab{display:inline-flex;align-items:center;gap:.3rem;padding-right:.7
   addEventListener('resize',soon);addEventListener('load',all);if(document.fonts&&document.fonts.ready)document.fonts.ready.then(all);
   if('ResizeObserver' in window){var ob=function(){new ResizeObserver(soon).observe(document.body)};if(document.body)ob();else document.addEventListener('DOMContentLoaded',ob)}setInterval(all,4000)})();
 </script>
+<style id="proj-demos">
+/* shared bits for the project demos */
+.seg{display:inline-flex;border:1px solid var(--line);border-radius:10px;padding:.15rem;background:var(--bg);max-width:100%}
+.seg button{white-space:nowrap;font:inherit;font-size:.78rem;border:0;background:none;color:var(--muted);padding:.28rem .7rem;border-radius:7px;cursor:pointer;transition:background .2s,color .2s}
+.seg button:hover{color:var(--ink)}
+.seg button[aria-pressed="true"],.seg button[aria-selected="true"]{background:var(--surface);color:var(--ink);box-shadow:0 1px 3px rgba(10,15,30,.12)}
+.pd-tip{position:absolute;left:2.6rem;top:.2rem;margin:0!important;font-size:.72rem;color:var(--ink);opacity:0;transition:opacity .15s;pointer-events:none;white-space:nowrap}
+.pd-tip.on{opacity:1}.pd-tip i{font-style:normal;color:var(--muted);margin-left:.45rem}
+.pd-stack{display:grid}.pd-stack>*{grid-area:1/1;min-width:0}
+.pd-stack>.off{visibility:hidden;pointer-events:none}
+.pd-stack>.in{animation:pdin .35s cubic-bezier(.2,.8,.2,1)}
+@keyframes pdin{from{opacity:0;transform:translateY(4px)}}
+@media (prefers-reduced-motion:reduce){.pd-stack>.in{animation:none}}
+
+/* trend following */
+.tf-head{display:flex;align-items:center;justify-content:space-between;gap:.6rem;flex-wrap:wrap;margin-bottom:.5rem}
+.tf-verdict{color:var(--muted);font-size:.72rem;letter-spacing:.06em;text-transform:uppercase}
+.tf-verdict b{font-family:var(--display);font-weight:700;font-size:1.25rem;letter-spacing:-.01em;text-transform:none;color:var(--ink);margin-left:.35rem}
+.tf-wrap{position:relative}
+.tf-wrap canvas{display:block;width:100%;height:clamp(12.5rem,24vw,16.4rem);touch-action:pan-y;cursor:crosshair;outline:none}
+.tf-wrap canvas:focus-visible{box-shadow:0 0 0 2px var(--accent);border-radius:6px}
+.tf-read{margin:.45rem 0 0!important;font-size:.88rem;line-height:1.45;min-height:2.9em;max-width:none!important}
+.tf-read b{font-weight:600}
+#tf .stats{margin-top:.7rem;padding-top:.75rem}
+#tf .stats span{display:block}
+.tf-ci{font-style:normal;display:none}
+@media (min-width:1100px){.tf-ci{display:inline}}
+
+/* abkit */
+.ab-tabs{margin-bottom:.8rem}
+.ab-sum{display:flex;height:.7rem;border-radius:4px;overflow:hidden;margin:.15rem 0 .5rem;gap:2px}
+.ab-sum button{border:0;padding:0;cursor:pointer;transition:opacity .2s,filter .2s}
+.ab-sum .p{background:var(--ink);opacity:.72}.ab-sum .b{background:var(--bench)}.ab-sum .l{background:var(--accent)}
+.ab-key{display:flex;flex-wrap:wrap;gap:.25rem .4rem;margin-bottom:.55rem}
+.ab-key button{font:inherit;font-size:.72rem;font-family:var(--mono);color:var(--muted);background:none;border:1px solid var(--line);border-radius:10px;padding:.18rem .5rem;cursor:pointer;display:inline-flex;align-items:center;gap:.35rem}
+.ab-key button i{width:.5rem;height:.5rem;border-radius:2px;display:inline-block}
+.ab-key button[aria-pressed="true"]{color:var(--ink);border-color:var(--ink)}
+.ab-list{list-style:none;margin:0;padding:0 .2rem 0 0;overflow:auto;border-top:1px solid var(--line);overscroll-behavior:contain;scrollbar-width:thin;min-height:0}
+.ab-list li{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:.1rem .7rem;padding:.42rem 0;border-bottom:1px solid var(--line);font-size:.78rem;line-height:1.35}
+.ab-list .m{color:var(--ink);font-weight:500}
+.ab-list .d{grid-column:1;color:var(--muted)}
+.ab-list .n{grid-column:1/-1;color:var(--muted);font-size:.72rem}
+.ab-list .v{grid-row:1/3;grid-column:2;text-align:right;font-family:var(--mono);font-size:.7rem;color:var(--muted);white-space:nowrap;align-self:center}
+.ab-list .v b{display:inline-block;font-weight:500;font-size:.62rem;letter-spacing:.06em;border-radius:4px;padding:.12rem .32rem;margin-left:.35rem;background:var(--line);color:var(--ink)}
+.ab-list li.l .v b{background:var(--accent);color:var(--surface)}
+.ab-list li.b .v b{background:none;border:1px solid var(--bench);color:var(--muted)}
+.ab-p1{display:flex;flex-direction:column;height:0;min-height:100%}
+.ab-p1 .ab-list{flex:1 1 0}
+.ab-p2 canvas{display:block;width:100%;height:clamp(7.5rem,13vw,9.4rem)}
+.ab-facts{list-style:none;margin:.5rem 0 0;padding:0;display:grid;gap:.3rem}
+.ab-facts li{display:grid;grid-template-columns:4.6rem minmax(0,1fr);gap:.6rem;font-size:.78rem;line-height:1.38;padding-top:.3rem;border-top:1px solid var(--line)}
+.ab-facts li>b{font-family:var(--mono);font-weight:500;font-size:.62rem;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);padding-top:.12rem}
+.ab-facts li.w>b{color:var(--accent)}
+.ab-facts span b{font-weight:600}
+.ab-run{font-size:.74rem;color:var(--muted);margin:.35rem 0 0!important;max-width:none!important}
+
+/* shutdowns */
+.sd-sum{display:flex;align-items:center;justify-content:space-between;gap:.4rem .8rem;flex-wrap:wrap;margin:.35rem 0 .2rem}
+.sd-sum .sd-big{text-align:left;min-width:0;white-space:nowrap}
+.sd-st{display:flex;align-items:center;gap:.4rem;font-size:.7rem!important;color:var(--muted);margin:0 0 .1rem!important;max-width:none!important}
+.sd-st i{width:.5rem;height:.5rem;border-radius:50%;background:var(--good);flex:none}
+.sd-st.no i{background:var(--bench)}
+.sd-oo{position:relative;margin-top:.35rem;padding-top:.45rem;border-top:1px solid var(--line)}
+.sd-oo canvas{display:block;width:100%;height:2.9rem}
+.sd-oo p{margin:.2rem 0 0!important;font-size:.72rem;color:var(--muted);max-width:none!important;min-height:1.35em;line-height:1.35}
+.sd-oo p b{color:var(--ink);font-weight:500}
+
+@media (max-width:900px) and (pointer:coarse),(max-width:699px){.sd-oo p{min-height:2.7em}}
+
+/* play store */
+.ps-head{display:flex;align-items:center;justify-content:space-between;gap:.5rem .8rem;flex-wrap:wrap;margin-bottom:.6rem}
+.ps-cat{display:flex;align-items:center;gap:.4rem;font-size:.8rem;color:var(--muted)}
+.ps-cat select{font:inherit;font-size:.85rem;color:var(--ink);background:var(--bg);border:1px solid var(--line);border-radius:7px;padding:.3rem .4rem;max-width:13rem}
+.ps-rows{display:grid;gap:.5rem}
+.ps-row{display:grid;grid-template-columns:6.2rem minmax(0,1fr) 7.4rem;gap:.7rem;align-items:center;font-size:.84rem}
+.ps-row>span:first-child{color:var(--muted)}
+.ps-row>span:nth-child(2){display:block;min-width:0}
+.ps-tr{display:block;position:relative;height:1.05rem;border-radius:4px;background:var(--accent-soft)}
+.ps-ci{position:absolute;top:.38rem;height:.3rem;border-radius:2px;background:color-mix(in srgb,var(--accent) 40%,transparent);transition:left .5s cubic-bezier(.2,.8,.2,1),width .5s cubic-bezier(.2,.8,.2,1)}
+.ps-ob{position:absolute;top:.15rem;width:.75rem;height:.75rem;margin-left:-.375rem;border-radius:50%;background:var(--accent);box-shadow:0 0 0 2px var(--surface);transition:left .5s cubic-bezier(.2,.8,.2,1)}
+.ps-md{position:absolute;top:-.12rem;bottom:-.12rem;width:2px;margin-left:-1px;background:var(--ink);transition:left .5s cubic-bezier(.2,.8,.2,1)}
+.ps-v{font-family:var(--mono);font-size:.74rem;text-align:right;white-space:nowrap}
+.ps-v i{font-style:normal;color:var(--muted)}
+.ps-ax{display:block;font-family:var(--mono);font-size:.6rem;color:var(--muted);text-align:right;margin-top:.1rem}
+.ps-key{display:flex;flex-wrap:wrap;gap:.3rem 1rem;font-size:.72rem;color:var(--muted);margin:.45rem 0 0}
+.ps-key span{display:inline-flex;align-items:center;gap:.35rem}
+.ps-key .k1{width:.6rem;height:.6rem;border-radius:50%;background:var(--accent)}
+.ps-key .k2{width:2px;height:.8rem;background:var(--ink)}
+.ps-key .k3{width:1rem;height:.3rem;border-radius:2px;background:color-mix(in srgb,var(--accent) 40%,transparent)}
+@media (max-width:460px){.ps-row{grid-template-columns:4.6rem minmax(0,1fr) 6.4rem;gap:.5rem;font-size:.76rem}.ps-v{font-size:.68rem}.ps-cat select{max-width:10rem}}
+@media (prefers-reduced-motion:reduce){.ps-ci,.ps-ob,.ps-md{transition:none}}
+@media (min-width:700px){#p-apps>.visual.wide .ps-rows{gap:.42rem}}
+
+/* unchart */
+.ucx-tabs button{scroll-margin:0 8px}
+.ucx-views{display:flex;gap:.3rem;flex-wrap:wrap}
+.ucx-views button{white-space:nowrap;font:500 .68rem/1 var(--mono);letter-spacing:.06em;color:#8C8C92;background:none;border:1px solid #2A2A2F;border-radius:4px;padding:.5rem .6rem;cursor:pointer;transition:color .2s,border-color .2s,background .2s}
+.ucx-views button:hover{color:#ECECEA;border-color:#55555A}
+.ucx-views button[aria-selected="true"]{color:#0A0A0B;background:#ECECEA;border-color:#ECECEA}
+.ucx-views button i{font-style:normal;display:inline-block;width:5px;height:5px;border-radius:50%;background:var(--signal);margin-left:.4rem;vertical-align:middle;opacity:0;transition:opacity .2s}
+.ucx-views button.dot i{opacity:1}
+.ucx-vw{min-height:0;display:flex;flex-direction:column;gap:.75rem}
+.ucx-conf{display:flex;align-items:center;gap:.6rem;font:.72rem/1.3 var(--mono);color:#8C8C92}
+.ucx-conf b{color:#3DDC97;font-weight:500}
+.ucx-conf .bar{flex:1;height:4px;border-radius:2px;background:#1E1E22;overflow:hidden}
+.ucx-conf .bar i{display:block;height:100%;background:#3DDC97;transform-origin:left;transition:transform .8s cubic-bezier(.2,.8,.2,1)}
+.ucx-tbl td.pm{color:#55555A;font-size:.68rem}
+.ucx-tblw{max-height:16.5rem;overflow:auto;scrollbar-width:thin;overscroll-behavior:contain}
+.ucx-chk{list-style:none;margin:0;padding:0;display:grid;gap:.1rem}
+.ucx-chk li{display:grid;grid-template-columns:1.1rem minmax(0,1fr);gap:.5rem;font-size:.8rem;color:#8C8C92;padding:.3rem 0;border-bottom:1px solid #1E1E22;line-height:1.35}
+.ucx-chk li::before{content:"";width:.55rem;height:.55rem;border-radius:50%;background:#3DDC97;margin-top:.33rem;box-shadow:0 0 0 3px rgba(61,220,151,.12)}
+.ucx-chk li.warn{color:#ECECEA}.ucx-chk li.warn::before{background:#FFB020;box-shadow:0 0 0 3px rgba(255,176,32,.15)}
+.ucx-ed{position:relative;border-radius:8px;overflow:hidden;line-height:0;border:1px solid #242428}
+.ucx-ed svg{display:block;width:100%;height:auto}
+.ucx-ed svg *{transition:fill .45s ease,stroke .45s ease,opacity .45s ease}
+.ucx-chips{display:flex;flex-wrap:wrap;gap:.3rem}
+.ucx-chips span{font:500 .6rem/1 var(--mono);letter-spacing:.14em;text-transform:uppercase;color:#55555A;align-self:center;margin-right:.2rem;min-width:2.7rem}
+.ucx-chips button{white-space:nowrap;font:500 .68rem/1 var(--mono);color:#8C8C92;background:#141416;border:1px solid #2A2A2F;border-radius:20px;padding:.4rem .6rem;cursor:pointer;transition:color .2s,border-color .2s,background .2s}
+.ucx-chips button:hover{color:#ECECEA;border-color:#55555A}
+.ucx-chips button[aria-pressed="true"]{color:#0A0A0B;background:var(--signal);border-color:var(--signal)}
+.ucx-code{margin:0;padding:.7rem .8rem;background:#0F0F11;border:1px solid #242428;border-radius:8px;font:.7rem/1.5 var(--mono);color:#C9C9CC;white-space:pre;overflow:auto;max-height:11.5rem;scrollbar-width:thin}
+.ucx-code .k{color:var(--signal)}
+.ucx-act{display:flex;gap:.4rem;flex-wrap:wrap;align-items:center}
+.ucx-act button{font:500 .7rem/1 var(--mono);color:#0A0A0B;background:#ECECEA;border:1px solid #ECECEA;border-radius:4px;padding:.5rem .7rem;cursor:pointer}
+.ucx-act button.q{color:#ECECEA;background:none;border-color:#2A2A2F}
+.ucx-act button:hover{filter:brightness(1.1)}
+.ucx-act small{font:.68rem/1.3 var(--mono);color:#8C8C92}
+.ucx-side .ucx-note{font-size:.8rem;color:#8C8C92}
+.ucx-hud .ok{color:#3DDC97}
+@media (max-width:460px){.ucx-views button{padding:.45rem .5rem;font-size:.64rem}.ucx-chips button{font-size:.64rem;padding:.38rem .5rem}.ucx-code{font-size:.64rem}}
+</style>
 </head>
 <body>
 
@@ -2538,11 +2686,11 @@ button.nav-lab{display:inline-flex;align-items:center;gap:.3rem;padding-right:.7
       <li class="labm"><button class="nav-drop" id="proj-btn" type="button" aria-expanded="false" aria-controls="proj-menu">Projects<svg viewBox="0 0 10 10" aria-hidden="true"><path d="M2 3.8 5 6.6 8 3.8"/></svg></button>
         <div class="lab-menu proj-menu" id="proj-menu" hidden>
           <a class="pm-sk" href="#skeptic" data-p="p-skeptic"><i>01</i><b>Skeptic<em class="new-tag">Beta</em></b><span>An AI analyst for claims made with data</span></a>
-          <a href="#p-backtest"><i>02</i><b>Trend following backtest</b><span>50/200 day crossover on SPY</span></a>
+          <a href="#p-backtest"><i>02</i><b>Trend following backtest</b><span>A century of trend following as insurance</span></a>
           <a href="#p-abkit"><i>03</i><b>A/B testing library</b><span>abkit, checked by simulation</span></a>
-          <a href="#p-shutdowns"><i>04</i><b>Internet shutdowns</b><span>What it costs to turn off the internet</span></a>
+          <a href="#p-shutdowns"><i>04</i><b>Internet shutdowns</b><span>What a blackout does to GitHub activity</span></a>
           <a href="#p-apps"><i>05</i><b>What gets an app to 100K installs</b><span>2.2M Play Store apps, a launch day model</span></a>
-          <a href="#p-unchart"><i>06</i><b>Unchart</b><span>Numbers back out of line, bar and dot charts</span></a>
+          <a href="#p-unchart"><i>06</i><b>Unchart</b><span>Numbers back out of 16 kinds of charts</span></a>
           <a href="#p-household"><i>07</i><b>Household size prediction</b><span>Kaggle class competition, 3rd of 23</span></a>
           <a href="#p-aura"><i>08</i><b>Aura desktop widgets</b><span>Now playing, GIF boxes, chrome clock</span></a>
         </div></li>
@@ -2550,6 +2698,7 @@ button.nav-lab{display:inline-flex;align-items:center;gap:.3rem;padding-right:.7
         <div class="lab-menu" id="lab-menu" hidden>
           <a href="lab.html"><b>Experiment Lab</b><span>Rerun a real 90K player A/B test</span></a>
           <a href="shutdowns.html"><b>Internet shutdowns</b><span>Build a country's twin, see the gap</span></a>
+          <a href="simulator.html"><b>App simulator<em class="new-tag">New</em></b><span>A new app's odds of 10K to 1M installs</span></a>
           <a href="unchart/"><b>Unchart<em class="new-tag">New</em></b><span>Paste a chart, get its numbers back</span></a>
         </div></li>
       <li class="hide-xs"><a href="#experience">Experience</a></li>
@@ -2596,6 +2745,15 @@ button.nav-lab{display:inline-flex;align-items:center;gap:.3rem;padding-right:.7
   </div>
 
 </header>
+<script>
+// phones: size the intro to the screen before the first paint, the same way the fit script further down does after load,
+// so it doesn't jump once everything has arrived. The music bubble comes later, but where it will rest is known from its saved state
+(function(){if(!window.MN_DESK||MN_DESK())return;var root=document.documentElement,hero=document.querySelector('.hero'),hin=hero&&hero.querySelector('.hero-in'),nav=document.querySelector('.nav');if(!hin)return;
+  var baseH=Math.min(innerHeight,(window.visualViewport&&visualViewport.height)||innerHeight),avail=baseH-(nav?nav.offsetHeight:56);root.style.setProperty('--fith',avail+'px');
+  window.mnMpCut=function(baseH){var s=null;try{s=JSON.parse(localStorage.getItem('mn-player')||'null')}catch(e){}var fresh=s&&Date.now()-s.ts<18e5,small=matchMedia('(max-width:600px),(max-height:500px)').matches,min=fresh&&s.min!=null?s.min:small,c=(s&&s.corner)||'br';return small&&min&&c.charAt(0)==='b'?Math.max(0,baseH-(innerHeight-62)+10):0};var cut=mnMpCut(baseH);
+  var cs=getComputedStyle(hero),pb0=parseFloat(cs.paddingBottom);if(cut>pb0)hero.style.setProperty('padding-bottom',cut+'px','important');
+  var pad=parseFloat(cs.paddingTop)+Math.max(pb0,cut),h=hin.scrollHeight;if(h>avail-pad-4)hin.style.zoom=Math.max(.5,(avail-pad-4)/h).toFixed(4)})();
+</script>
 
 <div class="marquee" aria-hidden="true"><div class="mq-track"><span>From a question <i>to something</i> people can actually use</span><b></b><span>Check the number <i>before</i> you believe it</span><b></b><span>From a question <i>to something</i> people can actually use</span><b></b><span>Check the number <i>before</i> you believe it</span><b></b></div></div>
 
@@ -2767,42 +2925,47 @@ button.nav-lab{display:inline-flex;align-items:center;gap:.3rem;padding-right:.7
 
   <article id="p-backtest" class="proj reveal" data-no="02">
     <div>
-      <div class="pintro" data-kind="bt" role="img" aria-label="89 pairs of moving averages tested. 3 beat buy and hold."><canvas></canvas><p class="mono"><span>89 pairs of moving averages tested. 3 beat buy and hold.</span><button type="button" class="intro-re" aria-label="Replay">Replay</button></p></div>
-      <h3>Trend following backtest</h3>
-      <ul class="tags"><li>Python</li><li>pandas</li><li>SciPy</li><li>bootstrap</li><li>unit tests</li></ul>
-      <p>A backtest of the 50/200 day moving average crossover on SPY, written from scratch with next day trades, trading costs and unit tests. I tuned it on 2000 to 2017 and tested on 2018 to 2026.</p>
-      <p>It didn't beat buy and hold. Then I checked whether picking the windows was just luck. Only 3 of 89 pairs beat buy and hold, and the probability of backtest overfitting came out around 0.57, basically a coin flip.</p>
+      <div class="pintro" data-kind="bt" role="img" aria-label="Ten US bear markets since 1927. The trend rule lost less than buy and hold in nine of them."><canvas></canvas><p class="mono"><span>10 US bear markets since 1927. Trend lost less in 9.</span><button type="button" class="intro-re" aria-label="Replay">Replay</button></p></div>
+      <h3>Trend following as portfolio protection</h3>
+      <ul class="tags"><li>Python</li><li>pandas</li><li>block bootstrap</li><li>Reality Check</li><li>123 tests</li></ul>
+      <p>I tested the 50/200 day moving average rule on a century of US stocks and 35 years of markets outside the US, to see if it works as insurance. I wrote the question, the rules and what would count as a pass down first and froze them before running anything.</p>
+      <p>It lost less than buy and hold in 9 of the 10 big US bear markets since 1927, about $21,000 ahead per $100,000 at the bottom, and that cost about $5,400 a year in normal times. But just holding 69% stocks and the rest in T-bills did about as well for the same risk, and my precommitted test came out Mixed.</p>
       <div class="links"><a href="https://matinnikoo.github.io/momentum-backtest/" target="_blank" rel="noopener">Full report</a><a href="https://github.com/MatinNikoo/momentum-backtest" target="_blank" rel="noopener">Code</a></div>
     </div>
-    <figure class="visual">
-      <div class="chart" id="chart"></div>
-      <div class="pickrow"><button class="btn bt-play" type="button" id="bt-play" aria-pressed="false"><svg viewBox="0 0 12 12" aria-hidden="true"><path d="M3 2l7 4-7 4z"/></svg><span>Play every start</span></button><label class="pick"><span>Start in</span><input type="range" id="bt-start" min="0" value="0" aria-label="Pick the month you start investing"><output id="bt-out">Jan 2018</output></label></div>
-      <p class="bt-res" id="bt-res" aria-live="polite"></p>
-      <figcaption>$1 invested from the month you pick, after costs. Drag to change the start, hover to read values.</figcaption>
-      <div class="stats">
-        <div><b>9.2% / 14.3%</b>yearly return, strategy vs SPY</div>
-        <div><b>0.63 / 0.79</b>Sharpe ratio</div>
-        <div><b>33.7%</b>worst drawdown, both</div>
+    <figure class="visual tf" id="tf">
+      <div class="tf-head">
+        <div class="seg" id="tf-vs" role="group" aria-label="Compare the trend rule with"><button type="button" data-v="bh" aria-pressed="true">vs buy and hold</button><button type="button" data-v="mx" aria-pressed="false">vs 69% stocks</button></div>
+        <span class="tf-verdict mono">Precommitted test<b>Mixed</b></span>
       </div>
+      <div class="tf-wrap"><canvas id="tf-c" tabindex="0" role="img" aria-label="Growth of one dollar in US stocks from 1927 to 2026 for buy and hold, the 50/200 trend rule and a 69 percent stock mix, with the ten bear markets shaded. Use the arrow keys to step through the bear markets."></canvas><p class="pd-tip mono" id="tf-tip"></p></div>
+      <p class="tf-read" id="tf-read" aria-live="polite">&nbsp;</p>
+      <div class="stats">
+        <div><b id="tf-s1">$5,416</b><span id="tf-s1t">a year it cost per $100,000 in normal times</span></div>
+        <div><b id="tf-s2">9 of 10</b><span>bear markets where trend lost less</span></div>
+        <div><b id="tf-s3">−1.2%</b><span id="tf-s3t">a year net, over every month</span></div>
+      </div>
+      <figcaption>Growth of $1 since 1927 on a log scale, after costs. Shaded are the 10 falls of 20% or more from the all time high, and the bars are dollars ahead at each bottom, per $100,000.<span class="sd-hov"> Hover to read one.</span></figcaption>
     </figure>
   </article>
 
   <article id="p-abkit" class="proj reveal" data-no="03">
     <div>
-      <div class="pintro" data-kind="ab" role="img" aria-label="90,189 players, split in two. A week later, 4.3% fewer of group B came back."><canvas></canvas><p class="mono"><span>90,189 players, split in two. A week later, 4.3% fewer of group B came back.</span><button type="button" class="intro-re" aria-label="Replay">Replay</button></p></div>
+      <div class="pintro" data-kind="ab" role="img" aria-label="127 checks on made up experiments with known answers. 91 pass, 18 show a mistake on purpose and 18 are real limits."><canvas></canvas><p class="mono"><span>127 checks with known answers. 91 pass, 18 fail on purpose, 18 are real limits.</span><button type="button" class="intro-re" aria-label="Replay">Replay</button></p></div>
       <h3>A/B testing library, checked by simulation</h3>
-      <ul class="tags"><li>Python</li><li>SciPy</li><li>pytest</li><li>CLI</li></ul>
-      <p>Real experiments break the textbook t test. People check results every day, metrics are noisy, splits come out uneven and dashboards track twenty metrics at once. I built a Python library that handles each of those, with CUPED and always valid sequential tests.</p>
-      <p>I checked every method on thousands of simulated experiments, then ran it on Cookie Cats, a mobile game that split 90,189 players. It found a 4.3% drop in 7 day retention and caught that the groups were split unevenly.</p>
-      <a class="lab-cta" href="lab.html">
+      <ul class="tags"><li>Python</li><li>SciPy</li><li>sequential tests</li><li>pytest</li><li>CLI</li></ul>
+      <p>Real experiments break the textbook t test. People check results every day, revenue is skewed, users have many sessions and splits come out uneven. abkit is a Python library and command line that handles those, with CUPED, always valid sequential tests, group sequential designs and a written plan before the test starts.</p>
+      <p>I tested every method with 127 checks on made up experiments where I knew the answer, many of them on messy data, and the validation table says where each one breaks. That also caught two bugs in my sequential test code. On Cookie Cats, a real test with 90,189 players, the groups came out uneven (p = 0.009), which is a warning sign worth chasing down.</p>      <a class="lab-cta" href="lab.html">
         <span class="lab-cta-k mono">Experiment Lab</span>
         <span class="lab-cta-t">Rerun the 90K player Cookie Cats test in your browser</span>
         <span class="lab-cta-s">or drop in your own CSV and go through it step by step.</span>
         <span class="lab-cta-go" aria-hidden="true">Open the lab <svg viewBox="0 0 16 16"><path d="M3 8h9M8.5 4.5 12 8l-3.5 3.5"/></svg></span>
       </a>
-      <div class="links"><a href="https://github.com/MatinNikoo/abkit" target="_blank" rel="noopener">Code and tests</a><a href="https://github.com/MatinNikoo/abkit/blob/main/paper/abkit.pdf" target="_blank" rel="noopener">Paper</a><a href="https://github.com/MatinNikoo/abkit/blob/main/docs/design.md" target="_blank" rel="noopener">Design doc</a></div>
+      <div class="links"><a href="https://github.com/MatinNikoo/abkit" target="_blank" rel="noopener">Code and tests</a><a href="https://github.com/MatinNikoo/abkit/blob/main/docs/validation.md" target="_blank" rel="noopener">Validation table</a><a href="https://github.com/MatinNikoo/abkit/blob/main/paper/abkit.pdf" target="_blank" rel="noopener">Paper</a></div>
     </div>
-    <figure class="visual peek">
+    <figure class="visual peek" id="ab">
+      <div class="seg ab-tabs" role="tablist" aria-label="Views"><button type="button" role="tab" id="ab-t0" aria-controls="ab-p0" aria-selected="true">Peeking</button><button type="button" role="tab" id="ab-t1" aria-controls="ab-p1" aria-selected="false" tabindex="-1">127 checks</button><button type="button" role="tab" id="ab-t2" aria-controls="ab-p2" aria-selected="false" tabindex="-1">Cookie Cats</button></div>
+      <div class="pd-stack">
+      <div id="ab-p0" role="tabpanel" aria-labelledby="ab-t0">
       <div class="peek-head">
         <label>Check the results <select id="peek-looks"><option value="10">10 times</option><option value="50" selected>50 times</option><option value="100">100 times</option></select></label>
         <button class="btn" type="button" id="peek-run">Run 200 tests</button>
@@ -2811,75 +2974,98 @@ button.nav-lab{display:inline-flex;align-items:center;gap:.3rem;padding-right:.7
         <div><span class="peek-t">normal p value</span><canvas id="peek-a" aria-hidden="true"></canvas><b id="peek-ra">&nbsp;</b></div>
         <div><span class="peek-t">always valid p value</span><canvas id="peek-b" aria-hidden="true"></canvas><b id="peek-rb">&nbsp;</b></div>
       </div>
-      <figcaption>Each line is a test where nothing changed, checked after every batch of users. Red ones dipped under 0.05 at some point, a false alarm. With a normal p value they pile up the more you check. The always valid test stays under 5%.</figcaption>
+      <p class="ab-run">In the repo's run of 2,000 tests checked 100 times each, 39% falsely won with a normal p value and 2.2% with the always valid one.</p>
+      </div>
+      <div class="ab-p1 off" id="ab-p1" role="tabpanel" aria-labelledby="ab-t1" inert>
+        <div class="ab-sum" aria-hidden="true"><button type="button" class="p" data-f="p" tabindex="-1" style="flex:91"></button><button type="button" class="b" data-f="b" tabindex="-1" style="flex:18"></button><button type="button" class="l" data-f="l" tabindex="-1" style="flex:18"></button></div>
+        <div class="ab-key" role="group" aria-label="Show"><button type="button" data-f="a" aria-pressed="true">All 127</button><button type="button" data-f="p" aria-pressed="false"><i style="background:var(--ink);opacity:.72"></i>91 pass</button><button type="button" data-f="b" aria-pressed="false"><i style="background:var(--bench)"></i>18 mistakes on purpose</button><button type="button" data-f="l" aria-pressed="false"><i style="background:var(--accent)"></i>18 real limits</button></div>
+        <ul class="ab-list" id="ab-list" aria-label="Validation table"></ul>
+      </div>
+      <div class="ab-p2 off" id="ab-p2" role="tabpanel" aria-labelledby="ab-t2" inert>
+        <canvas id="ab-srm" role="img" aria-label="Share of players in the gate 40 group for each bucket of rounds played. Players with few rounds lean toward gate 40, players who could have reached the gate are split evenly."></canvas>
+        <ul class="ab-facts">
+          <li class="w"><b>Split</b><span><b>44,700 vs 45,489</b> players, p = 0.009. A healthy test lands there about 1 time in 116, so it's worth a look.</span></li>
+          <li><b>Where</b><span>Players with under 29 rounds couldn't have reached a gate, and gate 40 has 823 more of them (p = 0.0005). From 29 rounds up it's 16,958 vs 16,924 (p = 0.85).</span></li>
+          <li><b>Result</b><span>7 day retention fell from 19.0% to 18.2%, a 4.3% drop (adjusted p = 0.005). Among players who could see the gate it's 43.4% vs 42.4%, p = 0.07, with 38% of the data.</span></li>
+        </ul>
+      </div>
+      </div>
+      <figcaption id="ab-cap">Each line is a test where nothing changed, checked after every batch of users. Red ones dipped under 0.05 at some point, a false alarm. With a normal p value they pile up the more you check.</figcaption>
     </figure>
   </article>
 
   <article id="p-shutdowns" class="proj reveal" data-no="04">
     <div>
-      <div class="pintro" data-kind="sd" role="img" aria-label="106 countries stayed online. One switched off."><canvas></canvas><p class="mono"><span>106 countries stayed online. One switched off.</span><button type="button" class="intro-re" aria-label="Replay">Replay</button></p></div>
-      <h3>What it costs to turn off the internet</h3>
-      <ul class="tags"><li>SQL</li><li>DuckDB</li><li>causal inference</li><li>Python</li><li>pytest</li></ul>
-      <p>When a government shuts off a country's internet, there's no A/B test to run. So I built each country a synthetic twin out of 106 countries that stayed online, using GitHub's public data on how much code every country pushes.</p>
-      <p>During Iran's 2026 blackouts its GitHub activity ran 69% below its twin. Across six full shutdowns, each day offline cost about 1.3 days of work, so people didn't catch up after. I planted 1,500 fake shutdowns first to make sure the method finds them.</p>
-      <a class="lab-cta" href="shutdowns.html">
+      <div class="pintro" data-kind="sd" role="img" aria-label="106 countries in the donor pool. One went dark."><canvas></canvas><p class="mono"><span>106 countries in the donor pool. One went dark.</span><button type="button" class="intro-re" aria-label="Replay">Replay</button></p></div>
+      <h3>When a country's internet goes dark</h3>
+      <ul class="tags"><li>SQL</li><li>DuckDB</li><li>synthetic control</li><li>Python</li><li>pytest</li></ul>
+      <p>When a government shuts off a country's internet, there's no A/B test to run. So I built each country a synthetic twin out of 106 countries with no shutdown in my registry, using GitHub's public data on where code gets pushed from, and measured the gap. Then I spent most of the time trying to break it.</p>
+      <p>Iran was offline for about half of early 2026, and its pushes came in 59% to 69% below its twin. It's a range because most countries jumped about 30% that quarter and sanctioned ones mostly didn't, though Venezuela grew 48%. OONI's daily network tests line up with the blackout dates. It's GitHub's map, so people on VPNs counted elsewhere are part of the gap.</p>      <a class="lab-cta" href="shutdowns.html">
         <span class="lab-cta-k mono">Interactive</span>
         <span class="lab-cta-t">Build a country's twin and see what simple comparisons get wrong</span>
         <span class="lab-cta-s">Nine shutdowns, from Myanmar to Iran.</span>
         <span class="lab-cta-go" aria-hidden="true">Open it <svg viewBox="0 0 16 16"><path d="M3 8h9M8.5 4.5 12 8l-3.5 3.5"/></svg></span>
       </a>
-      <div class="links"><a href="https://github.com/MatinNikoo/internet-shutdowns" target="_blank" rel="noopener">Code and tests</a><a href="https://github.com/MatinNikoo/internet-shutdowns/blob/main/memo/memo.pdf" target="_blank" rel="noopener">One page memo</a></div>
+      <div class="links"><a href="https://github.com/MatinNikoo/internet-shutdowns" target="_blank" rel="noopener">Code and tests</a><a href="https://github.com/MatinNikoo/internet-shutdowns/blob/main/memo/memo.pdf" target="_blank" rel="noopener">One page memo</a><a href="https://github.com/MatinNikoo/internet-shutdowns/blob/main/paper/paper.pdf" target="_blank" rel="noopener">Paper</a></div>
     </div>
     <figure class="visual sd">
       <div class="sd-head">
         <div class="sd-pick" id="sd-pick" role="group" aria-label="Pick a shutdown"><button type="button" data-id="IR-2026" aria-pressed="true">Iran 2026</button><button type="button" data-id="MM-2021" aria-pressed="false">Myanmar 2021</button><button type="button" data-id="SD-2021" aria-pressed="false">Sudan 2021</button></div>
         <b class="sd-big" id="sd-big" aria-live="polite"></b>
       </div>
+      <p class="sd-st mono" id="sd-st"><i></i><span></span></p>
       <div class="sd-wrap"><canvas id="sd-c" aria-label="Git pushes compared with the country's synthetic twin, 2020 to 2026"></canvas><p class="sd-tip mono" id="sd-tip"></p></div>
-      <figcaption>Pushes per quarter vs the country's twin, a mix of countries that stayed online and moved like it before. Shaded quarters are the shutdown.<span class="sd-hov"> Hover to read any quarter.</span></figcaption>
+      <div class="sd-oo"><canvas id="sd-oc" aria-hidden="true"></canvas><p id="sd-ot">&nbsp;</p></div>
+      <figcaption>Pushes per quarter vs the country's twin, a mix of donor countries that moved like it before. Shaded quarters are the shutdown.<span class="sd-hov"> Hover to read any quarter.</span></figcaption>
     </figure>
   </article>
 
   <article id="p-apps" class="proj reveal" data-no="05">
     <div>
       <p class="feat mono">Live simulator</p>
-      <div class="pintro" data-kind="ap" role="img" aria-label="Of 815K new apps, 6 in 100 hit 100K installs. With ads and in-app purchases, 31."><canvas></canvas><p class="mono"><span>815K new apps. 6 in 100 made it.</span><button type="button" class="intro-re" aria-label="Replay">Replay</button></p></div>
-      <h3>What gets an app to 100K installs</h3>
-      <ul class="tags"><li>Python</li><li>pandas</li><li>scikit-learn</li><li>2.2M rows</li></ul>
-      <p>I followed 815K Google Play apps from launch to see which ones ever reach 100K installs. Only about 6 in 100 do, and how an app makes money mattered most. Free apps with ads and in-app purchases broke out 31% of the time, paid ones 1.7%.</p>
-      <p>The gap held in all 48 categories, not just games, though part of it runs backwards since apps often add purchases once they have users. Then I turned the model into the simulator here.</p>
+      <div class="pintro" data-kind="ap" role="img" aria-label="Of 1,000 Google Play apps about a year old, 130 had reached 10K installs, 35 had reached 100K and 6 had reached 1M."><canvas></canvas><p class="mono"><span>130 of 1,000 apps hit 10K installs.</span><button type="button" class="intro-re" aria-label="Replay">Replay</button></p></div>
+      <h3>Launch-day odds for Play Store apps</h3>
+      <ul class="tags"><li>Python</li><li>scikit-learn</li><li>survival analysis</li><li>2.2M apps</li></ul>
+      <p>Most new Google Play apps go nowhere. Of the apps about a year old in June 2021, 13% had 10K installs, 3.5% had 100K and 0.6% had 1M.</p>
+      <p>A model using only launch-day facts like category, title and the developer's history ranks 2019 launches at an AUC of 0.84. My first version said 0.86, but it used fields read in 2021, long after launch. The simulator adds intervals and real apps like yours. Money shows up there only as a pattern.</p>
       
       <div class="links"><a href="simulator.html">Full simulator</a><a href="https://github.com/MatinNikoo/play-store-analysis" target="_blank" rel="noopener">Code and write-up</a></div>
     </div>
   <aside class="sim reveal" id="sim" aria-labelledby="sim-title">
     <span class="sim-note" aria-hidden="true">change anything, it updates live<svg viewBox="0 0 40 48"><path d="M4 4 C 30 6, 36 22, 26 42"/><path d="M26 42 L 22 30 M26 42 L 34 32"/></svg></span>
     <div class="sim-head">
-      <h2 id="sim-title">Will your app hit 100K installs?</h2>
-      <span class="mono">800K real apps</span>
+      <h2 id="sim-title">What are a new app's odds?</h2>
+      <span class="mono">launch-day model</span>
     </div>
     <div class="sim-out" aria-live="polite">
-      <span class="sim-pct" id="s-pct">6%</span>
+      <span class="sim-pct" id="s-pct">9.9%</span>
       <div>
-        <p class="sim-cmp" id="s-cmp">About the same as a typical new app</p>
-        <div class="meter" aria-hidden="true"><b id="s-bar" style="width:10%"></b><s id="s-avg"></s></div>
-        <div class="meter-key"><span>Line marks the average new app, 5.8%</span></div>
+        <p class="sim-cmp" id="s-cmp">chance of 100K installs within a year</p>
+        <div class="meter" aria-hidden="true"><b id="s-bar" style="width:33%"></b><s id="s-avg"></s></div>
+        <div class="meter-key"><span id="s-key">2.8 times the average app, the line at 3.5%</span></div>
       </div>
     </div>
     <div class="sim-form">
-      <label for="s-cat">Category<select id="s-cat"></select></label>
-      <label for="s-mon">How it makes money<select id="s-mon"></select></label>
-      <label for="s-dev">Apps you've published<select id="s-dev"></select></label>
-      <label for="s-size">App size<select id="s-size"></select></label>
-      <div class="sim-checks">
-        <label><input type="checkbox" id="s-priv"> Privacy policy</label>
-        <label><input type="checkbox" id="s-web"> Developer website</label>
-      </div>
+      <label for="s-cat">Category<select id="s-cat"><option>Action</option><option>Adventure</option><option>Arcade</option><option>Art &amp; Design</option><option>Auto &amp; Vehicles</option><option>Beauty</option><option>Board</option><option>Books &amp; Reference</option><option>Business</option><option>Card</option><option>Casino</option><option>Casual</option><option>Comics</option><option>Communication</option><option>Dating</option><option>Education</option><option>Educational</option><option>Entertainment</option><option>Events</option><option>Finance</option><option>Food &amp; Drink</option><option>Health &amp; Fitness</option><option>House &amp; Home</option><option>Libraries &amp; Demo</option><option>Lifestyle</option><option>Maps &amp; Navigation</option><option>Medical</option><option>Music</option><option>Music &amp; Audio</option><option>News &amp; Magazines</option><option>Parenting</option><option>Personalization</option><option>Photography</option><option>Productivity</option><option>Puzzle</option><option>Racing</option><option>Role Playing</option><option>Shopping</option><option selected>Simulation</option><option>Social</option><option>Sports</option><option>Strategy</option><option>Tools</option><option>Travel &amp; Local</option><option>Trivia</option><option>Video Players &amp; Editors</option><option>Weather</option><option>Word</option></select></label>
+      <label for="s-dev">Developer<select id="s-dev"><option value="first" selected>First app</option><option value="ninth">9th app</option><option value="many">151st app</option><option value="batch">10 the same day</option><option value="builder">App builder</option></select></label>
+      <label for="s-name" class="sim-wide">App title<input id="s-name" type="text" value="Truck Driver" maxlength="80" autocomplete="off" spellcheck="false"></label>
+      <div class="sim-ms" id="s-ms" aria-label="Chance of each milestone within a year"><span>10K <b id="s-m0">29.7%</b></span><span>100K <b id="s-m1">9.9%</b></span><span>1M <b id="s-m2">2.1%</b></span></div>
     </div>
-    <p class="sim-tip" id="s-tip"></p>
-    <p class="sim-foot"><span>Starts with an example app. Change anything.</span><a href="simulator.html">Open the full simulator</a></p>
+    <p class="sim-tip" id="s-tip">80% range <b>9.4% to 10.5%</b>, the model's own uncertainty.</p>
+    <p class="sim-foot"><span>Launch-day facts only</span><a href="simulator.html">Open the full simulator</a></p>
   </aside>
-    <figure class="visual wide reveal">
+    <figure class="visual wide reveal ps">
       <div>
+      <div class="ps-head">
+        <div class="seg" id="ps-tab" role="group" aria-label="View"><button type="button" data-v="0" aria-pressed="true">By category</button><button type="button" data-v="1" aria-pressed="false">By business model</button></div>
+        <label class="ps-cat" id="ps-catw">Category <select id="ps-cat" aria-label="Category"></select></label>
+      </div>
+      <div class="pd-stack">
+      <div id="ps-p0">
+        <div class="ps-rows" id="ps-rows" aria-live="polite"></div>
+        <div class="ps-key"><span><i class="k1"></i>first apps, 9 to 15 months old</span><span><i class="k3"></i>95% interval</span><span><i class="k2"></i>launch-day model at 12 months</span></div>
+      </div>
+      <div class="off" id="ps-p1" inert>
       <div class="hbars" role="img" aria-label="Share of apps reaching 100K installs by how they make money. Ads plus in-app purchases 31.3 percent, in-app purchases only 15.8, ads only 6.9, free with no ads or purchases 1.9, paid upfront 1.7.">
         <div class="hbar top"><span>Ads + in-app purchases</span><span class="t"><i style="width:89.4%"></i></span><span class="v">31.3%</span></div>
         <div class="hbar"><span>In-app purchases only</span><span class="t"><i style="width:45.1%"></i></span><span class="v">15.8%</span></div>
@@ -2887,12 +3073,14 @@ button.nav-lab{display:inline-flex;align-items:center;gap:.3rem;padding-right:.7
         <div class="hbar"><span>Free, no ads or purchases</span><span class="t"><i style="width:5.4%"></i></span><span class="v">1.9%</span></div>
         <div class="hbar"><span>Paid upfront</span><span class="t"><i style="width:4.9%"></i></span><span class="v">1.7%</span></div>
       </div>
-      <figcaption>Share reaching 100K installs, apps released 2018 to 2019, by how they make money.</figcaption>
+      </div>
+      </div>
+      <figcaption id="ps-cap">First apps 9 to 15 months old, against the launch-day model.</figcaption>
       </div>
       <div class="stats">
+        <div><b>0.84</b>AUC from launch-day facts (0.86 with 2021 fields)</div>
+        <div><b>47%</b>of each month's top 5% in the model's top 10%</div>
         <div><b>62%</b>of installs go to the top 0.1% of apps</div>
-        <div><b>7.9%</b>breakout rate for devs with 6 to 20 apps out</div>
-        <div><b>0.86</b>AUC, trained on 2018 and tested on 2019</div>
       </div>
     </figure>
   </article>
@@ -2901,25 +3089,25 @@ button.nav-lab{display:inline-flex;align-items:center;gap:.3rem;padding-right:.7
     <div>
       <p class="feat mono">New, a live tool</p>
       <h3>Unchart, numbers back out of a chart</h3>
-      <ul class="tags"><li>JavaScript</li><li>computer vision</li><li>OCR</li><li>robust regression</li><li>130 chart benchmark</li></ul>
-      <p>People retype numbers off charts all the time. Unchart reads a chart the way a person would. It finds the axis labels, fits the scale, follows every line and measures every bar, then hands back a table you can paste into Sheets.</p>
-      <p>It also flags charts built to mislead and redraws them honestly, and you can drag any point it got wrong back into place. It all runs in your browser, so nothing gets uploaded.</p>
+      <ul class="tags"><li>JavaScript</li><li>computer vision</li><li>OCR</li><li>618 held out charts</li><li>chart editor</li></ul>
+      <p>People retype numbers off charts all the time. Unchart reads the axis labels, fits the scale, traces the lines, bars, slices and dots, and hands back a table you can paste into Sheets or Excel, with an error bar on every number. It also flags charts drawn to mislead.</p>
+      <p>When it isn't sure about a chart it says so and gives no numbers, which happens a lot. On 618 held out charts it reads 69.8% of the synthetic ones right and 40.0% of the Our World in Data ones. Then the editor redraws any chart as one of 16 types with the controls of a spreadsheet's format pane, and exports CSV, XLSX with a real Excel chart, PNG, SVG and more. It all runs in your browser, so nothing gets uploaded.</p>
       <a class="lab-cta" href="unchart/">
         <span class="lab-cta-k mono">Live tool</span>
-        <span class="lab-cta-t">Paste a line, bar or dot chart and get its numbers back</span>
-        <span class="lab-cta-s">Works on screenshots, slide photos and PDF pages.</span>
+        <span class="lab-cta-t">Paste a chart or a PDF page and get its numbers back</span>
+        <span class="lab-cta-s">Screenshots, photos of slides and PDFs. Fix any point, redraw it, take it to Excel.</span>
         <span class="lab-cta-go" aria-hidden="true">Open Unchart <svg viewBox="0 0 16 16"><path d="M3 8h9M8.5 4.5 12 8l-3.5 3.5"/></svg></span>
       </a>
       <div class="links"><a href="https://github.com/MatinNikoo/unchart" target="_blank" rel="noopener">Code and benchmark</a></div>
     </div>
     <div class="ucx-nums">
       <div class="pintro ucart" role="img" aria-label="A screenshot of a chart goes in. Unchart finds the axis, straightens the image, traces the line and hands back a table of twelve numbers."><canvas></canvas><p class="mono"><span>A screenshot in. Twelve numbers out.</span><button type="button" class="intro-re" aria-label="Replay">Replay</button></p></div>
-      <div><b>130</b><span>charts tested, each with known numbers</span></div>
-      <div><b>&lt;1%</b><span>error on every one of them</span></div>
-      <div><b>0.17%</b><span>median error, about a third of a pixel</span></div>
-      <div><b>10 of 10</b><span>bar charts that skip zero were caught, with no false alarms</span></div>
+      <div><b>618</b><span>held out charts it was never tuned on</span></div>
+      <div><b>69.8%</b><span>of synthetic test charts read right, 40.0% of Our World in Data ones</span></div>
+      <div><b>3.2 s</b><span>median time per chart, in the browser</span></div>
+      <div><b>16</b><span>chart types in the editor</span></div>
     </div>
-    <figure class="ucx">
+    <figure class="ucx" id="ucx">
       <div class="ucx-top">
         <span class="ucx-mark">UN<i>/</i>CHART</span>
         <span class="ucx-live"><i></i>Live demo</span>
@@ -2927,18 +3115,27 @@ button.nav-lab{display:inline-flex;align-items:center;gap:.3rem;padding-right:.7
           <button type="button" data-k="ex_line.png" aria-pressed="true"><i>01</i>Sales by channel</button>
           <button type="button" data-k="ex_bars.png" aria-pressed="false"><i>02</i>Store scores</button>
           <button type="button" data-k="ex_dots.png" aria-pressed="false"><i>03</i>Ad spend</button>
+          <button type="button" data-k="ex_pie.png" aria-pressed="false"><i>04</i>Traffic</button>
         </div>
         <button type="button" class="ucx-replay" id="ucx-replay"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8a5 5 0 1 0 1.5-3.6M3 2.5v2.6h2.6"/></svg>Replay</button>
       </div>
-      <div class="ucx-pipe" id="ucx-pipe"><span data-p="0">Read labels</span><span data-p="1">Fit axes</span><span data-p="2">Trace data</span><span data-p="3">Rebuild</span></div>
+      <div class="ucx-pipe" id="ucx-pipe"><span data-p="0">Read labels</span><span data-p="1">Fit axes</span><span data-p="2">Trace data</span><span data-p="3">Check itself</span></div>
       <div class="ucx-body">
         <div class="ucx-left">
           <div class="ucx-stage" id="ucx-stage"><img id="ucx-img" src="unchart/examples/ex_line.png" alt="The example chart being read" width="880" height="484"><canvas id="ucx-ov" width="1760" height="968" aria-hidden="true"></canvas><i class="ucx-scan" id="ucx-scan"></i></div>
           <div class="ucx-hud"><span>labels <b id="ucx-n1">0</b></span><span>points <b id="ucx-n2">0</b></span><span>time <b id="ucx-n3">0.0 s</b></span><span class="ucx-read" id="ucx-read">Hover the chart to measure any point</span></div>
         </div>
-        <div class="ucx-side" id="ucx-side" aria-live="polite"></div>
+        <div class="ucx-side" id="ucx-side">
+          <div class="ucx-views" role="tablist" aria-label="What Unchart gives back"><button type="button" role="tab" id="ucx-t0" aria-controls="ucx-v0" aria-selected="true">Table<i></i></button><button type="button" role="tab" id="ucx-t1" aria-controls="ucx-v1" aria-selected="false" tabindex="-1">Checks<i></i></button><button type="button" role="tab" id="ucx-t2" aria-controls="ucx-v2" aria-selected="false" tabindex="-1">Editor<i></i></button><button type="button" role="tab" id="ucx-t3" aria-controls="ucx-v3" aria-selected="false" tabindex="-1">Export<i></i></button></div>
+          <div class="pd-stack">
+            <div class="ucx-vw" id="ucx-v0" role="tabpanel" aria-labelledby="ucx-t0" aria-live="polite"></div>
+            <div class="ucx-vw off" id="ucx-v1" role="tabpanel" aria-labelledby="ucx-t1" inert></div>
+            <div class="ucx-vw off" id="ucx-v2" role="tabpanel" aria-labelledby="ucx-t2" inert></div>
+            <div class="ucx-vw off" id="ucx-v3" role="tabpanel" aria-labelledby="ucx-t3" inert></div>
+          </div>
+        </div>
       </div>
-      <figcaption>Three example charts with made up data. Orange is what Unchart found. The live tool reads your own charts the same way.</figcaption>
+      <figcaption>Four example charts with made up data, read by version 4 of the engine. Orange is what Unchart found. The live tool reads your own charts the same way, and it has the full editor.</figcaption>
     </figure>
   </article>
 
@@ -2958,10 +3155,11 @@ button.nav-lab{display:inline-flex;align-items:center;gap:.3rem;padding-right:.7
 
   <article id="p-aura" class="proj reveal" data-no="08">
     <div>
-      <div class="pintro" data-kind="au" role="img" aria-label="Each frame, only what changed gets redrawn."><canvas></canvas><p class="mono"><span>Each frame, only what changed gets redrawn.</span><button type="button" class="intro-re" aria-label="Replay">Replay</button></p></div>
+      <div class="pintro" data-kind="au" role="img" aria-label="A pixel grid where only the progress bar redraws. Then the card rounds off and the analog clock face appears."><canvas></canvas><p class="mono"><span>Each frame, only what changed gets redrawn.</span><button type="button" class="intro-re" aria-label="Replay">Replay</button></p></div>
       <h3>Aura desktop widgets</h3>
-      <ul class="tags"><li>Python</li><li>PyQt6</li><li>NumPy</li><li>Windows APIs</li></ul>
-      <p>Desktop widgets for Windows. The main one shows the song that's playing and recolors itself from the album art, and the chrome text is rendered with NumPy. It only redraws what changed and pauses during fullscreen games, so idle CPU is close to zero.</p>
+      <ul class="tags"><li>Python</li><li>PyQt6</li><li>NumPy</li><li>Windows APIs</li><li>253 tests</li></ul>
+      <p>Desktop widgets for Windows. A now playing card that takes its colors from the album cover, GIF boxes, and a clock in 3D chrome rendered with NumPy. Version 1.1 adds five card shapes, an analog clock face, dragging the progress bar to seek, snapping, a hide shortcut, saved profiles, a settings window with a live preview and an installer.</p>
+      <p>It also fixes a leak in the fullscreen check that kept about 270 MB a day per widget, makes GIFs play at the right speed (0.96x instead of 0.65x for 20 ms frames), and keeps every line of text at 3:1 contrast or better on 122 test covers. I've only measured it on Linux so far.</p>
       <div class="links"><a href="https://github.com/MatinNikoo/aura-widgets" target="_blank" rel="noopener">Code</a></div>
     </div>
     <figure class="visual showcase">
@@ -3244,89 +3442,36 @@ button.nav-lab{display:inline-flex;align-items:center;gap:.3rem;padding-right:.7
 })();
 </script>
 
-<script>
-// backtest chart
-(function(){
-  var D={"d":["2018-01-07","2018-01-14","2018-01-21","2018-01-28","2018-02-04","2018-02-11","2018-02-18","2018-02-25","2018-03-04","2018-03-11","2018-03-18","2018-03-25","2018-04-01","2018-04-08","2018-04-15","2018-04-22","2018-04-29","2018-05-06","2018-05-13","2018-05-20","2018-05-27","2018-06-03","2018-06-10","2018-06-17","2018-06-24","2018-07-01","2018-07-08","2018-07-15","2018-07-22","2018-07-29","2018-08-05","2018-08-12","2018-08-19","2018-08-26","2018-09-02","2018-09-09","2018-09-16","2018-09-23","2018-09-30","2018-10-07","2018-10-14","2018-10-21","2018-10-28","2018-11-04","2018-11-11","2018-11-18","2018-11-25","2018-12-02","2018-12-09","2018-12-16","2018-12-23","2018-12-30","2019-01-06","2019-01-13","2019-01-20","2019-01-27","2019-02-03","2019-02-10","2019-02-17","2019-02-24","2019-03-03","2019-03-10","2019-03-17","2019-03-24","2019-03-31","2019-04-07","2019-04-14","2019-04-21","2019-04-28","2019-05-05","2019-05-12","2019-05-19","2019-05-26","2019-06-02","2019-06-09","2019-06-16","2019-06-23","2019-06-30","2019-07-07","2019-07-14","2019-07-21","2019-07-28","2019-08-04","2019-08-11","2019-08-18","2019-08-25","2019-09-01","2019-09-08","2019-09-15","2019-09-22","2019-09-29","2019-10-06","2019-10-13","2019-10-20","2019-10-27","2019-11-03","2019-11-10","2019-11-17","2019-11-24","2019-12-01","2019-12-08","2019-12-15","2019-12-22","2019-12-29","2020-01-05","2020-01-12","2020-01-19","2020-01-26","2020-02-02","2020-02-09","2020-02-16","2020-02-23","2020-03-01","2020-03-08","2020-03-15","2020-03-22","2020-03-29","2020-04-05","2020-04-12","2020-04-19","2020-04-26","2020-05-03","2020-05-10","2020-05-17","2020-05-24","2020-05-31","2020-06-07","2020-06-14","2020-06-21","2020-06-28","2020-07-05","2020-07-12","2020-07-19","2020-07-26","2020-08-02","2020-08-09","2020-08-16","2020-08-23","2020-08-30","2020-09-06","2020-09-13","2020-09-20","2020-09-27","2020-10-04","2020-10-11","2020-10-18","2020-10-25","2020-11-01","2020-11-08","2020-11-15","2020-11-22","2020-11-29","2020-12-06","2020-12-13","2020-12-20","2020-12-27","2021-01-03","2021-01-10","2021-01-17","2021-01-24","2021-01-31","2021-02-07","2021-02-14","2021-02-21","2021-02-28","2021-03-07","2021-03-14","2021-03-21","2021-03-28","2021-04-04","2021-04-11","2021-04-18","2021-04-25","2021-05-02","2021-05-09","2021-05-16","2021-05-23","2021-05-30","2021-06-06","2021-06-13","2021-06-20","2021-06-27","2021-07-04","2021-07-11","2021-07-18","2021-07-25","2021-08-01","2021-08-08","2021-08-15","2021-08-22","2021-08-29","2021-09-05","2021-09-12","2021-09-19","2021-09-26","2021-10-03","2021-10-10","2021-10-17","2021-10-24","2021-10-31","2021-11-07","2021-11-14","2021-11-21","2021-11-28","2021-12-05","2021-12-12","2021-12-19","2021-12-26","2022-01-02","2022-01-09","2022-01-16","2022-01-23","2022-01-30","2022-02-06","2022-02-13","2022-02-20","2022-02-27","2022-03-06","2022-03-13","2022-03-20","2022-03-27","2022-04-03","2022-04-10","2022-04-17","2022-04-24","2022-05-01","2022-05-08","2022-05-15","2022-05-22","2022-05-29","2022-06-05","2022-06-12","2022-06-19","2022-06-26","2022-07-03","2022-07-10","2022-07-17","2022-07-24","2022-07-31","2022-08-07","2022-08-14","2022-08-21","2022-08-28","2022-09-04","2022-09-11","2022-09-18","2022-09-25","2022-10-02","2022-10-09","2022-10-16","2022-10-23","2022-10-30","2022-11-06","2022-11-13","2022-11-20","2022-11-27","2022-12-04","2022-12-11","2022-12-18","2022-12-25","2023-01-01","2023-01-08","2023-01-15","2023-01-22","2023-01-29","2023-02-05","2023-02-12","2023-02-19","2023-02-26","2023-03-05","2023-03-12","2023-03-19","2023-03-26","2023-04-02","2023-04-09","2023-04-16","2023-04-23","2023-04-30","2023-05-07","2023-05-14","2023-05-21","2023-05-28","2023-06-04","2023-06-11","2023-06-18","2023-06-25","2023-07-02","2023-07-09","2023-07-16","2023-07-23","2023-07-30","2023-08-06","2023-08-13","2023-08-20","2023-08-27","2023-09-03","2023-09-10","2023-09-17","2023-09-24","2023-10-01","2023-10-08","2023-10-15","2023-10-22","2023-10-29","2023-11-05","2023-11-12","2023-11-19","2023-11-26","2023-12-03","2023-12-10","2023-12-17","2023-12-24","2023-12-31","2024-01-07","2024-01-14","2024-01-21","2024-01-28","2024-02-04","2024-02-11","2024-02-18","2024-02-25","2024-03-03","2024-03-10","2024-03-17","2024-03-24","2024-03-31","2024-04-07","2024-04-14","2024-04-21","2024-04-28","2024-05-05","2024-05-12","2024-05-19","2024-05-26","2024-06-02","2024-06-09","2024-06-16","2024-06-23","2024-06-30","2024-07-07","2024-07-14","2024-07-21","2024-07-28","2024-08-04","2024-08-11","2024-08-18","2024-08-25","2024-09-01","2024-09-08","2024-09-15","2024-09-22","2024-09-29","2024-10-06","2024-10-13","2024-10-20","2024-10-27","2024-11-03","2024-11-10","2024-11-17","2024-11-24","2024-12-01","2024-12-08","2024-12-15","2024-12-22","2024-12-29","2025-01-05","2025-01-12","2025-01-19","2025-01-26","2025-02-02","2025-02-09","2025-02-16","2025-02-23","2025-03-02","2025-03-09","2025-03-16","2025-03-23","2025-03-30","2025-04-06","2025-04-13","2025-04-20","2025-04-27","2025-05-04","2025-05-11","2025-05-18","2025-05-25","2025-06-01","2025-06-08","2025-06-15","2025-06-22","2025-06-29","2025-07-06","2025-07-13","2025-07-20","2025-07-27","2025-08-03","2025-08-10","2025-08-17","2025-08-24","2025-08-31","2025-09-07","2025-09-14","2025-09-21","2025-09-28","2025-10-05","2025-10-12","2025-10-19","2025-10-26","2025-11-02","2025-11-09","2025-11-16","2025-11-23","2025-11-30","2025-12-07","2025-12-14","2025-12-21","2025-12-28","2026-01-04","2026-01-11","2026-01-18","2026-01-25","2026-02-01","2026-02-08","2026-02-15","2026-02-22","2026-03-01","2026-03-08","2026-03-15","2026-03-22","2026-03-29","2026-04-05","2026-04-12","2026-04-19","2026-04-26","2026-05-03","2026-05-10","2026-05-17","2026-05-24","2026-05-31","2026-06-07","2026-06-14"],"s":[1.0246,1.0414,1.0508,1.0739,1.0322,0.9799,1.0234,1.0294,1.0083,1.045,1.0316,0.9709,0.99,0.9771,0.9976,1.0031,1.0029,1.0008,1.0265,1.0208,1.0239,1.0294,1.0466,1.0473,1.0383,1.0252,1.0409,1.0566,1.057,1.0635,1.0718,1.0701,1.0773,1.0866,1.0971,1.0869,1.0993,1.1085,1.1037,1.0926,1.0476,1.0487,1.0073,1.0322,1.0545,1.0392,0.9994,1.0464,1.0006,1.0073,1.0073,1.0073,1.0073,1.0073,1.0073,1.0073,1.0073,1.0073,1.0073,1.0073,1.0073,1.0073,1.0073,1.0073,1.0116,1.0334,1.0391,1.0386,1.0508,1.053,1.0318,1.0237,1.0127,0.9858,1.0301,1.0359,1.058,1.0544,1.0741,1.0819,1.0694,1.0868,1.053,1.0494,1.0395,1.0251,1.0524,1.0726,1.0835,1.0784,1.0679,1.0642,1.0711,1.0772,1.0904,1.1068,1.1169,1.1272,1.1242,1.1363,1.1383,1.1472,1.1652,1.173,1.1713,1.1833,1.206,1.1944,1.1689,1.2069,1.2265,1.2115,1.0763,1.0807,0.9784,0.8361,0.9261,0.9415,0.9415,0.9415,0.9415,0.9415,0.9415,0.9415,0.9415,0.9415,0.9415,0.9415,0.9415,0.9415,0.9415,0.9426,0.9548,0.9523,0.9691,0.993,0.9997,1.0075,1.0405,1.0167,0.9915,0.9853,0.9795,0.9948,1.0335,1.0348,1.0304,0.973,1.0434,1.0671,1.0588,1.0837,1.1021,1.0915,1.1048,1.1042,1.1188,1.1409,1.1243,1.1458,1.1074,1.1602,1.175,1.1672,1.1382,1.148,1.1792,1.1693,1.1888,1.2027,1.2354,1.2527,1.2512,1.2529,1.2673,1.2507,1.2458,1.2611,1.2688,1.2739,1.2498,1.285,1.3064,1.3118,1.2992,1.3251,1.3208,1.3328,1.3432,1.3354,1.3562,1.3647,1.3417,1.3338,1.3414,1.3122,1.3231,1.3473,1.3692,1.3877,1.4158,1.412,1.4169,1.3869,1.3701,1.4225,1.3945,1.427,1.4403,1.4134,1.4092,1.3281,1.3402,1.3606,1.3356,1.3167,1.3274,1.3105,1.2738,1.3203,1.3203,1.3203,1.3203,1.3203,1.3203,1.3203,1.3203,1.3203,1.3203,1.3203,1.3203,1.3203,1.3203,1.3203,1.3203,1.3203,1.3203,1.3203,1.3203,1.3203,1.3203,1.3203,1.3203,1.3203,1.3203,1.3203,1.3203,1.3203,1.3203,1.3203,1.3203,1.3203,1.3203,1.3203,1.3203,1.3203,1.3203,1.3203,1.3203,1.3203,1.3203,1.3203,1.3203,1.3203,1.3227,1.3444,1.3304,1.3278,1.2924,1.3178,1.2582,1.2764,1.2952,1.3399,1.3392,1.3499,1.3491,1.3613,1.3505,1.3471,1.3701,1.3747,1.4005,1.407,1.4436,1.4231,1.4562,1.4406,1.4759,1.4854,1.501,1.4678,1.464,1.4339,1.4453,1.4822,1.4635,1.4616,1.4189,1.4092,1.416,1.4225,1.3885,1.3538,1.433,1.4525,1.4861,1.5009,1.5135,1.5171,1.5535,1.5678,1.5733,1.5488,1.5778,1.5968,1.6133,1.6363,1.6589,1.6534,1.681,1.6975,1.6938,1.6928,1.7305,1.7367,1.7213,1.6961,1.644,1.6875,1.6976,1.7293,1.7579,1.7579,1.751,1.773,1.8022,1.8137,1.8128,1.8475,1.8653,1.8287,1.8135,1.7751,1.7754,1.8464,1.8724,1.8776,1.7999,1.872,1.8986,1.9094,1.9144,1.9365,1.9532,1.9347,1.9079,1.9986,1.9571,1.9897,2.0132,2.0308,2.0188,1.9818,1.9947,1.9845,1.946,2.0033,2.0382,2.0175,2.014,2.044,2.0112,1.9919,1.9307,1.8868,1.8964,1.8684,1.699,1.7954,1.7666,1.7666,1.7666,1.7666,1.7666,1.7666,1.7666,1.7666,1.7666,1.7666,1.7666,1.7957,1.7908,1.8021,1.8295,1.7853,1.8297,1.8477,1.8531,1.8523,1.8586,1.8878,1.9112,1.9057,1.927,1.8804,1.9131,1.9502,1.964,1.9321,1.9349,1.8977,1.9679,1.9745,1.9632,1.9656,1.9937,1.973,2.0045,1.9975,1.9905,1.9984,1.9945,1.9689,1.9911,1.9812,1.9419,1.9127,1.8782,1.8363,1.8992,1.9677,2.0565,2.0675,2.087,2.1361,2.1406,2.1593,2.1907,2.1359,2.1008],"b":[1.0246,1.0414,1.0508,1.0739,1.0322,0.9799,1.0234,1.0294,1.0083,1.045,1.0316,0.9709,0.99,0.9771,0.9976,1.0031,1.0029,1.0008,1.0265,1.0208,1.0239,1.0294,1.0466,1.0473,1.0383,1.0252,1.0409,1.0566,1.057,1.0635,1.0718,1.0701,1.0773,1.0866,1.0971,1.0869,1.0993,1.1085,1.1037,1.0926,1.0476,1.0487,1.0073,1.0322,1.0545,1.0392,0.9994,1.0464,1.0006,0.9888,0.9191,0.946,0.9637,0.9889,1.0175,1.0149,1.0312,1.0328,1.0591,1.0659,1.0708,1.048,1.0789,1.071,1.0834,1.1067,1.1128,1.1123,1.1253,1.1277,1.1049,1.0963,1.0845,1.0557,1.1032,1.1094,1.1331,1.1292,1.1502,1.1587,1.1453,1.1639,1.1277,1.1239,1.1132,1.0978,1.1271,1.1487,1.1604,1.1549,1.1437,1.1396,1.1471,1.1537,1.1677,1.1853,1.1961,1.2072,1.204,1.2169,1.2191,1.2286,1.2479,1.2562,1.2544,1.2673,1.2915,1.2792,1.2518,1.2925,1.3135,1.2975,1.1527,1.1573,1.0479,0.8954,0.9918,0.9713,1.0888,1.1218,1.1074,1.1067,1.1445,1.1204,1.1562,1.191,1.2498,1.1906,1.2132,1.1795,1.2273,1.2484,1.2646,1.2613,1.2835,1.3152,1.3241,1.3345,1.3781,1.3466,1.3131,1.3049,1.2974,1.3175,1.3689,1.3706,1.3647,1.2887,1.3819,1.4133,1.4023,1.4353,1.4597,1.4456,1.4632,1.4625,1.4818,1.5111,1.4891,1.5175,1.4667,1.5367,1.5562,1.5459,1.5075,1.5205,1.5618,1.5487,1.5746,1.593,1.6363,1.6592,1.6571,1.6594,1.6785,1.6565,1.65,1.6703,1.6804,1.6872,1.6553,1.7019,1.7303,1.7375,1.7208,1.7551,1.7494,1.7653,1.779,1.7687,1.7962,1.8075,1.777,1.7666,1.7766,1.7379,1.7524,1.7845,1.8135,1.838,1.8751,1.8701,1.8766,1.8369,1.8147,1.884,1.847,1.8901,1.9076,1.8719,1.8664,1.759,1.775,1.8021,1.769,1.744,1.7581,1.7357,1.6871,1.7909,1.8238,1.8247,1.8031,1.7637,1.7164,1.6598,1.6572,1.6184,1.5697,1.673,1.654,1.5704,1.4803,1.5783,1.5425,1.5726,1.5583,1.5986,1.667,1.673,1.7281,1.708,1.6399,1.5871,1.6452,1.5664,1.4949,1.4511,1.4739,1.453,1.5206,1.5805,1.529,1.619,1.609,1.6346,1.6532,1.5978,1.5643,1.5628,1.5609,1.5839,1.6264,1.6158,1.6557,1.683,1.6654,1.6622,1.6178,1.6497,1.5751,1.5978,1.6214,1.6773,1.6764,1.6898,1.6888,1.7041,1.6905,1.6863,1.7151,1.7208,1.7532,1.7613,1.8072,1.7815,1.8229,1.8034,1.8475,1.8595,1.879,1.8374,1.8326,1.795,1.8092,1.8554,1.8321,1.8297,1.7762,1.7641,1.7726,1.7807,1.7381,1.6948,1.7938,1.8183,1.8603,1.8789,1.8946,1.8991,1.9446,1.9625,1.9694,1.9388,1.9751,1.9989,2.0196,2.0483,2.0767,2.0697,2.1042,2.125,2.1203,2.119,2.1663,2.174,2.1548,2.1233,2.058,2.1125,2.1251,2.1648,2.2006,2.2005,2.1919,2.2195,2.256,2.2705,2.2693,2.3127,2.335,2.2891,2.2702,2.222,2.2224,2.3113,2.3439,2.3504,2.2532,2.3434,2.3767,2.3902,2.3965,2.4241,2.4451,2.4218,2.3884,2.5019,2.4499,2.4907,2.5202,2.5422,2.5271,2.4808,2.497,2.4842,2.4361,2.5078,2.5514,2.5256,2.5212,2.5587,2.5177,2.4935,2.4169,2.3619,2.3739,2.3389,2.1268,2.2475,2.2158,2.3178,2.3856,2.3754,2.5011,2.4376,2.4809,2.5219,2.5129,2.5089,2.5959,2.64,2.6327,2.6494,2.6896,2.6247,2.69,2.7164,2.7243,2.7232,2.7324,2.7754,2.8097,2.8017,2.833,2.7645,2.8126,2.867,2.8874,2.8405,2.8445,2.7899,2.893,2.9028,2.8861,2.8897,2.931,2.9007,2.9469,2.9367,2.9264,2.938,2.9323,2.8946,2.9272,2.9126,2.8548,2.812,2.7613,2.6996,2.7922,2.8928,3.0234,3.0396,3.0681,3.1404,3.147,3.1745,3.2207,3.1401,3.0885]};
-  D.d=[];for(var t=Date.UTC(2018,0,7),j=0;j<D.s.length;j++,t+=6048e5){D.d.push(new Date(t).toISOString().slice(0,10))}
-  var el=document.getElementById('chart'); if(!el) return;
-  var MO=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
-  function lab(i){var p=D.d[i].split('-');return MO[+p[1]-1]+' '+p[0]}
-  var N=D.d.length, st=0, sm, W, H, P, n, S, B, max, mn;
-  var svg=document.createElementNS('http://www.w3.org/2000/svg','svg');svg.setAttribute('role','img');el.appendChild(svg);
-  var ro=document.createElement('div');ro.className='readout';ro.setAttribute('aria-live','polite');el.appendChild(ro);
-  var range=document.getElementById('bt-start'),out=document.getElementById('bt-out'),res=document.getElementById('bt-res');
-  if(range){range.max=N-27}
-  function x(i){return P.l+i*(W-P.l-P.r)/(n-1)}
-  function y(v){return H-P.b-(v-mn)*(H-P.t-P.b)/(max-mn)}
-  function path(a){var q='';for(var i=0;i<n;i++){q+=(i?'L':'M')+x(i).toFixed(1)+' '+y(a[i]).toFixed(1)}return q}
-  function render(first){
-    sm=el.clientWidth<440; W=sm?360:680; H=sm?250:300; P={l:sm?40:48,r:sm?100:92,t:14,b:30};
-    S=D.s.slice(st).map(function(v){return v/D.s[st]}); B=D.b.slice(st).map(function(v){return v/D.b[st]}); n=S.length;
-    var all=S.concat(B); max=Math.max(1.5,Math.ceil(Math.max.apply(null,all)*4)/4); mn=Math.min(.75,Math.floor(Math.min.apply(null,all)*4)/4);
-    svg.setAttribute('viewBox','0 0 '+W+' '+H);
-    svg.setAttribute('aria-label','Line chart. One dollar invested in '+lab(st)+' grew to '+B[n-1].toFixed(2)+' dollars holding SPY and '+S[n-1].toFixed(2)+' dollars with the crossover strategy by June 2026.');
-    var g='', stp=max-mn>2.5?1:.5;
-    for(var v=Math.ceil(mn/stp)*stp;v<=max+1e-9;v+=stp){g+='<line x1="'+P.l+'" x2="'+(W-P.r)+'" y1="'+y(v)+'" y2="'+y(v)+'" stroke="var(--line)" stroke-width="'+(Math.abs(v-1)<1e-9?1.5:1)+'"/><text x="'+(P.l-10)+'" y="'+(y(v)+4)+'" text-anchor="end" font-size="12" fill="var(--muted)">$'+(v%1?v.toFixed(2):v)+'</text>'}
-    var yrs={},every=n>300?(sm?4:2):(n>150?(sm?2:1):1);
-    for(var i=0;i<n;i++){var yr=D.d[st+i].slice(0,4);if(!(yr in yrs)&&yr%every===0&&i>4)yrs[yr]=i}
-    for(var k in yrs){g+='<text x="'+x(yrs[k])+'" y="'+(H-8)+'" text-anchor="middle" font-size="12" fill="var(--muted)">'+k+'</text>'}
-    var L=n-1, yb=y(B[L]), ys=y(S[L]); if(Math.abs(yb-ys)<16){if(yb<ys){yb-=8;ys+=8}else{yb+=8;ys-=8}}
-    g+='<path d="'+path(B)+'" fill="none" stroke="var(--bench)" stroke-width="2" stroke-linejoin="round"/>';
-    g+='<path class="draw" d="'+path(S)+'" fill="none" stroke="var(--accent)" stroke-width="2.5" stroke-linejoin="round"/>';
-    g+='<text x="'+(x(L)+8)+'" y="'+(yb+4)+'" font-size="13" fill="var(--muted)">SPY $'+B[L].toFixed(2)+'</text>';
-    g+='<text x="'+(x(L)+8)+'" y="'+(ys+4)+'" font-size="13" font-weight="600" fill="var(--accent)">'+(sm?'Strat. $':'Strategy $')+S[L].toFixed(2)+'</text>';
-    g+='<line id="hx" y1="'+P.t+'" y2="'+(H-P.b)+'" stroke="var(--muted)" stroke-width="1" opacity="0"/><circle id="hb" r="4" fill="var(--bench)" opacity="0"/><circle id="hs" r="4" fill="var(--accent)" opacity="0"/>';
-    g+='<rect id="hit" x="'+P.l+'" y="0" width="'+(W-P.l-P.r)+'" height="'+H+'" fill="transparent"/>';
-    svg.innerHTML=g;
-    if(out) out.textContent=lab(st);
-    if(res){var won=S[L]>B[L];res.innerHTML='Starting '+lab(st)+', $1 became <b>$'+S[L].toFixed(2)+'</b> with the strategy and <b>$'+B[L].toFixed(2)+'</b> holding SPY. '+(won?'<span class="w">The strategy wins from here.</span>':'Buy and hold still wins.')}
-    var hit=svg.querySelector('#hit');
-    hit.addEventListener('pointermove',function(e){show(e.clientX)});hit.addEventListener('pointerdown',function(e){show(e.clientX)});hit.addEventListener('pointerleave',hide);
-    if(first){var dp=svg.querySelector('.draw'),TL=dp.getTotalLength();
-      if(!matchMedia('(prefers-reduced-motion: reduce)').matches&&'IntersectionObserver' in window){
-        dp.style.strokeDasharray=TL;dp.style.strokeDashoffset=TL;
-        mnAfterSlide(svg,function(){dp.style.animation='draw 1.6s ease-out forwards'})}}
-  }
-  function show(cx){var hx=svg.querySelector('#hx'),hb=svg.querySelector('#hb'),hs=svg.querySelector('#hs');var r=svg.getBoundingClientRect(),px=(cx-r.left)*W/r.width;var i=Math.round((px-P.l)/(W-P.l-P.r)*(n-1));i=Math.max(0,Math.min(n-1,i));var X=x(i);
-    hx.setAttribute('x1',X);hx.setAttribute('x2',X);hx.setAttribute('opacity',1);hb.setAttribute('cx',X);hb.setAttribute('cy',y(B[i]));hb.setAttribute('opacity',1);hs.setAttribute('cx',X);hs.setAttribute('cy',y(S[i]));hs.setAttribute('opacity',1);
-    ro.textContent=lab(st+i)+'   SPY $'+B[i].toFixed(2)+'   Strategy $'+S[i].toFixed(2)}
-  function hide(){['#hx','#hb','#hs'].forEach(function(q){var e=svg.querySelector(q);if(e)e.setAttribute('opacity',0)});ro.textContent=''}
-  render(true);
-  if(range){var pend=false;range.addEventListener('input',function(){st=+range.value;if(pend)return;pend=true;requestAnimationFrame(function(){pend=false;render(false)})})}
-  var rt;addEventListener('resize',function(){clearTimeout(rt);rt=setTimeout(function(){var was=sm;if((el.clientWidth<440)!==was)render(false)},150)});
-})();
-</script>
 
 <script>
-// simulator
+// simulator: the launch-day model, the same file and math as simulator.html, loaded when the card gets close
 (function(){
-  var M={"intercept":-2.25407,"weights":{"Category=Action":0.08555,"Category=Adventure":0.07479,"Category=Arcade":-0.72982,"Category=Art & Design":0.29798,"Category=Auto & Vehicles":0.07627,"Category=Beauty":0.10427,"Category=Board":0.21378,"Category=Books & Reference":-0.4386,"Category=Business":-1.099,"Category=Card":-0.05895,"Category=Casino":-0.44134,"Category=Casual":-0.12629,"Category=Comics":0.23081,"Category=Communication":0.23715,"Category=Dating":-0.26118,"Category=Education":-0.34981,"Category=Educational":0.10116,"Category=Entertainment":0.3749,"Category=Events":-1.25564,"Category=Finance":0.61015,"Category=Food & Drink":-0.79522,"Category=Health & Fitness":-0.3662,"Category=House & Home":-0.67791,"Category=Libraries & Demo":0.18451,"Category=Lifestyle":-0.10133,"Category=Maps & Navigation":-0.15739,"Category=Medical":-0.75161,"Category=Music":0.38916,"Category=Music & Audio":-0.68163,"Category=News & Magazines":-1.10461,"Category=Parenting":0.04252,"Category=Personalization":0.55015,"Category=Photography":0.79289,"Category=Productivity":-0.05108,"Category=Puzzle":-0.54109,"Category=Racing":0.25122,"Category=Role Playing":0.91642,"Category=Shopping":-0.00733,"Category=Simulation":1.04919,"Category=Social":-0.10654,"Category=Sports":-0.09084,"Category=Strategy":0.05272,"Category=Tools":0.782,"Category=Travel & Local":-0.52296,"Category=Trivia":-0.62,"Category=Video Players & Editors":1.36463,"Category=Weather":0.75731,"Category=Word":-0.43494,"model=Ads + in-app purchases":1.17958,"model=Ads only":-0.01473,"model=Free, no ads or purchases":-1.58422,"model=In-app purchases only":0.2059,"model=Paid upfront":-2.01834,"size=15 to 40 MB":-0.6045,"size=40 to 100 MB":-0.03196,"size=5 to 15 MB":-0.92941,"size=Over 100 MB":0.55756,"size=Under 5 MB":-1.22348,"dev=2 to 5":0.08323,"dev=21 to 100":-0.60021,"dev=6 to 20":-0.07853,"dev=More than 100":-1.71811,"dev=This is my first app":0.09079,"rating=Everyone":-0.83495,"rating=Everyone 10+":-0.4693,"rating=Mature 17+":-0.45151,"rating=Teen":-0.47604,"privacy=yes":1.11155,"website=yes":0.65478},"options":{"Category":["Action","Adventure","Arcade","Art & Design","Auto & Vehicles","Beauty","Board","Books & Reference","Business","Card","Casino","Casual","Comics","Communication","Dating","Education","Educational","Entertainment","Events","Finance","Food & Drink","Health & Fitness","House & Home","Libraries & Demo","Lifestyle","Maps & Navigation","Medical","Music","Music & Audio","News & Magazines","Parenting","Personalization","Photography","Productivity","Puzzle","Racing","Role Playing","Shopping","Simulation","Social","Sports","Strategy","Tools","Travel & Local","Trivia","Video Players & Editors","Weather","Word"],"model":["Ads + in-app purchases","In-app purchases only","Ads only","Free, no ads or purchases","Paid upfront"],"size":["Under 5 MB","5 to 15 MB","15 to 40 MB","40 to 100 MB","Over 100 MB"],"dev":["This is my first app","2 to 5","6 to 20","21 to 100","More than 100"],"rating":["Everyone","Everyone 10+","Teen","Mature 17+"]},"cells":{"Action|Ads + in-app purchases":[2126,0.4069],"Action|Ads only":[4697,0.1346],"Action|Free, no ads or purchases":[1105,0.0326],"Action|In-app purchases only":[182,0.3352],"Action|Paid upfront":[177,0.1017],"Adventure|Ads + in-app purchases":[1317,0.4282],"Adventure|Ads only":[4401,0.0879],"Adventure|Free, no ads or purchases":[1171,0.0239],"Adventure|In-app purchases only":[247,0.1822],"Adventure|Paid upfront":[227,0.0485],"Arcade|Ads + in-app purchases":[3302,0.1838],"Arcade|Ads only":[10230,0.0417],"Arcade|Free, no ads or purchases":[2860,0.0091],"Arcade|In-app purchases only":[211,0.1469],"Arcade|Paid upfront":[145,0.069],"Art & Design|Ads + in-app purchases":[237,0.4937],"Art & Design|Ads only":[6635,0.0699],"Art & Design|Free, no ads or purchases":[2131,0.0131],"Art & Design|In-app purchases only":[94,0.266],"Art & Design|Paid upfront":[80,0.0],"Auto & Vehicles|Ads + in-app purchases":[263,0.3726],"Auto & Vehicles|Ads only":[1936,0.0966],"Auto & Vehicles|Free, no ads or purchases":[5511,0.0181],"Auto & Vehicles|In-app purchases only":[101,0.198],"Auto & Vehicles|Paid upfront":[101,0.0],"Beauty|Ads + in-app purchases":[55,0.6],"Beauty|Ads only":[2463,0.0678],"Beauty|Free, no ads or purchases":[2467,0.0118],"Beauty|In-app purchases only":[32,0.0312],"Beauty|Paid upfront":[7,0.0],"Board|Ads + in-app purchases":[519,0.3507],"Board|Ads only":[1551,0.1019],"Board|Free, no ads or purchases":[777,0.0193],"Board|In-app purchases only":[110,0.2545],"Board|Paid upfront":[92,0.0217],"Books & Reference|Ads + in-app purchases":[1671,0.1167],"Books & Reference|Ads only":[33353,0.0312],"Books & Reference|Free, no ads or purchases":[6800,0.0179],"Books & Reference|In-app purchases only":[346,0.1156],"Books & Reference|Paid upfront":[725,0.0],"Business|Ads + in-app purchases":[291,0.2165],"Business|Ads only":[5533,0.0208],"Business|Free, no ads or purchases":[48846,0.0079],"Business|In-app purchases only":[519,0.0617],"Business|Paid upfront":[109,0.0183],"Card|Ads + in-app purchases":[542,0.3007],"Card|Ads only":[940,0.116],"Card|Free, no ads or purchases":[381,0.0289],"Card|In-app purchases only":[159,0.2516],"Card|Paid upfront":[53,0.0755],"Casino|Ads + in-app purchases":[440,0.3045],"Casino|Ads only":[409,0.0587],"Casino|Free, no ads or purchases":[171,0.0468],"Casino|In-app purchases only":[132,0.3636],"Casino|Paid upfront":[12,0.0],"Casual|Ads + in-app purchases":[2736,0.2654],"Casual|Ads only":[8748,0.0874],"Casual|Free, no ads or purchases":[2509,0.0147],"Casual|In-app purchases only":[252,0.1508],"Casual|Paid upfront":[108,0.0463],"Comics|Ads + in-app purchases":[180,0.3556],"Comics|Ads only":[840,0.169],"Comics|Free, no ads or purchases":[135,0.0519],"Comics|In-app purchases only":[35,0.3143],"Comics|Paid upfront":[12,0.0],"Communication|Ads + in-app purchases":[335,0.403],"Communication|Ads only":[5256,0.1178],"Communication|Free, no ads or purchases":[12083,0.0175],"Communication|In-app purchases only":[246,0.1545],"Communication|Paid upfront":[140,0.0],"Dating|Ads + in-app purchases":[398,0.1583],"Dating|Ads only":[832,0.095],"Dating|Free, no ads or purchases":[498,0.0281],"Dating|In-app purchases only":[262,0.229],"Dating|Paid upfront":[9,0.0],"Education|Ads + in-app purchases":[2658,0.1817],"Education|Ads only":[34623,0.0451],"Education|Free, no ads or purchases":[44754,0.0114],"Education|In-app purchases only":[1910,0.0843],"Education|Paid upfront":[1643,0.0006],"Educational|Ads + in-app purchases":[677,0.4298],"Educational|Ads only":[2613,0.0865],"Educational|Free, no ads or purchases":[2648,0.0166],"Educational|In-app purchases only":[435,0.1816],"Educational|Paid upfront":[243,0.0165],"Entertainment|Ads + in-app purchases":[1899,0.2838],"Entertainment|Ads only":[32237,0.0934],"Entertainment|Free, no ads or purchases":[12669,0.0295],"Entertainment|In-app purchases only":[632,0.1899],"Entertainment|Paid upfront":[396,0.0],"Events|Ads + in-app purchases":[34,0.4412],"Events|Ads only":[1181,0.0186],"Events|Free, no ads or purchases":[5602,0.0018],"Events|In-app purchases only":[33,0.1212],"Events|Paid upfront":[5,0.0],"Finance|Ads + in-app purchases":[400,0.1125],"Finance|Ads only":[4210,0.0468],"Finance|Free, no ads or purchases":[15840,0.0695],"Finance|In-app purchases only":[348,0.0891],"Finance|Paid upfront":[139,0.0],"Food & Drink|Ads + in-app purchases":[1055,0.0351],"Food & Drink|Ads only":[6044,0.0222],"Food & Drink|Free, no ads or purchases":[19274,0.01],"Food & Drink|In-app purchases only":[180,0.0389],"Food & Drink|Paid upfront":[81,0.0],"Health & Fitness|Ads + in-app purchases":[752,0.3178],"Health & Fitness|Ads only":[7019,0.0389],"Health & Fitness|Free, no ads or purchases":[19081,0.0117],"Health & Fitness|In-app purchases only":[1120,0.1098],"Health & Fitness|Paid upfront":[293,0.0034],"House & Home|Ads + in-app purchases":[110,0.1818],"House & Home|Ads only":[2003,0.024],"House & Home|Free, no ads or purchases":[3945,0.0122],"House & Home|In-app purchases only":[59,0.0508],"House & Home|Paid upfront":[29,0.0],"Libraries & Demo|Ads + in-app purchases":[78,0.6282],"Libraries & Demo|Ads only":[524,0.0916],"Libraries & Demo|Free, no ads or purchases":[1143,0.007],"Libraries & Demo|In-app purchases only":[12,0.25],"Libraries & Demo|Paid upfront":[12,0.0833],"Lifestyle|Ads + in-app purchases":[827,0.318],"Lifestyle|Ads only":[14306,0.0626],"Lifestyle|Free, no ads or purchases":[21467,0.0154],"Lifestyle|In-app purchases only":[631,0.1173],"Lifestyle|Paid upfront":[260,0.0],"Maps & Navigation|Ads + in-app purchases":[261,0.2567],"Maps & Navigation|Ads only":[2990,0.0378],"Maps & Navigation|Free, no ads or purchases":[6104,0.017],"Maps & Navigation|In-app purchases only":[130,0.1077],"Maps & Navigation|Paid upfront":[189,0.0053],"Medical|Ads + in-app purchases":[145,0.1034],"Medical|Ads only":[1675,0.0257],"Medical|Free, no ads or purchases":[8419,0.014],"Medical|In-app purchases only":[276,0.0688],"Medical|Paid upfront":[280,0.0],"Music|Ads + in-app purchases":[173,0.422],"Music|Ads only":[784,0.1314],"Music|Free, no ads or purchases":[183,0.0164],"Music|In-app purchases only":[26,0.2692],"Music|Paid upfront":[16,0.125],"Music & Audio|Ads + in-app purchases":[898,0.2094],"Music & Audio|Ads only":[50896,0.0324],"Music & Audio|Free, no ads or purchases":[10713,0.0101],"Music & Audio|In-app purchases only":[288,0.1528],"Music & Audio|Paid upfront":[256,0.0234],"News & Magazines|Ads + in-app purchases":[429,0.0466],"News & Magazines|Ads only":[7353,0.0337],"News & Magazines|Free, no ads or purchases":[5056,0.0115],"News & Magazines|In-app purchases only":[318,0.0189],"News & Magazines|Paid upfront":[17,0.0],"Parenting|Ads + in-app purchases":[109,0.2752],"Parenting|Ads only":[574,0.0662],"Parenting|Free, no ads or purchases":[681,0.0426],"Parenting|In-app purchases only":[114,0.193],"Parenting|Paid upfront":[28,0.0],"Personalization|Ads + in-app purchases":[688,0.3663],"Personalization|Ads only":[25419,0.0855],"Personalization|Free, no ads or purchases":[2526,0.0479],"Personalization|In-app purchases only":[216,0.1852],"Personalization|Paid upfront":[1709,0.0023],"Photography|Ads + in-app purchases":[528,0.5379],"Photography|Ads only":[10406,0.127],"Photography|Free, no ads or purchases":[1805,0.0432],"Photography|In-app purchases only":[139,0.3237],"Photography|Paid upfront":[94,0.0638],"Productivity|Ads + in-app purchases":[913,0.2782],"Productivity|Ads only":[6370,0.0752],"Productivity|Free, no ads or purchases":[19271,0.0129],"Productivity|In-app purchases only":[620,0.1177],"Productivity|Paid upfront":[364,0.0137],"Puzzle|Ads + in-app purchases":[3305,0.2306],"Puzzle|Ads only":[9186,0.0384],"Puzzle|Free, no ads or purchases":[1759,0.0085],"Puzzle|In-app purchases only":[277,0.1083],"Puzzle|Paid upfront":[239,0.0921],"Racing|Ads + in-app purchases":[828,0.4432],"Racing|Ads only":[1690,0.1284],"Racing|Free, no ads or purchases":[260,0.0423],"Racing|In-app purchases only":[44,0.1591],"Racing|Paid upfront":[25,0.08],"Role Playing|Ads + in-app purchases":[983,0.528],"Role Playing|Ads only":[903,0.2879],"Role Playing|Free, no ads or purchases":[387,0.0517],"Role Playing|In-app purchases only":[394,0.5533],"Role Playing|Paid upfront":[187,0.0749],"Shopping|Ads + in-app purchases":[142,0.1549],"Shopping|Ads only":[3379,0.0456],"Shopping|Free, no ads or purchases":[20642,0.0257],"Shopping|In-app purchases only":[62,0.0968],"Shopping|Paid upfront":[27,0.0],"Simulation|Ads + in-app purchases":[2132,0.5568],"Simulation|Ads only":[3495,0.3165],"Simulation|Free, no ads or purchases":[614,0.044],"Simulation|In-app purchases only":[144,0.3403],"Simulation|Paid upfront":[162,0.1358],"Social|Ads + in-app purchases":[547,0.3803],"Social|Ads only":[5249,0.0796],"Social|Free, no ads or purchases":[8747,0.0184],"Social|In-app purchases only":[474,0.2574],"Social|Paid upfront":[60,0.0],"Sports|Ads + in-app purchases":[1188,0.3519],"Sports|Ads only":[5682,0.0762],"Sports|Free, no ads or purchases":[7082,0.0131],"Sports|In-app purchases only":[511,0.0959],"Sports|Paid upfront":[274,0.0],"Strategy|Ads + in-app purchases":[580,0.3828],"Strategy|Ads only":[838,0.0752],"Strategy|Free, no ads or purchases":[436,0.0206],"Strategy|In-app purchases only":[285,0.3544],"Strategy|Paid upfront":[115,0.0957],"Tools|Ads + in-app purchases":[2452,0.3789],"Tools|Ads only":[19284,0.1326],"Tools|Free, no ads or purchases":[23925,0.0273],"Tools|In-app purchases only":[798,0.1529],"Tools|Paid upfront":[969,0.0175],"Travel & Local|Ads + in-app purchases":[805,0.2609],"Travel & Local|Ads only":[5070,0.031],"Travel & Local|Free, no ads or purchases":[17518,0.0158],"Travel & Local|In-app purchases only":[394,0.0152],"Travel & Local|Paid upfront":[145,0.0],"Trivia|Ads + in-app purchases":[688,0.1672],"Trivia|Ads only":[2524,0.0527],"Trivia|Free, no ads or purchases":[503,0.0318],"Trivia|In-app purchases only":[46,0.1087],"Trivia|Paid upfront":[30,0.0],"Video Players & Editors|Ads + in-app purchases":[240,0.7],"Video Players & Editors|Ads only":[2255,0.243],"Video Players & Editors|Free, no ads or purchases":[933,0.0707],"Video Players & Editors|In-app purchases only":[63,0.4603],"Video Players & Editors|Paid upfront":[34,0.0],"Weather|Ads + in-app purchases":[372,0.7043],"Weather|Ads only":[738,0.1233],"Weather|Free, no ads or purchases":[692,0.013],"Weather|In-app purchases only":[36,0.0556],"Weather|Paid upfront":[40,0.05],"Word|Ads + in-app purchases":[962,0.2401],"Word|Ads only":[1435,0.0578],"Word|Free, no ads or purchases":[202,0.0149],"Word|In-app purchases only":[59,0.0339],"Word|Paid upfront":[28,0.0]},"category_rates":{"Action":0.1945,"Adventure":0.1406,"Arcade":0.0657,"Art & Design":0.0691,"Auto & Vehicles":0.0512,"Beauty":0.0458,"Board":0.1263,"Books & Reference":0.0326,"Business":0.0109,"Card":0.1576,"Casino":0.1838,"Casual":0.1095,"Comics":0.1864,"Communication":0.0555,"Dating":0.1081,"Education":0.0317,"Educational":0.0973,"Entertainment":0.0845,"Events":0.0074,"Finance":0.0656,"Food & Drink":0.0139,"Health & Fitness":0.0304,"House & Home":0.0194,"Libraries & Demo":0.0616,"Lifestyle":0.0417,"Maps & Navigation":0.0309,"Medical":0.0181,"Music":0.1591,"Music & Audio":0.0317,"News & Magazines":0.0252,"Parenting":0.079,"Personalization":0.0848,"Photography":0.1337,"Productivity":0.0385,"Puzzle":0.08,"Racing":0.2122,"Role Playing":0.3612,"Shopping":0.0294,"Simulation":0.3652,"Social":0.0603,"Sports":0.0674,"Strategy":0.1801,"Tools":0.0902,"Travel & Local":0.0272,"Trivia":0.071,"Video Players & Editors":0.2301,"Weather":0.1949,"Word":0.1188},"meta":{"apps":799763,"base_rate":0.0578,"holdout_auc":0.841,"train_apps_2018":327704,"test_apps_2019":472059}};
   var $=function(i){return document.getElementById(i)};
   if(!$("sim")) return;
-  function fill(el,items){el.innerHTML=items.map(function(v){return "<option>"+v+"</option>"}).join("")}
-  fill($("s-cat"),M.options.Category);fill($("s-mon"),M.options.model);fill($("s-dev"),M.options.dev);fill($("s-size"),M.options.size);
-  $("s-cat").value="Casual";$("s-mon").value="Ads only";$("s-dev").value="This is my first app";$("s-size").value="15 to 40 MB";$("s-priv").checked=true;
-  var CAP=0.6;
-  $("s-avg").style.left=(M.meta.base_rate/CAP*100)+"%";
-  function pct(p){return p<0.01?"<1%":Math.round(p*100)+"%"}
-  function prob(s){var w=M.weights;var z=M.intercept+(w["Category="+s.cat]||0)+(w["model="+s.mon]||0)+(w["dev="+s.dev]||0)+(w["size="+s.size]||0)+(w["rating=Everyone"]||0)+(s.priv?w["privacy=yes"]:0)+(s.web?w["website=yes"]:0);return 1/(1+Math.exp(-z))}
-  function read(){return{cat:$("s-cat").value,mon:$("s-mon").value,dev:$("s-dev").value,size:$("s-size").value,priv:$("s-priv").checked,web:$("s-web").checked}}
-  var counted=false;
+  var PRE={first:{},ninth:{earlier_apps:8,months_since_first_app:24,earlier_categories:2},many:{earlier_apps:150,months_since_first_app:36,apps_last_30_days:10},batch:{same_day_apps:10},builder:{builder_apps:5000}};
+  var FIELDS=["earlier_apps","months_since_first_app","earlier_categories","earlier_apps_same_category","apps_last_30_days","same_day_apps","builder_apps"];
+  var AVG=0.035,CAP=0.3,MS=["10000","100000","1000000"],loading=false,want=false,counted=false;
+  $("s-avg").style.left=(AVG/CAP*100)+"%";
+  function pct(p){return p>=0.01?(p*100).toFixed(1)+"%":(p*100).toFixed(2)+"%"}
+  // the same app the full simulator builds from its form: preset fields or 0, earlier categories worked out
+  function app(){var a={category:$("s-cat").value,name:$("s-name").value},p=PRE[$("s-dev").value]||{};
+    FIELDS.forEach(function(f){if(f in p)a[f]=p[f];else if(f!=="earlier_categories")a[f]=0});
+    if(!("earlier_categories" in a))a.earlier_categories=a.earlier_apps>0?1:0;return a}
   function render(user){
-    var s=read(),p=prob(s),r=p/M.meta.base_rate;
-    $("s-pct").textContent=pct(p);
-    $("s-bar").style.width=Math.min(p/CAP,1)*100+"%";
-    $("s-cmp").textContent=r>=1.5?"About "+r.toFixed(1)+"x the typical new app":r>=0.67?"About the same as a typical new app":"About "+(1/r).toFixed(1)+"x less likely than a typical new app";
-    var best=null;
-    M.options.model.forEach(function(m){if(m!==s.mon){var q=prob(Object.assign({},s,{mon:m}));if(!best||q>best.p)best={t:"switching to "+m.toLowerCase(),p:q}}});
-    if(!s.web){var q=prob(Object.assign({},s,{web:true}));if(!best||q>best.p)best={t:"adding a developer website",p:q}}
-    if(!s.priv){var q2=prob(Object.assign({},s,{priv:true}));if(!best||q2>best.p)best={t:"adding a privacy policy",p:q2}}
-    $("s-tip").innerHTML=best&&best.p-p>=0.005?"The biggest boost comes from "+best.t+", <b>"+pct(p)+" to "+pct(best.p)+"</b>":"These are already the strongest choices for this category.";
+    if(!window.PLAYODDS_MODEL){want=want||user;load();return}
+    var r=PlayOdds.score(window.PLAYODDS_MODEL,app(),12,"80").milestones,m=r["100000"],k=m.p/AVG;
+    $("s-pct").textContent=pct(m.p);
+    $("s-bar").style.width=Math.min(m.p/CAP,1)*100+"%";
+    $("s-key").textContent=(k>=1.25?k.toFixed(1)+" times the average app":k>=0.8?"about the average app":(1/k).toFixed(1)+" times less likely than the average app")+", the line at 3.5%";
+    MS.forEach(function(ms,i){$("s-m"+i).textContent=pct(r[ms].p)});
+    $("s-tip").innerHTML="80% range <b>"+pct(m.lo)+" to "+pct(m.hi)+"</b>, the model's own uncertainty.";
     if(user&&!counted){counted=true;try{if(window.goatcounter&&window.goatcounter.count)window.goatcounter.count({path:"simulator-used-home",title:"Simulator used (homepage)",event:true})}catch(e){}}
   }
+  function load(){if(loading)return;loading=true;var sc=document.createElement("script");sc.src="simulator-model.js";sc.async=true;sc.onload=function(){render(want)};sc.onerror=function(){loading=false};document.head.appendChild(sc)}
   $("sim").addEventListener("change",function(){render(true)});
-  render(false);
+  $("s-name").addEventListener("input",function(){render(true)});
+  $("sim").addEventListener("focusin",load);$("sim").addEventListener("pointerenter",load);
+  if("IntersectionObserver" in window){var io=new IntersectionObserver(function(es){if(es[0].isIntersecting){io.disconnect();load()}},{rootMargin:"900px 0px"});io.observe($("sim"))}else load();
 })();
 </script>
 <script>
@@ -3552,6 +3697,15 @@ var AURA_LASTFM={user:'',key:''};
   }
   function layer(w,h){var c=document.createElement('canvas');c.width=w;c.height=h;return c}
   var timeL=null,timeKey='',starL=null,starMask=null;
+  // Aura 1.1 analog face: dial, ticks and hands go through the same chrome pass as the digits. Click the clock to switch
+  var face=0,fk=0,dialL=null,dialKey='',fRaf=0;
+  function buildDial(d){var L=layer(132*R,132*R),x=L.getContext('2d'),c=66*R,r=48*R,i,a;x.strokeStyle='#fff';x.fillStyle='#fff';x.lineCap='round';
+    x.lineWidth=5*R;x.beginPath();x.arc(c,c,r,0,7);x.stroke();
+    for(i=0;i<12;i++){a=i/12*Math.PI*2;var r1=r-(i%3?10:14)*R,r2=r-6.5*R;x.lineWidth=(i%3?2.2:3.6)*R;x.beginPath();x.moveTo(c+Math.sin(a)*r1,c-Math.cos(a)*r1);x.lineTo(c+Math.sin(a)*r2,c-Math.cos(a)*r2);x.stroke()}
+    var hh=d.getHours()%12,mm=d.getMinutes(),ha=(hh+mm/60)/12*Math.PI*2,ma=mm/60*Math.PI*2;
+    x.lineWidth=6.5*R;x.beginPath();x.moveTo(c-Math.sin(ha)*5*R,c+Math.cos(ha)*5*R);x.lineTo(c+Math.sin(ha)*r*.5,c-Math.cos(ha)*r*.5);x.stroke();
+    x.lineWidth=4.4*R;x.beginPath();x.moveTo(c-Math.sin(ma)*7*R,c+Math.cos(ma)*7*R);x.lineTo(c+Math.sin(ma)*r*.74,c-Math.cos(ma)*r*.74);x.stroke();
+    x.beginPath();x.arc(c,c,6*R,0,7);x.fill();chrome(x,L.width,L.height,7*R,1.4,.25);dialL=L}
   function fmt(d){var hh=d.getHours(),mm=d.getMinutes();return {t:((hh%12)||12)+':'+(mm<10?'0':'')+mm,ap:hh<12?'AM':'PM'}}
   function buildTime(d){
     var f=fmt(d),L=layer(W*R,104*R),x=L.getContext('2d');x.fillStyle='#fff';x.textBaseline='alphabetic';
@@ -3575,9 +3729,13 @@ var AURA_LASTFM={user:'',key:''};
     var g=ctx.createLinearGradient(0,0,0,H);g.addColorStop(0,'rgb(13,13,15)');g.addColorStop(1,'rgb(4,4,5)');
     rr(ctx,.5,.5,W-1,H-1,26);ctx.fillStyle=g;ctx.fill();ctx.strokeStyle='rgba(255,255,255,'+(22/255).toFixed(3)+')';ctx.lineWidth=1;ctx.stroke();
     ctx.save();rr(ctx,0,0,W,H,26);ctx.clip();
+    if(fk<1){ctx.globalAlpha=1-fk;
     ctx.drawImage(timeL,0,0,W,104);
     ctx.font='300 11.5px Unbounded';ctx.fillStyle='rgb(150,153,163)';ctx.textBaseline='top';
-    ctx.fillText(d.toLocaleDateString('en-US',{weekday:'long',month:'long',day:'numeric'}),PAD+2,DATE_TOP);
+    ctx.fillText(d.toLocaleDateString('en-US',{weekday:'long',month:'long',day:'numeric'}),PAD+2,DATE_TOP);ctx.globalAlpha=1}
+    if(fk>0){if(dialKey!==timeKey){dialKey=timeKey;buildDial(d)}ctx.globalAlpha=fk;ctx.drawImage(dialL,0,0,132,132);
+      ctx.textBaseline='alphabetic';ctx.font='700 17px Unbounded';ctx.fillStyle='rgb(236,238,244)';ctx.fillText(d.toLocaleDateString('en-US',{weekday:'long'}),142,62);
+      ctx.font='300 11.5px Unbounded';ctx.fillStyle='rgb(150,153,163)';ctx.fillText(d.toLocaleDateString('en-US',{month:'long',day:'numeric'}),142,82);ctx.globalAlpha=1}
     var T=(now-t0)/1000, cyc=T%6, shine=reduce?0:(cyc<2.2?Math.pow(Math.sin(Math.PI*cyc/2.2),2):0);
     var cx=W-64,cy=H/2;
     var hg=ctx.createRadialGradient(cx,cy,0,cx,cy,35*1.15);hg.addColorStop(0,'rgba(255,255,255,'+((24+30*shine)/255).toFixed(3)+')');hg.addColorStop(1,'rgba(255,255,255,0)');ctx.fillStyle=hg;ctx.fillRect(cx-45,cy-45,90,90);
@@ -3595,6 +3753,9 @@ var AURA_LASTFM={user:'',key:''};
   if('IntersectionObserver' in window)new IntersectionObserver(function(es){visible=es[0].isIntersecting;wakeClock()}).observe(cv);
   addEventListener('resize',function(){size();draw(performance.now())});
   addEventListener('deskresize',function(){size();draw(performance.now())});
+  cv.style.cursor='pointer';cv.title='Click for the analog face';
+  cv.addEventListener('click',function(){face=1-face;cv.title=face?'Click for the digital face':'Click for the analog face';cancelAnimationFrame(fRaf);
+    if(reduce){fk=face;draw(performance.now());return}var f0=fk,t1=performance.now();(function f(now){var k=Math.min(1,(now-t1)/420);fk=f0+(face-f0)*(k<.5?2*k*k:1-Math.pow(-2*k+2,2)/2);draw(now);if(k<1)fRaf=requestAnimationFrame(f)})(t1)});
   var go=function(){start()};
   if(document.fonts&&document.fonts.load){Promise.all([document.fonts.load('700 50px Unbounded'),document.fonts.load('300 12px Unbounded')]).then(go,go)}else go();
 })();
@@ -3605,6 +3766,9 @@ var AURA_LASTFM={user:'',key:''};
   var ca=document.getElementById('peek-a'),cb=document.getElementById('peek-b'),btn=document.getElementById('peek-run'),sel=document.getElementById('peek-looks');
   if(!ca||!ca.getContext) return;
   var ra=document.getElementById('peek-ra'),rb=document.getElementById('peek-rb');
+  // the result line can wrap once it fills in, so it keeps room for its longest text from the start and nothing below it jumps
+  function room(){[ra,rb].forEach(function(el){if(!el)return;var t=el.innerHTML;el.style.minHeight='';el.textContent='200 of 200 false alarms (100%)';var hh=el.offsetHeight;el.innerHTML=t;el.style.minHeight=hh+'px'})}
+  room();var rmT;addEventListener('resize',function(){clearTimeout(rmT);rmT=setTimeout(room,150)});if(document.fonts&&document.fonts.ready)document.fonts.ready.then(room);
   var reduce=matchMedia('(prefers-reduced-motion: reduce)').matches, SIMS=200, N=4000, TAU=0.05, run=0;
   function gauss(){var u=1-Math.random(),v=Math.random();return Math.sqrt(-2*Math.log(u))*Math.cos(2*Math.PI*v)}
   function phi(x){var t=1/(1+0.2316419*Math.abs(x)),d=0.3989423*Math.exp(-x*x/2),p=d*t*(0.3193815+t*(-0.3565638+t*(1.781478+t*(-1.821256+t*1.330274))));return x>0?1-p:p}
@@ -3702,22 +3866,25 @@ var AURA_LASTFM={user:'',key:''};
   function ease(t){return 1-Math.pow(1-t,3)}
 
   function absTop(el){var t=0;while(el){t+=el.offsetTop;el=el.offsetParent}return t}
-  function measure(){dirty=true;if(typeof kick==='function')kick();items.forEach(function(o){o.top=absTop(o.el);o.h=o.el.offsetHeight});heads.forEach(function(o){o.top=absTop(o.el)});
+  // writes a style only when it changed, so a scroll frame restyles just what moved
+  function put(el,k,v){var c=el.__st||(el.__st={});if(c[k]!==v){c[k]=v;el.style[k]=v}}
+  var heroH=0,maxS=1;
+  function measure(){dirty=true;heroH=hero.offsetHeight;maxS=Math.max(1,root.scrollHeight-innerHeight);if(typeof kick==='function')kick();items.forEach(function(o){o.top=absTop(o.el);o.h=o.el.offsetHeight});heads.forEach(function(o){o.top=absTop(o.el)});
     secs.forEach(function(o){o.top=absTop(o.el)});rowsets.forEach(function(o){o.top=absTop(o.el)});scans.forEach(function(o){o.top=absTop(o.f);o.h=o.f.offsetHeight});
     projs.forEach(function(o){o.top=o.col?absTop(o.col):absTop(o.el);o.h=o.el.offsetHeight;if(o.fig){o.ftop=absTop(o.fig);o.fh=o.fig.offsetHeight}})}
   var lastY=-1, dirty=true, last=performance.now();
   function frame(now){
     var dt=Math.min(64,now-last); last=now;
-    var y=window.scrollY||0, vh=innerHeight, vw=innerWidth, max=Math.max(1,root.scrollHeight-vh);
+    var y=window.scrollY||0, vh=innerHeight, vw=innerWidth, max=maxS;
     fr=0; if(y===lastY&&!dirty)return; dirty=false; lastY=y;
-    if(prog) prog.style.transform='scaleX('+(y/max).toFixed(4)+')';
+    if(prog) put(prog,'transform','scaleX('+(y/max).toFixed(4)+')');
     // hero: name splits apart, block sinks, shrinks and fades
-    if(y<hero.offsetHeight*1.4){
-      var p=clamp(y/(hero.offsetHeight*.8)), e=ease(p), dx=Math.min(vw*.22,240)*e;
-      hin.style.transform='translate3d(0,'+(y*.4).toFixed(1)+'px,0) scale('+(1-e*.1).toFixed(4)+')';
-      hin.style.opacity=(1-e).toFixed(3);
-      n1.style.transform='translate3d('+(-dx).toFixed(1)+'px,0,0)';
-      n2.style.transform='translate3d('+(dx*.7).toFixed(1)+'px,0,0) skewX('+(-e*8).toFixed(2)+'deg)';
+    if(y<heroH*1.4){
+      var p=clamp(y/(heroH*.8)), e=ease(p), dx=Math.min(vw*.22,240)*e;
+      put(hin,'transform','translate3d(0,'+(y*.4).toFixed(1)+'px,0) scale('+(1-e*.1).toFixed(4)+')');
+      put(hin,'opacity',(1-e).toFixed(3));
+      put(n1,'transform','translate3d('+(-dx).toFixed(1)+'px,0,0)');
+      put(n2,'transform','translate3d('+(dx*.7).toFixed(1)+'px,0,0) skewX('+(-e*8).toFixed(2)+'deg)');
     }
     // blocks rise, grow and sharpen as they come up the screen
     items.forEach(function(o){
@@ -3725,15 +3892,15 @@ var AURA_LASTFM={user:'',key:''};
       var e=ease(clamp(rel/Math.max(1,Math.min(vh*.45,max+vh-o.top-20))));
       var t='translate3d(0,'+((1-e)*40).toFixed(1)+'px,0)';
       if(o.sim) t='perspective(1400px) translate3d(0,'+((1-e)*50).toFixed(1)+'px,0) rotateX('+((1-e)*10).toFixed(2)+'deg)';
-      if(o.proj){o.el.style.transform='translate3d(0,'+((1-e)*16).toFixed(1)+'px,0)';o.el.style.opacity='';return}
-      if(o.el.classList.contains('rows')){o.el.style.transform='';o.el.style.opacity='';return}
+      if(o.proj){put(o.el,'transform','translate3d(0,'+((1-e)*16).toFixed(1)+'px,0)');put(o.el,'opacity','');return}
+      if(o.el.classList.contains('rows')){put(o.el,'transform','');put(o.el,'opacity','');return}
       if(!o.sim)t+=' scale('+(.97+.03*e).toFixed(4)+')';
-      o.el.style.transform=t; o.el.style.opacity=(.2+.8*e).toFixed(3);
+      put(o.el,'transform',t); put(o.el,'opacity',(.2+.8*e).toFixed(3));
     });
     scans.forEach(function(o){if(o.done)return;var t=o.top-y,st=o.f.style;
       if(t<=vh*.36&&t>-o.h*.5){o.done=true;setTimeout(function(){var r=o.f.getBoundingClientRect();if(r.bottom>0&&r.top<innerHeight)o.play()},1700)}});
     secs.forEach(function(o){var rel=y+vh-o.top;if(rel<-200)return;var p=clamp(rel/(vh*.5)),e=ease(p);
-      o.r.style.transform=e>=1?'scaleX(1)':'scaleX('+e.toFixed(4)+')';
+      put(o.r,'transform',e>=1?'scaleX(1)':'scaleX('+e.toFixed(4)+')');
       if(o.m){var m=ease(clamp(p*1.4-.25));if(m>=1){if(o.m.style.opacity!==''){o.m.style.transform='';o.m.style.opacity=''}}else{o.m.style.transform='translate3d('+((1-m)*36).toFixed(1)+'px,0,0)';o.m.style.opacity=m.toFixed(3)}}});
     rowsets.forEach(function(o){var rel=y+vh-o.top;if(rel<-300)return;var p=clamp(rel/(vh*.6));
       var n=o.li.length;o.li.forEach(function(li,i){var q=ease(clamp(p*(1+(n-1)*.12)-i*.12));
@@ -3762,7 +3929,7 @@ var AURA_LASTFM={user:'',key:''};
     // headings: each word slides up out of its line, one after another
     heads.forEach(function(o){
       var p=clamp((y+vh-o.top)/Math.max(1,Math.min(vh*.45,max+vh-o.top-20))), n=o.words.length;
-      o.words.forEach(function(w,i){var q=ease(clamp(p*1.5-i*(.5/Math.max(1,n-1||1))));w.style.transform='translate3d(0,'+((1-q)*110).toFixed(1)+'%,0) rotate('+((1-q)*7).toFixed(2)+'deg)'});
+      o.words.forEach(function(w,i){var q=ease(clamp(p*1.5-i*(.5/Math.max(1,n-1||1))));put(w,'transform','translate3d(0,'+((1-q)*110).toFixed(1)+'%,0) rotate('+((1-q)*7).toFixed(2)+'deg)')});
     });
   }
   // scan line once the chart is in view
@@ -4083,108 +4250,6 @@ noir:["/* Noir. Black and white, heavy grain. */","",
   });
 })();
 
-// shutdowns card: a country vs its twin. Both lines draw up to the shutdown, the band
-// switches on with an "internet off" tag, the twin carries on where the country would
-// have been, then the real line drops and the gap fills in. Hover to read any quarter.
-(function(){
-  var c=document.getElementById('sd-c'); if(!c||!c.getContext) return;
-  var root=document.documentElement, reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
-  var D={"l":["2020Q1","2020Q2","2020Q3","2020Q4","2021Q1","2021Q2","2021Q3","2021Q4","2022Q1","2022Q2","2022Q3","2022Q4","2023Q1","2023Q2","2023Q3","2023Q4","2024Q1","2024Q2","2024Q3","2024Q4","2025Q1","2025Q2","2025Q3","2025Q4","2026Q1"],"e":{"SD-2021":{"a":[5482,7599,7717,8964,9786,8723,9902,7191,14414,13259,19338,56701,39229,12295,88450,40485,14865,13943,13668,8831,11024,13858,19579,27156,36558],"w":[5797,7544,7715,8555,9260,9607,9675,10648,11901,13599,13886,15149,16639,17111,16741,18012,17720,18536,17916,20247,20997,26812,26878,33324,44045],"q":[7],"pct":-0.3246,"c":"Sudan","y":"2021"},"IR-2026":{"a":[148536,176080,190556,219516,227874,251212,314655,325208,335784,355711,424187,310890,432451,502595,550631,500107,538364,506752,568093,527387,565809,628498,806458,798320,331042],"w":[140263,179679,187150,198472,220310,259488,276356,284531,319392,362317,388041,396439,447190,467522,487656,473113,479850,501782,509359,531556,553181,694587,732687,825453,1067233],"q":[24],"pct":-0.6898,"c":"Iran","y":"2026"},"MM-2021":{"a":[42148,51434,57173,60893,32835,27333,42119,41611,48639,52485,59529,69555,90299,99621,114784,113778,121804,93155,77085,75209,77745,94234,117815,122028,174641],"w":[42362,52584,56705,60680,64064,73764,73022,76243,88187,103452,107537,112808,125438,130762,129920,132633,132781,143542,141214,153603,158684,202665,209409,246751,313380],"q":[4,5],"pct":-0.5642,"c":"Myanmar","y":"2021"}}}, root=document.documentElement, reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
-  var cur='IR-2026', pa=0, pw=0, band=0, shown=0, flick=0, done=false, hover=-1, started=false;
-  var tip=document.getElementById('sd-tip'), big=document.getElementById('sd-big');
-  function col(n){return getComputedStyle(root).getPropertyValue(n).trim()}
-  function fmt(v){return v>=1e6?(v/1e6).toFixed(2)+'M':Math.round(v/1000)+'k'}
-  function ease(t){return t<.5?2*t*t:1-Math.pow(-2*t+2,2)/2}
-  var G={};
-  function draw(){
-    var r=c.getBoundingClientRect(); if(!r.width) return; var dpr=(window.MN_DPR||Math.min(devicePixelRatio||1,2));
-    c.width=Math.round(r.width*dpr); c.height=Math.round(r.height*dpr); var g=c.getContext('2d'), gk=MN_K(); g.setTransform(dpr*gk,0,0,dpr*gk,0,0);
-    var E=D.e[cur], A=E.a, T=E.w, n=A.length, W=r.width/gk, H=r.height/gk, q0=E.q[0], q1=E.q[E.q.length-1];
-    var tEnd=Math.min(n-1,q1+3);
-    var padL=38,padR=14,padT=30,padB=24,w=W-padL-padR,h=H-padT-padB;
-    var top=Math.max(Math.max.apply(null,A),Math.max.apply(null,T.slice(0,tEnd+1)))*1.08;
-    var X=function(i){return padL+w*i/(n-1)},Y=function(v){return padT+h*(1-v/top)};
-    G={X:X,n:n,padL:padL,w:w,k:gk};
-    var step=Math.pow(10,Math.floor(Math.log10(top/3)));if(top/step>8)step*=2.5;if(top/step>8)step*=2;
-    g.font='500 10px '+col('--mono'); g.fillStyle=col('--muted'); g.textAlign='right'; g.textBaseline='middle';
-    for(var v=0;v<top;v+=step){g.strokeStyle=col('--line');g.lineWidth=1;g.beginPath();g.moveTo(padL,Y(v));g.lineTo(W-padR,Y(v));g.stroke();g.fillText(v?fmt(v):'0',padL-6,Y(v))}
-    g.textAlign='center'; g.textBaseline='top'; for(var i=0;i<n;i+=8) g.fillText(D.l[i].slice(0,4),X(i),H-padB+7);
-    var bw=w/(n-1), bx0=X(q0)-bw/2, bx1=X(q1)+bw/2;
-    // the shutdown band switches on
-    if(band>0){
-      g.save();g.globalAlpha=band;g.fillStyle=col('--hot-soft');g.fillRect(bx0,padT,bx1-bx0,h);
-      g.strokeStyle=col('--hot');g.globalAlpha=band*.55;g.lineWidth=1;g.setLineDash([3,3]);
-      g.beginPath();g.moveTo(bx0,padT);g.lineTo(bx0,padT+h);g.stroke();g.setLineDash([]);g.restore();
-      // the tag
-      var label='internet off';g.font='600 10px '+col('--mono');var tw=g.measureText(label).width+14,th=18;
-      var cx=Math.min(W-padR-tw/2,Math.max(padL+tw/2,(bx0+bx1)/2)), ty=padT-th-4+(1-band)*-6;
-      g.save();g.globalAlpha=band;g.fillStyle=col('--hot');if(flick>0||band<1){g.shadowColor=col('--hot');g.shadowBlur=14}
-      g.beginPath();if(g.roundRect)g.roundRect(cx-tw/2,ty,tw,th,9);else g.rect(cx-tw/2,ty,tw,th);g.fill();
-      g.fillStyle=col('--surface');g.textAlign='center';g.textBaseline='middle';g.fillText(label,cx,ty+th/2+.5);g.restore();
-    }
-    // the gap between where it was and where it would have been
-    if(shown>0){g.save();g.globalAlpha=.28*shown;g.fillStyle=col('--hot');g.beginPath();
-      var t0=Math.max(0,q0-1);g.moveTo(X(t0),Y(T[t0]));for(var i=t0;i<=q1;i++)g.lineTo(X(i),Y(T[i]));
-      for(var i=q1;i>=t0;i--)g.lineTo(X(i),Y(A[i]));g.closePath();g.fill();g.restore()}
-    function line(arr,upto,dash,color,lw){if(upto<=0)return;g.setLineDash(dash);g.strokeStyle=color;g.lineWidth=lw;g.lineJoin='round';g.lineCap='round';g.beginPath();g.moveTo(X(0),Y(arr[0]));
-      for(var i=1;i<n;i++){if(i>upto){var f=upto-(i-1);if(f>0)g.lineTo(X(i-1+f),Y(arr[i-1]+(arr[i]-arr[i-1])*f));break}g.lineTo(X(i),Y(arr[i]))}g.stroke();g.setLineDash([])}
-    line(T,Math.min(pw,tEnd),[5,4],col('--bench'),1.8);
-    line(A,pa,[],col('--accent'),2.5);
-    // pen tip on the live line
-    if(!done&&pa>0){var li=Math.floor(pa),lf=pa-li,yy=li<n-1?A[li]+(A[li+1]-A[li])*lf:A[n-1];g.fillStyle=col('--accent');g.beginPath();g.arc(X(pa),Y(yy),3.4,0,7);g.fill()}
-    if(pw>q0){g.font='500 10px '+col('--mono');g.fillStyle=col('--muted');g.textBaseline='bottom';var tl=Math.min(tEnd,Math.floor(pw));g.textAlign=tl>n-3?'right':'left';g.fillText('twin',X(tl)+(tl>n-3?-8:6),Y(T[tl])-4)}
-    // the power cut: the chart flickers like a failing light, with a little static in the band
-    if(flick>0){
-      g.save();g.fillStyle='rgba(6,9,14,'+(.82*flick).toFixed(3)+')';g.fillRect(padL-4,padT,w+8,h);
-      g.fillStyle=col('--hot');for(var z=0;z<70*flick;z++){g.globalAlpha=.15+Math.random()*.45;g.fillRect(bx0+Math.random()*(bx1-bx0),padT+Math.random()*h,1+Math.random()*3,1)}
-      g.globalAlpha=.18*flick;var sy=padT+Math.random()*h;g.fillRect(padL,sy,w,1+Math.random()*2);g.restore();
-    }
-    if(flick>0&&band>0){var label2='internet off';g.font='600 10px '+col('--mono');var tw2=g.measureText(label2).width+14,th2=18,cx2=Math.min(W-padR-tw2/2,Math.max(padL+tw2/2,(bx0+bx1)/2)),ty2=padT-th2-4;
-      g.save();g.globalAlpha=band;g.shadowColor=col('--hot');g.shadowBlur=18;g.fillStyle=col('--hot');g.beginPath();if(g.roundRect)g.roundRect(cx2-tw2/2,ty2,tw2,th2,9);else g.rect(cx2-tw2/2,ty2,tw2,th2);g.fill();
-      g.shadowBlur=0;g.fillStyle='#fff';g.textAlign='center';g.textBaseline='middle';g.fillText(label2,cx2,ty2+th2/2+.5);g.restore()}
-    // hover readout
-    if(hover>=0&&done){var x=X(hover);g.strokeStyle=col('--ink');g.globalAlpha=.35;g.lineWidth=1;g.beginPath();g.moveTo(x,padT);g.lineTo(x,padT+h);g.stroke();g.globalAlpha=1;
-      (hover<=tEnd?[[T,col('--bench')],[A,col('--accent')]]:[[A,col('--accent')]]).forEach(function(s){g.fillStyle=col('--surface');g.strokeStyle=s[1];g.lineWidth=2;g.beginPath();g.arc(x,Y(s[0][hover]),4,0,7);g.fill();g.stroke()})}
-  }
-  function readout(){
-    var E=D.e[cur], tEnd=Math.min(E.a.length-1,E.q[E.q.length-1]+3);
-    if(hover>=0&&done){tip.innerHTML='<b>'+D.l[hover]+'</b> actual '+fmt(E.a[hover])+(hover<=tEnd?' <i>twin '+fmt(E.w[hover])+'</i>':'');tip.classList.add('on')}else tip.classList.remove('on');
-  }
-  var shownPct=0, runId=0;
-  function count(to,my){big.style.opacity='1';var from=shownPct,t0=performance.now();(function f(now){if(my!==runId)return;var k=Math.min(1,(now-t0)/800);k=1-Math.pow(1-k,3);shownPct=from+(to-from)*k;big.textContent='−'+Math.round(-shownPct*100)+'%';if(k<1)requestAnimationFrame(f)})(t0)}
-  function play(){
-    var my=++runId, E=D.e[cur], n=E.a.length, q0=E.q[0], q1=E.q[E.q.length-1], tEnd=Math.min(n-1,q1+3), pre=Math.max(0,q0-1);
-    done=false; band=0; shown=0; flick=0; big.style.opacity=shownPct?'.25':'1';
-    if(reduce){pa=pw=n-1;band=1;shown=1;done=true;draw();shownPct=E.pct;big.textContent='−'+Math.round(-E.pct*100)+'%';return}
-    // each step: [duration ms, update(k)]
-    var steps=[
-      [Math.max(350,1100*pre/(n-1)), function(k){pa=pw=pre*k}],
-      [760, function(k){ // on, off, on, off, on: a light that can't decide, then the cut holds
-        var ks=[0,.08,.16,.26,.34,.46,.56,.72,1], fv=[0,.9,.1,.85,.2,.7,.05,.35,0];
-        for(var z=1;z<ks.length;z++)if(k<=ks[z]){var u=(k-ks[z-1])/(ks[z]-ks[z-1]);flick=fv[z-1]+(fv[z]-fv[z-1])*u;break}
-        band=k<.56?(flick>.45?1:.25):Math.min(1,.6+(k-.56)/.44*.4);if(k>=1){flick=0;band=1}}],
-      [Math.max(450,160*(tEnd-pre)), function(k){pw=pre+(tEnd-pre)*ease(k)}],
-      [520, function(k){pa=pre+(q1-pre)*ease(k)}],
-      [Math.max(500,90*(n-1-q1)), function(k){shown=ease(k);pa=q1+(n-1-q1)*ease(k)}]
-    ];
-    var si=0, t0=performance.now();
-    (function f(now){
-      if(my!==runId)return;
-      var st=steps[si], k=Math.min(1,(now-t0)/st[0]); st[1](k);
-      if(k>=1){ if(si===3)count(E.pct,my); si++; t0=now; if(si>=steps.length){done=true;draw();return} }
-      draw();requestAnimationFrame(f)})(t0);
-  }
-  [].forEach.call(document.querySelectorAll('#sd-pick button'),function(btn){btn.addEventListener('click',function(){cur=btn.dataset.id;[].forEach.call(document.querySelectorAll('#sd-pick button'),function(x){x.setAttribute('aria-pressed',x===btn)});hover=-1;readout();play()})});
-  c.addEventListener('pointermove',function(e){if(!G.X||e.pointerType!=='mouse')return;var r=c.getBoundingClientRect(),i=Math.round(((e.clientX-r.left)/(G.k||1)-G.padL)/G.w*(G.n-1));hover=i>=0&&i<G.n?i:-1;readout();draw()});
-  c.addEventListener('pointerleave',function(){hover=-1;readout();draw()});
-  function start(){if(started)return;started=true;play()}
-  mnAfterSlide(c,start);
-  draw();
-  var rt;addEventListener('resize',function(){clearTimeout(rt);rt=setTimeout(draw,120)});
-  addEventListener('themechange',draw); var mq=matchMedia('(prefers-color-scheme: dark)'); if(mq.addEventListener)mq.addEventListener('change',draw);
-  if(document.fonts&&document.fonts.ready)document.fonts.ready.then(draw);
-})();
-
 // dropdowns in the nav: Projects jumps to a project on this page, Lab opens the interactive pages
 (function(){
   var menus=[['proj-btn','proj-menu'],['lab-btn','lab-menu']].map(function(x){return {b:document.getElementById(x[0]),m:document.getElementById(x[1])}}).filter(function(o){return o.b&&o.m});
@@ -4202,113 +4267,16 @@ noir:["/* Noir. Black and white, heavy grain. */","",
 </script>
 <script data-goatcounter="https://matinnikoo.goatcounter.com/count" async src="https://gc.zgo.at/count.js"></script>
 
-<script src="unchart/src/engine.js"></script>
-<script src="unchart/src/remake.js"></script>
-<script src="unchart/examples/precomputed.js"></script>
-<script>
-(function(){
-  var stage=document.getElementById('ucx-stage');if(!stage||!window.Unchart||!window.UNCHART_EXAMPLES)return;
-  var $=function(id){return document.getElementById(id)},img=$('ucx-img'),ov=$('ucx-ov'),scan=$('ucx-scan'),side=$('ucx-side'),read=$('ucx-read'),pipe=$('ucx-pipe');
-  var g=ov.getContext('2d');g.scale(2,2);
-  var SIG='#FF5A1F',sigOf=function(){return getComputedStyle(document.documentElement).getPropertyValue('--signal').trim()||'#FF5A1F'},cur=null,key='ex_line.png',raf=0,cross=null,T=1,fitY=null,fitX=null,reduce=matchMedia('(prefers-reduced-motion: reduce)').matches,ghostT=0;
-  var fmt=function(v){return Unchart.fmt(v)};
-  var nPts=function(R){return R.series.reduce(function(a,s){return a+s.points.length},0)};
-  function table(R){var S=R.series,h='<table class="ucx-tbl"><thead><tr><th>year</th>'+S.map(function(s){return '<th>'+s.name+'</th>'}).join('')+'</tr></thead><tbody>';
-    S[0].points.forEach(function(p,i){h+='<tr><td>'+p.x+'</td>'+S.map(function(s){return '<td class="wait">'+s.points[i].y.toFixed(1)+'</td>'}).join('')+'</tr>'});return h+'</tbody></table>'}
-  function cagr(p){var a=p[0].y,b=p[p.length-1].y,n=p[p.length-1].x-p[0].x;return ((Math.pow(b/a,1/n)-1)*100).toFixed(1)}
-  function corr(P){var n=P.length,mx=0,my=0;P.forEach(function(p){mx+=p.x;my+=p.y});mx/=n;my/=n;var a=0,b=0,c=0;P.forEach(function(p){a+=(p.x-mx)*(p.y-my);b+=(p.x-mx)*(p.x-mx);c+=(p.y-my)*(p.y-my)});return a/Math.sqrt(b*c)}
-  function tableData(R){return {xName:'x',cols:R.series.map(function(s){return {name:s.name}}),rows:R.series[0].points.map(function(p,i){return {x:p.x,vals:R.series.map(function(s){return s.points[i].y})}})}}
-  function buildSide(){
-    var R=cur;
-    if(key==='ex_line.png'){var A=R.series[0],B=R.series[1];
-      side.innerHTML='<span class="ucx-k">Recovered table</span>'+table(R)+'<p><b>'+A.name+' passed '+B.name+'</b> between 2019 and 2020, growing '+cagr(A.points)+'% a year against '+cagr(B.points)+'% for '+B.name.toLowerCase()+'.</p>';
-    } else if(key==='ex_bars.png'){var f=(R.flags||[])[0];
-      side.innerHTML='<span class="ucx-k">Honesty check</span><div class="ucx-warn"><p><b>'+f.title+'.</b> '+f.text+'</p></div><canvas class="ucx-cv" id="ucx-cv"></canvas><div class="ucx-tog" role="group" aria-label="Axis"><button type="button" data-lo="orig" aria-pressed="true">As drawn</button><button type="button" data-lo="zero" aria-pressed="false">Drawn honestly</button></div>';
-      var cv=$('ucx-cv'),td={xName:'Store',cols:[{name:'Score'}],rows:R.series[0].points.map(function(p){return {x:p.x,vals:[p.y]}})},from=Math.min.apply(null,R.calib.y.map(function(q){return q.v}));
-      var lo=from,anim=0;var d=function(v){UnchartRemake.draw(cv,td,{type:'bar',theme:'dark',zero:false,trend:'off',lo:v})};
-      d(lo);side.querySelectorAll('[data-lo]').forEach(function(b){b.onclick=function(){side.querySelectorAll('[data-lo]').forEach(function(x){x.setAttribute('aria-pressed',x===b)});
-        var to=b.dataset.lo==='zero'?0:from,st=lo,t0=performance.now(),D=reduce?1:1200;cancelAnimationFrame(anim);
-        (function f(){var t=Math.min(1,(performance.now()-t0)/D),e=1-Math.pow(1-t,3);lo=st+(to-st)*e;d(lo);if(t<1)anim=requestAnimationFrame(f)})()}});
-    } else {var P=R.series[0].points;
-      side.innerHTML='<span class="ucx-k">Recovered points, redrawn</span><canvas class="ucx-cv" id="ucx-cv"></canvas><p><b>'+P.length+' dots read.</b> Correlation r = '+corr(P).toFixed(2)+'. The band shows where 90% of new campaigns would land.</p>';
-      UnchartRemake.draw($('ucx-cv'),tableData(R),{type:'dots',theme:'dark',zero:false,trend:'linear'});
-    }
-  }
-  var seg=function(t,a,b){return Math.max(0,Math.min(1,(t-a)/(b-a)))};
-  // one frame of the reading sequence. t runs 0 to 1, labelsOn shows the numbers beside each point
-  function draw(t,labelsOn){
-    SIG=sigOf();var R=cur;g.clearRect(0,0,880,484);if(!R)return;var rc=R.rect,W=R.words||[];
-    var tRead=seg(t,0,.24),tFit=seg(t,.24,.36),tTrace=seg(t,.36,.78);
-    // 1. every label it found gets a box, one after another, then they settle back
-    W.forEach(function(w,i){var at=i/Math.max(1,W.length),v=seg(tRead,at*.85,at*.85+.15);if(v<=0)return;
-      var fade=t>.36?Math.max(.0,1-seg(t,.36,.5)):1;g.globalAlpha=Math.min(1,v)*fade;g.strokeStyle=SIG;g.lineWidth=1.2;
-      g.strokeRect(w.x0-2,w.y0-2,w.x1-w.x0+4,w.y1-w.y0+4);g.globalAlpha=1});
-    // 2. the axis it fitted
-    if(tFit>0){g.strokeStyle=SIG;g.lineWidth=1.3;R.calib.y.forEach(function(q,i){var v=seg(tFit,i/R.calib.y.length*.6,i/R.calib.y.length*.6+.4);if(v<=0)return;g.beginPath();g.moveTo(rc.left-4,q.p);g.lineTo(rc.left-4+14*v,q.p);g.stroke()});
-      (R.calib.x||[]).forEach(function(q){g.beginPath();g.moveTo(q.p,rc.bottom+4);g.lineTo(q.p,rc.bottom+4-14*tFit);g.stroke()});
-      g.globalAlpha=.5*tFit;g.setLineDash([3,4]);g.strokeRect(rc.left,rc.top,rc.right-rc.left,rc.bottom-rc.top);g.setLineDash([]);g.globalAlpha=1}
-    if(cross){g.save();g.setLineDash([4,4]);g.strokeStyle=getComputedStyle(document.documentElement).getPropertyValue('--signal').trim()||'#FF5A1F';g.globalAlpha=.8;g.lineWidth=1;g.beginPath();g.moveTo(rc.left,cross[1]);g.lineTo(rc.right,cross[1]);g.moveTo(cross[0],rc.top);g.lineTo(cross[0],rc.bottom);g.stroke();g.restore();
-      g.fillStyle=SIG;g.beginPath();g.arc(cross[0],cross[1],3,0,7);g.fill()}
-    // 3. the data, revealed by the scan line
-    if(tTrace>0){var xc=rc.left+(rc.right-rc.left+30)*tTrace;g.save();g.beginPath();g.rect(0,0,xc,484);g.clip();
-      g.lineWidth=2.6;g.strokeStyle=SIG;
-      R.series.forEach(function(s){var P=s.points;
-        if(s.type==='line'){g.beginPath();P.forEach(function(p,i){i?g.lineTo(p.px,p.py):g.moveTo(p.px,p.py)});g.stroke();P.forEach(function(p){g.fillStyle='#fff';g.fillRect(p.px-4,p.py-4,8,8);g.strokeRect(p.px-4,p.py-4,8,8)})}
-        else if(s.type==='bar'){P.forEach(function(p){var b=p.box;g.globalAlpha=.2;g.fillStyle=SIG;g.fillRect(b[0],p.py,b[2]-b[0]+1,b[3]-p.py+1);g.globalAlpha=1;g.strokeRect(b[0],p.py,b[2]-b[0]+1,b[3]-p.py+1);g.lineWidth=3.4;g.beginPath();g.moveTo(b[0]-6,p.py);g.lineTo(b[2]+6,p.py);g.stroke();g.lineWidth=2.6})}
-        else P.forEach(function(p){g.beginPath();g.arc(p.px,p.py,6.5,0,7);g.stroke()})});
-      g.restore();
-      if(key==='ex_line.png'){var rows=side.querySelectorAll('tbody tr');R.series[0].points.forEach(function(p,i){if(!rows[i])return;var on=p.px<=xc;rows[i].className=on&&tTrace<1&&p.px>xc-90?'now':'';[].slice.call(rows[i].children,1).forEach(function(td){td.className=on?'':'wait'})})}}
-    // 4. the numbers themselves, floating over the rebuilt chart
-    if(labelsOn>0){g.globalAlpha=labelsOn;g.font='600 12px "Geist Mono",ui-monospace,monospace';g.textAlign='center';
-      R.series.forEach(function(s,si){if(s.type==='scatter')return;s.points.forEach(function(p,i){var y=s.type==='bar'?p.py-12:(si===0?p.py-14:p.py+18);var txt=s.type==='bar'?p.y.toFixed(1):p.y.toFixed(1);
-        var w=g.measureText(txt).width+8;g.fillStyle='#0A0A0B';g.fillRect(p.px-w/2,y-9,w,17);g.fillStyle=si===0?'#ECECEA':SIG;g.fillText(txt,p.px,y+4)})});g.globalAlpha=1}
-  }
-  function setPipe(t){[].forEach.call(pipe.children,function(el,i){var a=[0,.24,.36,.78][i],b=[.24,.36,.78,1][i];var c=t>=b?'done':t>=a?'on':'';if(el.className!==c)el.className=c})}
-  function play(){cancelAnimationFrame(raf);var t0=performance.now(),D=reduce?1:3800,H=reduce?1:2200,R=cur,total=nPts(R),nl=(R.words||[]).length;
-    stage.classList.remove('ghost');
-    (function f(){var el=performance.now()-t0,t=Math.min(1,el/D),hold=seg(el,D,D+H),lab=t<.8?0:seg(t,.8,.95)*(1-seg(hold,.75,1));
-      if(t>=.78&&hold<.75)stage.classList.add('ghost');else stage.classList.remove('ghost');
-      T=t;draw(t,lab);setPipe(t);
-      var tt=seg(t,.36,.78),so=t>.36&&t<.78?1:0;if(f.so!==so){f.so=so;scan.style.opacity=so}if(so)scan.style.left=((R.rect.left+(R.rect.right-R.rect.left+30)*tt)/880*100)+'%';
-      put('ucx-n1',Math.round(nl*seg(t,0,.24)));put('ucx-n2',Math.round(total*tt));put('ucx-n3',(R.ms/1000*t).toFixed(1)+' s');
-      if(t>=1&&key==='ex_bars.png'&&!f.fixed){f.fixed=1;var b=side.querySelector('[data-lo="zero"]');if(b)b.click()}
-      if(el<D+H)raf=requestAnimationFrame(f)})();
-  }
-  function put(id,v){var e=$(id);v=String(v);if(e.textContent!==v)e.textContent=v}
-  function rest(){T=1;draw(1,0);setPipe(1);var R=cur;$('ucx-n1').textContent=(R.words||[]).length;$('ucx-n2').textContent=nPts(R);$('ucx-n3').textContent=(R.ms/1000).toFixed(1)+' s'}
-  function load(k,animate){key=k;cur=JSON.parse(JSON.stringify(window.UNCHART_EXAMPLES[k]));fitY=Unchart.fitAxis(cur.calib.y);fitX=cur.calib.x&&cur.calib.x.length>1?Unchart.fitAxis(cur.calib.x):null;
-    img.src='unchart/examples/'+k;document.querySelectorAll('.ucx-tabs button').forEach(function(b){b.setAttribute('aria-pressed',b.dataset.k===k);if(b.dataset.k===k){var t=b.parentNode;t.scrollLeft=b.offsetLeft-t.offsetLeft-8}});
-    buildSide();if(animate)play();else rest()}
-  document.querySelectorAll('.ucx-tabs button').forEach(function(b){b.onclick=function(){load(b.dataset.k,true)}});
-  $('ucx-replay').onclick=function(){load(key,true)};
-  stage.addEventListener('mousemove',function(e){if(!cur||T<1)return;var r=stage.getBoundingClientRect(),x=(e.clientX-r.left)/r.width*880,y=(e.clientY-r.top)/r.height*484,rc=cur.rect;
-    if(x<rc.left||x>rc.right||y<rc.top||y>rc.bottom||!fitY){cross=null;draw(1,0);read.textContent='Hover the chart to measure any point';return}
-    cross=[x,y];draw(1,0);read.innerHTML='under cursor <b>'+(fitX?'x '+fmt(fitX.toValue(x))+'  ':'')+'y '+fmt(fitY.toValue(y))+'</b>'});
-  stage.addEventListener('mouseleave',function(){cross=null;if(T>=1)draw(1,0);read.textContent='Hover the chart to measure any point'});
-  load('ex_line.png',false);
-  mnAfterSlide(stage,function(){load(key,true)});
-  var rt;addEventListener('resize',function(){clearTimeout(rt);rt=setTimeout(function(){if(key!=='ex_line.png')buildSide()},200)});
-})();
-</script>
 
 
 <script>
 // the sculpture melts further as you scroll past the hero
 (function(){var m=document.querySelector('.hero-melt'),h=document.querySelector('.hero');if(!m||!h||matchMedia('(prefers-reduced-motion: reduce)').matches)return;
   var t=0,cur=0,raf=0,HM=null;function target(){if(!HM&&window.mnGeo)HM=mnGeo(h);var top=HM?HM.top-(window.MN_SY!=null?MN_SY:scrollY):h.getBoundingClientRect().top,hh=HM?HM.h:h.offsetHeight;t=Math.max(0,Math.min(1,-top/(hh*.75)))}
-  function tick(){cur+=(t-cur)*.08;m.style.setProperty('--melt',cur.toFixed(4));if(Math.abs(t-cur)>.001)raf=requestAnimationFrame(tick);else raf=0}
+  var lm='';function tick(){cur+=(t-cur)*.08;if(HM&&HM.top+HM.h*1.5<(window.MN_SY!=null?MN_SY:scrollY))cur=t;var v=cur.toFixed(4);if(v!==lm){lm=v;m.style.setProperty('--melt',v)}if(Math.abs(t-cur)>.001)raf=requestAnimationFrame(tick);else raf=0}
   addEventListener('scroll',function(){target();if(!raf)raf=requestAnimationFrame(tick)},{passive:true});target();tick()})();
 </script>
 
-<script>
-// backtest: sweep the start month from Jan 2018 forward, so you can watch the gap move without dragging
-(function(){var b=document.getElementById('bt-play'),r=document.getElementById('bt-start');if(!b||!r)return;
-  var raf=0,t0=0,v0=0;function stop(){cancelAnimationFrame(raf);raf=0;b.setAttribute('aria-pressed','false');b.querySelector('span').textContent='Play every start';b.querySelector('path').setAttribute('d','M3 2l7 4-7 4z')}
-  b.addEventListener('click',function(){if(raf){stop();return}
-    var max=+r.max;if(+r.value>=max)r.value=0;v0=+r.value;t0=performance.now();b.setAttribute('aria-pressed','true');b.querySelector('span').textContent='Pause';b.querySelector('path').setAttribute('d','M3 2h2v8H3zM7 2h2v8H7z');
-    (function f(now){var v=Math.min(max,Math.round(v0+(now-t0)/140));if(+r.value!==v){r.value=v;r.dispatchEvent(new Event('input'))}if(v>=max){stop();return}raf=requestAnimationFrame(f)})(t0)});
-  r.addEventListener('pointerdown',stop)})();
-</script>
 
 <script>
 (function(){
@@ -4316,47 +4284,95 @@ noir:["/* Noir. Black and white, heavy grain. */","",
   function col(n){return getComputedStyle(document.documentElement).getPropertyValue(n).trim()}
   function rnd(seed){return function(){seed=(seed*16807)%2147483647;return (seed-1)/2147483646}}
   var ease=function(t){return t<.5?4*t*t*t:1-Math.pow(-2*t+2,3)/2}, seg=function(t,a,b){return Math.max(0,Math.min(1,(t-a)/(b-a)))};
+  // where every app dot starts and where the ones that make it settle, worked out once per canvas size
+  var AP=null;
+  function apLay(W,H){if(AP&&AP.W===W&&AP.H===H)return AP;var r=rnd(17),top=1,bot=H-13,mid=(top+bot)/2,h0=bot-top,n=1000,i;
+    function grid(cnt,x0,x1,hh){var w=x1-x0,s=Math.sqrt(w*hh/cnt),c=Math.max(1,Math.round(w/s)),rows=Math.ceil(cnt/c);s=Math.min(w/c,hh/rows);var o=[],ox=x0+(w-c*s)/2,oy=mid-rows*s/2;
+      for(var k=0;k<cnt;k++)o.push({x:ox+(k%c+.5)*s,y:oy+(Math.floor(k/c)+.5)*s,c:(k%c)/c});o.s=s;return o}
+    var Z=[[0,W*.44,h0],[W*.5,W*.67,h0*.62],[W*.72,W*.84,h0*.36],[W*.88,W*.98,h0*.18]];
+    var P=grid(n,Z[0][0],Z[0][1],h0),ord=[];for(i=0;i<n;i++){P[i].lv=0;ord.push(i)}
+    for(i=n-1;i>0;i--){var j=Math.floor(r()*(i+1)),tmp=ord[i];ord[i]=ord[j];ord[j]=tmp}
+    var S1=grid(130,Z[1][0],Z[1][1],Z[1][2]),S2=grid(35,Z[2][0],Z[2][1],Z[2][2]),S3=grid(6,Z[3][0],Z[3][1],Z[3][2]),M=[];
+    // the 130 that reach 10K, nearest slot first so the flow stays tidy
+    var mv=ord.slice(0,130).sort(function(a,b){return P[a].y-P[b].y||P[a].x-P[b].x});
+    var up=ord.slice(0,35),top6=up.slice(0,6);
+    mv.forEach(function(pi,k){P[pi].lv=top6.indexOf(pi)>=0?3:up.indexOf(pi)>=0?2:1;M.push({i:pi,lv:P[pi].lv,d:r(),s1:S1[k]})});
+    var m2=M.filter(function(m){return m.lv>1}).sort(function(a,b){return a.s1.y-b.s1.y||a.s1.x-b.s1.x});m2.forEach(function(m,k){m.s2=S2[k]});
+    m2.filter(function(m){return m.lv>2}).forEach(function(m,k){m.s3=S3[k]});
+    var F=[[Z[0][0],mid-h0/2],[Z[0][1],mid-h0/2]];[1,2,3].forEach(function(z){F.push([Z[z][0]-W*.02,mid-Z[z][2]/2-2]);F.push([Z[z][1],mid-Z[z][2]/2-2])});
+    var Fb=F.slice().reverse().map(function(q){return [q[0],2*mid-q[1]]});
+    AP={W:W,H:H,P:P,M:M,F:F.concat(Fb),mid:mid,z:Z.map(function(z){return (z[0]+z[1])/2}),
+      r0:Math.max(.6,P.s*.3),r1:Math.max(.9,Math.min(S1.s*.32,2.2)),r2:Math.max(1.2,Math.min(S2.s*.32,2.8)),r3:Math.max(1.6,Math.min(S3.s*.3,3.2))};
+    return AP}
   var K={
-    // 100 apps, 6 make it, then the two ways to make money side by side
-    ap:function(g,W,H,t,C){var cols=25,rows=4,sx=W/cols,sy=14,y0=H*.5-sy*1.5,lit6={7:1,23:1,41:1,58:1,76:1,92:1},e=ease(seg(t,.55,.9)),gw=Math.min(W*.42,190),gs=gw/10;
-      for(var i=0;i<100;i++){var x0=sx*(i%cols+.5),yA=y0+Math.floor(i/cols)*sy,on=seg(t,i/100*.32,i/100*.32+.06),grp=i<50?0:1,k=i%50,
-        x1=(grp?W-gw:0)+gs*(k%10+.5),y1=H*.18+Math.floor(k/10)*11,x=x0+(x1-x0)*e,y=yA+(y1-yA)*e,
-        hit=e<.5?(t>.36&&lit6[i]):(grp?k===27:(k%3===0&&k<48));
-        g.globalAlpha=hit?1:on*.75;g.fillStyle=hit?C.s:C.i;g.beginPath();g.arc(x,y,hit?3:1.8,0,7);g.fill()}
-      g.globalAlpha=1;g.font='500 10px '+C.f;g.textBaseline='alphabetic';
-      if(t>.36&&e<.2){g.globalAlpha=seg(t,.36,.46)*(1-e*5);g.fillStyle=C.s;g.textAlign='left';g.fillText('6 IN 100',0,H-2)}
-      if(e>.8){g.globalAlpha=seg(e,.8,1);g.fillStyle=C.s;g.textAlign='left';g.fillText('ADS + IN-APP  31%',0,H-2);g.fillStyle=C.m;g.textAlign='right';g.fillText('PAID UPFRONT  1.7%',W,H-2)}g.globalAlpha=1},
+    // 1,000 apps launch as dots and flow down a narrowing funnel. 130 reach 10K installs, 35 of them 100K and 6 of those 1M.
+    // a dot that moves on leaves a ring behind, so each tier still shows everyone who got that far
+    ap:function(g,W,H,t,C){var L=apLay(W,H),P=L.P,n=P.length,a0=seg(t,0,.2),dim=seg(t,.3,.55),i,k,u,x,y;
+      g.globalAlpha=.05*a0;g.fillStyle=C.i;g.beginPath();L.F.forEach(function(q,j){j?g.lineTo(q[0],q[1]):g.moveTo(q[0],q[1])});g.closePath();g.fill();
+      g.globalAlpha=.16*a0;g.strokeStyle=C.i;g.lineWidth=1;g.stroke();
+      g.fillStyle=C.i;g.globalAlpha=1;
+      for(i=0;i<n;i++){if(P[i].lv)continue;u=seg(t,P[i].c*.18,P[i].c*.18+.08);if(u<=0)continue;g.globalAlpha=u*(.5-.32*dim);g.beginPath();g.arc(P[i].x,P[i].y,L.r0,0,7);g.fill()}
+      var cnt=[0,0,0],rings=[],glow=[];
+      L.M.forEach(function(m){var p=P[m.i],u0=seg(t,p.c*.18,p.c*.18+.08),p1=ease(seg(t,.28+m.d*.2,.46+m.d*.2)),p2=m.lv>1?ease(seg(t,.54+m.d*.12,.68+m.d*.12)):0,p3=m.lv>2?ease(seg(t,.72+m.d*.06,.86+m.d*.06)):0,A,B,q;
+        if(p1>=.98)cnt[0]++;if(p2>=.98)cnt[1]++;if(p3>=.98)cnt[2]++;
+        if(p3>0){A=m.s2;B=m.s3;q=p3;rings.push([m.s2,p3,L.r2])}else if(p2>0){A=m.s1;B=m.s2;q=p2}else{A=p;B=m.s1;q=p1}
+        if(p2>0)rings.push([m.s1,p2,L.r1]);
+        var cx=(A.x+B.x)/2,cy=L.mid+(A.y-L.mid)*.25;x=(1-q)*(1-q)*A.x+2*(1-q)*q*cx+q*q*B.x;y=(1-q)*(1-q)*A.y+2*(1-q)*q*cy+q*q*B.y;
+        var r=p3>0?L.r2+(L.r3-L.r2)*p3:p2>0?L.r1+(L.r2-L.r1)*p2:L.r0+(L.r1-L.r0)*p1,hot=m.lv>1?Math.min(1,p2*1.4):0;
+        g.globalAlpha=u0*(.6+.3*p1)*(1-hot);g.fillStyle=C.i;g.beginPath();g.arc(x,y,r,0,7);g.fill();
+        if(hot>0){g.globalAlpha=hot;g.fillStyle=C.s;g.beginPath();g.arc(x,y,r,0,7);g.fill()}
+        if(p3>0)glow.push([x,y,p3])});
+      g.lineWidth=.8;rings.forEach(function(o){g.globalAlpha=.5*o[1];g.strokeStyle=C.s;g.beginPath();g.arc(o[0].x,o[0].y,o[2]*.9,0,7);g.stroke()});
+      glow.forEach(function(o){if(window.MN_LITE){g.globalAlpha=.18*o[2];g.fillStyle=C.s;g.beginPath();g.arc(o[0],o[1],L.r3*3,0,7);g.fill();return}
+        var gr=g.createRadialGradient(o[0],o[1],0,o[0],o[1],L.r3*4.5);gr.addColorStop(0,C.s);gr.addColorStop(1,'rgba(0,0,0,0)');g.globalAlpha=.42*o[2];g.fillStyle=gr;g.beginPath();g.arc(o[0],o[1],L.r3*4.5,0,7);g.fill()});
+      g.font='500 9px '+C.f;g.textBaseline='alphabetic';g.textAlign='center';var ly=H-2;
+      [['1,000 launched',L.z[0],1,a0],['10K  '+cnt[0],L.z[1],0,seg(t,.3,.45)],['100K  '+cnt[1],L.z[2],0,seg(t,.55,.66)],['1M  '+cnt[2],L.z[3],0,seg(t,.72,.82)]].forEach(function(l,j){
+        g.globalAlpha=l[3]*(j===0?.8:1);g.fillStyle=j>1?C.s:C.m;g.fillText(l[0],l[1],ly)});
+      g.globalAlpha=1},
     // ten numbers in an AI report get traced one by one, two came from nowhere
     sk:function(g,W,H,t,C){var n=64,sx=W/n,y=H*.5,nums={4:0,10:0,17:0,23:0,30:1,36:0,43:0,49:0,55:1,60:0},sc=W*seg(t,.08,.85);
       for(var i=0;i<n;i++){var x=sx*(i+.5),isN=i in nums,done=x<sc,bad=isN&&nums[i]===1;
         g.globalAlpha=isN?(done?1:.5):(done?.45:.2);g.fillStyle=bad&&done?C.s:C.i;g.beginPath();g.arc(x,y,isN?3.4:1.5,0,7);g.fill();
         if(bad&&done){g.globalAlpha=1;g.strokeStyle=C.s;g.lineWidth=1.2;g.beginPath();g.arc(x,y,7.5,0,7);g.stroke();g.font='600 10px '+C.f;g.fillStyle=C.s;g.textAlign='center';g.fillText(i===30?'23.1%?':'2.4%?',x,y-14)}}
       if(t<.88){g.globalAlpha=1;g.strokeStyle=C.s;g.lineWidth=1;g.beginPath();g.moveTo(sc,H*.2);g.lineTo(sc,H*.8);g.stroke()}g.globalAlpha=1},
-    // two crowds form from one, then a few dots in B fade out
-    ab:function(g,W,H,t,C){var r=rnd(3),n=180,cx=[W*.3,W*.7];for(var i=0;i<n;i++){var grp=i%2,a=r()*6.283,d=Math.sqrt(r())*Math.min(38,H*.42),x0=W*.5+Math.cos(a)*d*1.6,y0=H*.5+Math.sin(a)*d,
-      e=ease(seg(t,.1,.55)),x=x0+(cx[grp]+Math.cos(a)*d*1.3-x0)*e,y=y0;var gone=grp===1&&r()<.05&&t>.65;g.globalAlpha=gone?1-.7*seg(t,.8,1):.9;
-      g.fillStyle=gone?C.s:(grp?C.i:C.m);g.beginPath();g.arc(x,y,1.9,0,7);g.fill()}g.globalAlpha=1;
-      g.font='500 10px '+C.f;g.fillStyle=C.m;g.textAlign='center';if(t>.55){g.globalAlpha=seg(t,.55,.7);g.fillText('A',cx[0],H-4);g.fillText('B',cx[1],H-4);g.globalAlpha=1}},
+    // 127 checks fill in, then the 18 real limits light up and the 18 mistakes on purpose go hollow
+    ab:function(g,W,H,t,C){var code='pbppppppbppppppppbpppppbllpppbpppplblllpbpppbppppppbppppppppppppppppbpbblplblllppppllllppppppppppppppbbpppbppppppplllpppbppppbp',n=code.length,cols=Math.ceil(n/3),cw=W/cols,e=ease(seg(t,.55,.85));
+      for(var i=0;i<n;i++){var on=seg(t,i/n*.45,i/n*.45+.08);if(on<=0)continue;var c=code[i],x=cw*(i%cols+.5),y=H*.25+Math.floor(i/cols)*H*.25;
+        if(c==='b'&&e>0){g.globalAlpha=on*(.7-.3*e);g.fillStyle=C.i;g.beginPath();g.arc(x,y,1.9*(1-e),0,7);g.fill();g.globalAlpha=on*e;g.strokeStyle=C.m;g.lineWidth=1;g.beginPath();g.arc(x,y,2.6,0,7);g.stroke();continue}
+        g.globalAlpha=on*(c==='l'?.7+.3*e:.7);g.fillStyle=c==='l'&&e>0?C.s:C.i;g.beginPath();g.arc(x,y,c==='l'?1.9+1.3*e:1.9,0,7);g.fill()}g.globalAlpha=1},
     // a row of countries, one goes dark and its line drops
     sd:function(g,W,H,t,C){var n=106,cols=53,cw=W/cols;for(var i=0;i<n;i++){var c=i%cols,rw=i/cols|0,x=cw*(c+.5),y=H*.32+rw*16,on=seg(t,i/n*.4,i/n*.4+.1);
       var off=i===71&&t>.55;g.globalAlpha=on;g.fillStyle=off?C.s:C.i;g.beginPath();g.arc(x,y,off?3.2:1.8,0,7);g.fill()}g.globalAlpha=1;
       if(t>.55){var k=seg(t,.55,.95),x0=cw*(71%53+.5),y0=H*.32+16;g.strokeStyle=C.s;g.lineWidth=1.5;g.beginPath();g.moveTo(x0,y0+6);g.lineTo(x0,y0+6+(H-y0-12)*k*.69);g.stroke();
-        g.fillStyle=C.s;g.font='600 11px '+C.f;g.textAlign='left';g.globalAlpha=k;g.fillText('−69%',x0+7,y0+6+(H-y0-12)*k*.69);g.globalAlpha=1}},
-    // 89 window pairs scanned left to right, 3 light up
-    bt:function(g,W,H,t,C){var n=89,cols=30,cw=W/cols,win={12:1,41:1,70:1};for(var i=0;i<n;i++){var c=i%cols,rw=i/cols|0,x=cw*(c+.5),y=H*.22+rw*(H*.28),s=seg(t,.05+i/n*.7,.12+i/n*.7);
-      var w=win[i];g.globalAlpha=s?(w?1:.55):.12;g.fillStyle=w&&s?C.s:C.i;var sz=w&&s?3.6:2;g.beginPath();g.arc(x,y,sz,0,7);g.fill()}g.globalAlpha=1;
-      var sx=W*seg(t,.05,.82);if(t<.85){g.strokeStyle=C.s;g.lineWidth=1;g.beginPath();g.moveTo(sx,0);g.lineTo(sx,H);g.stroke()}},
+        g.fillStyle=C.s;g.font='600 11px '+C.f;g.textAlign='left';g.globalAlpha=k;g.fillText('−59 to −69%',x0+7,y0+6+(H-y0-12)*k*.69);g.globalAlpha=1}},
+    // ten bear markets since 1927, scanned left to right. Nine light up where trend lost less
+    bt:function(g,W,H,t,C){var won=[1,1,1,1,1,1,1,1,0,1],yrs=[1929,1946,1962,1968,1973,1987,2000,2007,2020,2022],cw=W/10,sx=W*seg(t,.05,.85),y=H*.55;
+      for(var i=0;i<10;i++){var x=cw*(i+.5),done=x<sx,w=won[i]&&done;g.globalAlpha=done?1:.25;g.fillStyle=w?C.s:C.i;g.beginPath();g.arc(x,y,w?4:2.6,0,7);g.fill();
+        g.globalAlpha=done?.7:.25;g.font='500 9px '+C.f;g.fillStyle=C.m;g.textAlign='center';g.textBaseline='alphabetic';g.fillText(String(yrs[i]),x,y-11)}
+      g.globalAlpha=1;if(t<.88){g.strokeStyle=C.s;g.lineWidth=1;g.beginPath();g.moveTo(sx,0);g.lineTo(sx,H);g.stroke()}},
     // 23 teams settle into a ranking, ours rises to 3rd
     kg:function(g,W,H,t,C){var r=rnd(9),n=23,start=[],end=[];for(var i=0;i<n;i++){start.push(r())}var ord=[];for(i=0;i<n;i++)ord.push(i);ord.sort(function(a,b){return start[a]-start[b]});
       var us=ord[17];var rank=[];var others=ord.filter(function(v){return v!==us});others.splice(2,0,us);others.forEach(function(v,k){rank[v]=k});
       var e=ease(seg(t,.15,.85));for(i=0;i<n;i++){var x0=W*(.04+start[i]*.92),x1=W*(.04+rank[i]/(n-1)*.92),x=x0+(x1-x0)*e,me=i===us,y=H*.5+(me?0:Math.sin(i*1.7)*H*.16*(1-e));
         g.fillStyle=me?C.s:C.i;g.globalAlpha=me?1:.75;g.beginPath();g.arc(x,y,me?4.5:2.6,0,7);g.fill()}g.globalAlpha=1;
       if(t>.85){var xm=W*(.04+2/(n-1)*.92);g.globalAlpha=seg(t,.85,1);g.fillStyle=C.s;g.font='600 11px '+C.f;g.textAlign='center';g.fillText('3rd',xm,H*.5-11);g.globalAlpha=1}},
-    // a pixel grid where only a small patch redraws
-    au:function(g,W,H,t,C){var cs=8,cols=Math.floor(W/cs),rows=Math.floor(H/cs),px=Math.floor(cols*.62),py=Math.floor(rows*.35),pw=Math.max(6,Math.floor(cols*.14)),ph=4,f=Math.floor(t*12);
-      var B={};for(var y=0;y<rows;y++)for(var x=0;x<cols;x++){var inP=x>=px&&x<px+pw&&y>=py&&y<py+ph&&t>.35,on=seg(t,(x+y)/(cols+rows)*.3,(x+y)/(cols+rows)*.3+.1);
-        var key=inP?(((x+y+f)%3)?'s9':'s3'):'i'+Math.round(on*8);if(key==='i0')continue;(B[key]||(B[key]=[])).push(x*cs+1,y*cs+1)}
-      for(var kk in B){var a=B[kk];g.globalAlpha=kk==='s9'?.9:kk==='s3'?.35:(+kk.slice(1))/8*.16;g.fillStyle=kk[0]==='s'?C.s:C.i;g.beginPath();for(var q=0;q<a.length;q+=2)g.rect(a[q],a[q+1],cs-2,cs-2);g.fill()}g.globalAlpha=1}
+    // a pixel grid where only what changed redraws: a soft wave of orange runs through the redrawn patch, the seek bar fills with a bright head and one pulse when it lands, then the card rounds off and the analog face fades in
+    au:function(g,W,H,t,C){var cs=8,gw=W*.74,cols=Math.floor(gw/cs),rows=Math.floor(H/cs),by=rows-1,px=Math.floor(cols*.62),py=Math.floor(rows*.35),pw=Math.max(6,Math.floor(cols*.14)),ph=Math.min(4,by-py),
+      bx=Math.floor(cols*.12),bw=Math.floor(cols*.76),fp=bw*ease(seg(t,.35,.8)),fill=bx+Math.round(fp),rr=ease(seg(t,.7,1)),act=seg(t,.3,.36)*(1-seg(t,.78,.9)),
+      wv=seg(t,.3,.78)*2*(pw+6)%(pw+6)-3,pulse=Math.sin(Math.PI*seg(t,.8,.92));
+      g.save();g.beginPath();if(g.roundRect)g.roundRect(0,0,cols*cs,rows*cs,rr*rows*cs*.32);else g.rect(0,0,cols*cs,rows*cs);g.clip();
+      var B={},G=[];function put(k,x,y){(B[k]||(B[k]=[])).push(x*cs+1,y*cs+1)}
+      for(var y=0;y<rows;y++)for(var x=0;x<cols;x++){var on=seg(t,(x+y)/(cols+rows)*.3,(x+y)/(cols+rows)*.3+.1);
+        if(t>.3&&x>=px&&x<px+pw&&y>=py&&y<py+ph){var d=x-px-wv+(y-py)*.6,I=Math.exp(-d*d/2.4)*act,q=Math.round(I*8);put('p'+q,x,y);if(I>.45)G.push(x,y,I);continue}
+        if(t>.35&&y===by&&x>=bx&&x<bx+bw){if(x<fill){var hd=x===fill-1&&fill<bx+bw?1:0;put(hd?'h':'f',x,y);if(hd)G.push(x,y,1)}else put('e',x,y);continue}
+        var k=Math.round(on*8);if(k)put('i'+k,x,y)}
+      var A=function(k){var c=k[0],n=+k.slice(1);return c==='i'?[C.i,n/8*.16]:c==='p'?[C.s,.22+.7*n/8]:c==='h'?[C.s,1]:c==='f'?[C.s,.78+.22*pulse]:[C.s,.24]};
+      for(var kk in B){var a=B[kk],st=A(kk);g.globalAlpha=st[1];g.fillStyle=st[0];g.beginPath();for(var q2=0;q2<a.length;q2+=2)g.rect(a[q2],a[q2+1],cs-2,cs-2);g.fill()}
+      g.fillStyle=C.s;for(var j=0;j<G.length;j+=3){g.globalAlpha=.16*G[j+2];g.fillRect(G[j]*cs-2,G[j+1]*cs-2,cs+4,cs+4)}
+      if(pulse>0){g.globalAlpha=.12*pulse;g.fillRect(bx*cs-2,by*cs-2,bw*cs+4,cs+4)}
+      g.restore();var ca=seg(t,.7,1);if(ca>0){var R=Math.min(H*.4,(W-gw)*.36),ox=gw+(W-gw)/2,oy=H/2,m=(t*40+9)/60*Math.PI*2;g.globalAlpha=ca*.6;g.strokeStyle=C.i;g.lineWidth=1;g.beginPath();g.arc(ox,oy,R,0,7);g.stroke();
+        g.globalAlpha=ca;g.lineCap='round';g.lineWidth=2;g.beginPath();g.moveTo(ox,oy);g.lineTo(ox+Math.sin(5.4)*R*.5,oy-Math.cos(5.4)*R*.5);g.stroke();g.lineWidth=1.3;g.beginPath();g.moveTo(ox,oy);g.lineTo(ox+Math.sin(m)*R*.75,oy-Math.cos(m)*R*.75);g.stroke();
+        g.fillStyle=C.s;g.beginPath();g.arc(ox,oy,1.8,0,7);g.fill();g.lineCap='butt'}g.globalAlpha=1}
   };
   [].forEach.call(document.querySelectorAll('.pintro'),function(box){
     var c=box.querySelector('canvas'),g=c.getContext('2d'),k=K[box.dataset.kind],raf=0,CC=null,cur=-1,tgt=0,sr=0,sl=0;if(!k)return;
@@ -4381,9 +4397,9 @@ noir:["/* Noir. Black and white, heavy grain. */","",
   var SSY=null,lt=0;
   function upd(now){pend=false;var vh=innerHeight,ty=window.MN_SY!=null?MN_SY:scrollY;if(SSY==null||Math.abs(ty-SSY)>vh*1.5)SSY=ty;var dt=lt&&now?Math.min(64,now-lt):16;lt=now||0;SSY+=(ty-SSY)*(1-Math.exp(-dt/85));if(Math.abs(ty-SSY)<.4)SSY=ty;var sy=SSY;if(!HG&&window.mnGeo){HG=hs.map(mnGeo);VG=vs.map(mnGeo);KG=k?mnGeo(k):null}
     if(!HG){HG=hs.map(function(e){var r=e.getBoundingClientRect();return {top:r.top+scrollY,h:r.height}});VG=vs.map(function(e){var r=e.getBoundingClientRect();return {top:r.top+scrollY,h:r.height}});KG=k?{top:k.getBoundingClientRect().top+scrollY,h:0}:null}
-    hs.forEach(function(h,i){var g=HG[i],t=g.top-sy;if(t+g.h<-300||t>vh+300)return;var p=(t+g.h/2-vh/2)/vh;h.style.setProperty('--sx',(p*-40).toFixed(1))});
-    vs.forEach(function(v,i){var g=VG[i],t=g.top-sy;if(t+g.h<-200||t>vh+200)return;var p=(t+g.h/2-vh/2)/vh;v.style.setProperty('--py',(p*18).toFixed(1))});
-    if(k&&KG){var t=KG.top-sy;k.style.setProperty('--kr',((t-vh/2)/vh*-24).toFixed(2))}
+    hs.forEach(function(h,i){var g=HG[i],t=g.top-sy;if(t+g.h<-300||t>vh+300)return;var p=(t+g.h/2-vh/2)/vh,v=(p*-40).toFixed(1);if(h._sx!==v){h._sx=v;h.style.setProperty('--sx',v)}});
+    vs.forEach(function(v,i){var g=VG[i],t=g.top-sy;if(t+g.h<-200||t>vh+200)return;var p=(t+g.h/2-vh/2)/vh,q=(p*18).toFixed(1);if(v._py!==q){v._py=q;v.style.setProperty('--py',q)}});
+    if(k&&KG){var t=KG.top-sy,kv=((t-vh/2)/vh*-24).toFixed(2);if(t+KG.h>-300&&t<vh+300&&kv!==k._kv){k._kv=kv;k.style.setProperty('--kr',kv);if(k._rk)k._rk.style.setProperty('--kr',kv)}}
     if(SSY!==ty&&!pend){pend=true;requestAnimationFrame(upd)}else if(SSY===ty)lt=0}
   addEventListener('scroll',function(){if(!pend){pend=true;requestAnimationFrame(upd)}},{passive:true});upd()})();
 </script>
@@ -4409,8 +4425,9 @@ noir:["/* Noir. Black and white, heavy grain. */","",
 <script src="gifbox.js" defer></script>
 <script src="player.js" defer></script>
 <script src="desk.js" defer></script>
+<script src="projects.js" defer></script>
 <script>(function(){if(!('IntersectionObserver' in window))return;var io=new IntersectionObserver(function(es){es.forEach(function(e){e.target.classList.toggle('zz',!e.isIntersecting)})},{rootMargin:'150px'});
-  document.querySelectorAll('.hero,.marquee,.proj,.exhibit,.sk,.contact,.colophon').forEach(function(el){io.observe(el)})})();</script>
+  document.querySelectorAll('.hero,.marquee,.proj,.exhibit,.sk,.contact,.colophon,.endin').forEach(function(el){io.observe(el)})})();</script>
 <script>
 // phone menu: a small dropdown built from the real menus, so it never goes out of date
 (function(){var nav=document.querySelector('.nav');if(!nav)return;var ul=nav.querySelector('ul'),root=document.documentElement;
@@ -4480,7 +4497,9 @@ noir:["/* Noir. Black and white, heavy grain. */","",
     baseH=Math.min(innerHeight,(window.visualViewport&&visualViewport.height)||innerHeight);var nh=nav?nav.offsetHeight:56,avail=baseH-nh;
     root.style.setProperty('--fith',avail+'px');root.style.setProperty('--fite',avail+'px');
     // the music bubble sits in the bottom corner: the intro keeps clear of it, then centres in what is left
-    hero.style.removeProperty('padding-bottom');var mp=document.querySelector('.mp'),mr=mp&&mp.getBoundingClientRect(),cut=0;if(mr&&mr.width&&mr.top<baseH)cut=Math.max(0,baseH-mr.top+10);
+    hero.style.removeProperty('padding-bottom');var mp=document.querySelector('.mp'),mr=mp&&mp.getBoundingClientRect(),cut=0;
+    // where the bubble rests, not where its slide-in animation has it right now
+    if(mr&&getComputedStyle(mp).position==='fixed')mr={width:mr.width,top:mp.offsetTop};if(mr&&mr.width&&mr.top<baseH)cut=Math.max(0,baseH-mr.top+10);else if(!mp&&window.mnMpCut)cut=mnMpCut(baseH);
     var cs=getComputedStyle(hero),pb0=parseFloat(cs.paddingBottom),pad=parseFloat(cs.paddingTop)+Math.max(pb0,cut);if(cut>pb0)hero.style.setProperty('padding-bottom',cut+'px','important');
     fit(hin,avail-pad-4,.5);fitEnd(avail);
     // the sculpture is sized so its drips end above the first line of the intro, whatever the phone
@@ -4655,25 +4674,32 @@ noir:["/* Noir. Black and white, heavy grain. */","",
   // a polished floor: a dim mirror image of the sculpture under the plinth line
   // drawn once into a canvas: the sculpture's own image, flipped, softened and fading out. No masks or filters, so every
   // browser shows it the same way (Safari drops a reflection built from layered masks)
-  var refl=document.createElement('div');refl.className='refl';refl.setAttribute('aria-hidden','true');refl.innerHTML='<div class="knot"><canvas></canvas></div>';room.appendChild(refl);
-  var rc=refl.querySelector('canvas'),srcI=knot&&knot.querySelector('i'),img=null;
-  function drawRefl(){if(!img||!img.naturalWidth)return;var box=refl.querySelector('.knot').getBoundingClientRect(),rh=refl.getBoundingClientRect().height,S=Math.round(box.width);if(!S)return;var d=Math.min(2,devicePixelRatio||1);
-    rc.width=rc.height=Math.round(S*d);var g2=rc.getContext('2d');g2.setTransform(d,0,0,d,0,0);g2.clearRect(0,0,S,S);
+  var refl=document.createElement('div');refl.className='refl';refl.setAttribute('aria-hidden','true');refl.innerHTML='<i class="slab"></i><div class="knot"><canvas></canvas></div>';room.appendChild(refl);
+  // the image turns with the sculpture: the scroll twist is copied onto it every frame (mirrored) and the sway shares its clock.
+  // The fade toward the back is a gradient laid over the floor, so it stays put while the image turns under it
+  var rc=refl.querySelector('canvas'),rk=refl.querySelector('.knot'),srcI=knot&&knot.querySelector('i'),img=null,drawn='',inkC=null;if(knot){knot._rk=rk;rk.style.setProperty('--kr',knot.style.getPropertyValue('--kr')||'0')}
+  function drawRefl(){if(!img||!img.naturalWidth)return;var S=rk.offsetWidth;if(!S)return;var d=Math.min(2,devicePixelRatio||1),sig=(srcI&&getComputedStyle(srcI).backgroundColor)||getComputedStyle(room).getPropertyValue('--signal').trim()||'#FF5A1F',key=S+' '+d+' '+sig;if(key===drawn)return;drawn=key;
+    var px=Math.round(S*d);if(rc.width!==px)rc.width=rc.height=px;var g2=rc.getContext('2d');g2.setTransform(d,0,0,d,0,0);g2.globalCompositeOperation='source-over';g2.globalAlpha=1;g2.clearRect(0,0,S,S);
     // the image fit like background-size:contain, centred
     var iw=img.naturalWidth,ih=img.naturalHeight,k=Math.min(S/iw,S/ih),w=iw*k,h=ih*k,x=(S-w)/2,y=(S-h)/2;
     // tint a copy: the orange plate a little offset, then the light ink over it, the same as the sculpture above
     function tint(col){var t=document.createElement('canvas');t.width=Math.ceil(w/2);t.height=Math.ceil(h/2);var tg=t.getContext('2d');tg.drawImage(img,0,0,t.width,t.height);tg.globalCompositeOperation='source-in';tg.fillStyle=col;tg.fillRect(0,0,t.width,t.height);return t}
-    var sig=getComputedStyle(room).getPropertyValue('--signal').trim()||'#FF5A1F';
+    if(!inkC||inkC.width!==Math.ceil(w/2))inkC=tint('#ECECEA');
     // drawn from a half size copy, which softens it the way a polished floor would
-    g2.globalAlpha=.8;g2.drawImage(tint(sig),x-7,y+5,w,h);g2.globalAlpha=1;g2.drawImage(tint('#ECECEA'),x,y,w,h);
-    // fade: strongest at the floor line, gone a little way down. The box is flipped, so the floor is its bottom edge
-    g2.globalCompositeOperation='destination-in';var fade=g2.createLinearGradient(0,S,0,S-rh*.8);fade.addColorStop(0,'rgba(0,0,0,.5)');fade.addColorStop(1,'rgba(0,0,0,0)');g2.fillStyle=fade;g2.fillRect(0,0,S,S);g2.globalCompositeOperation='source-over'}
-  (function load(){var m=srcI&&(getComputedStyle(srcI).webkitMaskImage||getComputedStyle(srcI).maskImage||''),u=/url\(["']?([^"')]+)["']?\)/.exec(m);img=new Image();img.onload=drawRefl;img.src=u?u[1]:'unchart/art/knot.png'})();
-  var rrt;addEventListener('resize',function(){clearTimeout(rrt);rrt=setTimeout(drawRefl,200)});
-  new MutationObserver(function(){setTimeout(drawRefl,50)}).observe(document.documentElement,{attributes:true,attributeFilter:['style','data-theme']});
+    g2.globalAlpha=.8;g2.drawImage(tint(sig),x-7,y+5,w,h);g2.globalAlpha=1;g2.drawImage(inkC,x,y,w,h);
+    // half as bright as the sculpture
+    g2.globalCompositeOperation='destination-in';g2.fillStyle='rgba(0,0,0,.5)';g2.fillRect(0,0,S,S);g2.globalCompositeOperation='source-over'}
+  (function load(){var m=srcI&&(getComputedStyle(srcI).webkitMaskImage||getComputedStyle(srcI).maskImage||''),u=/url\(["']?([^"')]+)["']?\)/.exec(m);img=new Image();img.onload=place;img.src=u?u[1]:'unchart/art/knot.png'})();
+  var rrt;addEventListener('resize',function(){clearTimeout(rrt);rrt=setTimeout(place,200)});
+  // the tint follows the console color live, in this tab or another one
+  var recolor=function(){drawRefl()};addEventListener('themechange',recolor);addEventListener('storage',function(e){if(e.key==='mn-live-css')setTimeout(recolor,0)});
+  new MutationObserver(function(){setTimeout(recolor,0)}).observe(document.documentElement,{attributes:true,attributeFilter:['style','data-theme']});
+  var lc=document.getElementById('live-css');if(lc)new MutationObserver(recolor).observe(lc,{childList:true,characterData:true,subtree:true});
+  // same clock for the sway of the sculpture and its image
+  function sync(){try{var a=null,b=null;knot.getAnimations().forEach(function(x){if(x.animationName==='turn')a=x});rk.getAnimations().forEach(function(x){if(x.animationName==='turn')b=x});if(a&&b&&a.currentTime!=null&&b.currentTime!==a.currentTime)b.currentTime=a.currentTime}catch(e){}}
   var floor=document.createElement('i');floor.className='floor';room.appendChild(floor);
-  function place(){var fl=plinth.offsetTop+plinth.offsetHeight;room.style.setProperty('--fl',fl)}place();addEventListener('resize',place);
-  var rk=refl.querySelector('.knot');
+  function place(){var sl=parseFloat(getComputedStyle(plinth,'::after').height)||0,fl=plinth.offsetTop+plinth.offsetHeight,kh=knot.offsetHeight;room.style.setProperty('--fl',fl);room.style.setProperty('--sl',sl);if(kh)rk.style.height=kh+'px';drawRefl();sync()}place();
+  if(document.fonts&&document.fonts.ready)document.fonts.ready.then(place);
   if(reduce)return;
   // walk in: the room is dark, then the light flickers on once
   room.classList.add('dark');var lit=false;
@@ -4694,7 +4720,7 @@ noir:["/* Noir. Black and white, heavy grain. */","",
         var y=m.y*H*.92,spread=Math.tan(20*Math.PI/180)*y,x0=apx+(m.x-.5)*2*spread,x=apx+(x0-apx)*Math.cos(ang)-(y)*Math.sin(ang),yy=(x0-apx)*Math.sin(ang)+y*Math.cos(ang);
         var a=(1-m.y*.9)*(.35+.35*Math.sin(t*1.3+m.p*3));g.globalAlpha=Math.max(0,a);g.fillStyle='#FFF1E2';g.beginPath();g.arc(x,yy,m.s,0,6.283);g.fill()}g.globalAlpha=1}
     raf=requestAnimationFrame(frame)}
-  if('IntersectionObserver' in window)new IntersectionObserver(function(es){inView=es[0].isIntersecting;if(inView){if(es[0].intersectionRatio>.35)switchOn();last=0;if(!raf)raf=requestAnimationFrame(frame)}},{threshold:[0,.35,.6]}).observe(room);else{room.classList.remove('dark')}
+  if('IntersectionObserver' in window)new IntersectionObserver(function(es){inView=es[0].isIntersecting;if(inView){sync();drawRefl();if(es[0].intersectionRatio>.35)switchOn();last=0;if(!raf)raf=requestAnimationFrame(frame)}},{threshold:[0,.35,.6]}).observe(room);else{room.classList.remove('dark')}
 })();
 
 </script>
@@ -4781,7 +4807,9 @@ noir:["/* Noir. Black and white, heavy grain. */","",
 
   /* ---------- GPU name from WebGL debug info ---------- */
   var GPUN='';function gpuName(){if(gpuName.t)return;gpuName.t=1;try{if(!navigator.gpu||!navigator.gpu.requestAdapter)return;navigator.gpu.requestAdapter().then(function(ad){if(!ad)return;
-    var f=function(i){i=i||{};var s=((i.vendor||'')+' '+(i.architecture||'')).replace(/[-_]/g,' ').trim().toUpperCase();if(s){GPUN=s.slice(0,22);lastLK=''}};
+    var f=function(i){i=i||{};var up=function(x){return String(x||'').replace(/[-_]/g,' ').trim().toUpperCase()},v=up(i.vendor),vw=v.split(/\s+/),a=up(i.architecture).split(/\s+/).filter(function(x){return x&&vw.indexOf(x)<0});
+      // Apple reports its own name as the architecture too, so drop words the vendor already says and plain family numbers
+      if(/^(COMMON|METAL|UNKNOWN|GENERIC)$/.test(a[0]||'')||!/[A-Z]/.test(a.join('')))a=[];var s=(v+' '+a.join(' ')).trim();if(s&&GPUN!==s.slice(0,22)){GPUN=s.slice(0,22);lastLK=''}};
     if(ad.info)f(ad.info);else if(ad.requestAdapterInfo)ad.requestAdapterInfo().then(f,function(){})}).catch(function(){})}catch(e){}}
 
   /* ---------- gaze target: pointer, touch, tilt, or idle saccades ---------- */
@@ -4962,9 +4990,11 @@ noir:["/* Noir. Black and white, heavy grain. */","",
       var an=p.a*6.283,q=Math.max(R.w,R.h)*(.45+p.b*.35);return T(cx+Math.cos(an)*q,cy+Math.sin(an)*q*.7,'soft',.1,1.1,'dust')})}
 
   /* ---------- what a dot looks like inside a formation at local time tt ---------- */
-  function look(fi,i,tt,now){var t=F[fi][i],x=t.x,y=t.y,c=t.c,a=t.a,s=t.s,gg=t.g,oa;
+  // written into reused arrays, so a frame makes no garbage for the collector to pause on
+  var LKA=[0,0,'',0,0,0],LKB=[0,0,'',0,0,0],HY=function(a,b){return Math.sqrt(a*a+b*b)};
+  function look(fi,i,tt,now,R6){var t=F[fi][i],x=t.x,y=t.y,c=t.c,a=t.a,s=t.s,gg=t.g,oa;
     if(fi===1&&gg!=='dust'){var L=K.logo,bl=GZ.b,ecx=L.cx+L.hx,ecy=L.cy+L.hy,uu,h0,top,bot;
-      if(gg==='field'){if(t.hide)a=0;else{var gx=GZ.x,gy=GZ.y*1.3,gm=Math.hypot(gx,gy),dx0=x-ecx,dy0=y-ecy,dl=Math.hypot(dx0,dy0);
+      if(gg==='field'){if(t.hide)a=0;else{var gx=GZ.x,gy=GZ.y*1.3,gm=HY(gx,gy),dx0=x-ecx,dy0=y-ecy,dl=HY(dx0,dy0);
         // lit where it looks
         if(gm>.12&&dl>0){var cs0=(dx0*gx+dy0*gy)/(dl*gm);if(cs0>.955){var lit=(cs0-.955)/.045*Math.min(1,gm*1.6);a=Math.max(a,.2+.55*lit);s=1.15+.8*lit;if(!t.f&&lit>.45)c='ink'}}}}
       else if(gg==='orb'){oa=orbXY(t,now,-L.hx*.5,-L.hy*.5);x=OX;y=OY;a=oa*(t.hot?2.2:1);c=t.hot?'sig':'soft';s=1.2+.45*(.5+.5*OB)}
@@ -4988,7 +5018,7 @@ noir:["/* Noir. Black and white, heavy grain. */","",
       else if(t.part==='c'){var pl2=.5+.5*Math.sin(now*.0035+k*1.7);x=cc[0]+o[0]*Kc.cr*.46+t.jx*Kc.pr*.5;y=cc[1]+(o[1]*Kc.cr*.46+t.jy*Kc.pr*.5)*sq;c=k===0?(w>.5?'sig':'hot'):'sig';a=(.35+.65*pl2)*op*(k===0||w>.5?1:.7)*(1-bk)}
       // the scale ring turns slowly, each lens its own way; it speeds up a little while the lens is opening
       else if(t.part==='t'){var at=t.an+(k%2?1:-1)*(now*.00018+op*.8),rt=Kc.cr*t.tr;x=cc[0]+Math.cos(at)*rt;y=cc[1]+Math.sin(at)*rt*sq;c=k===0&&w<.5?'sig':'dim';a=(.2+.75*op)*(k===0&&w<.5?.8:1)}
-      else{var prK=Kc.pr*(k===0?1-.55*w:(.85+.4*GZ.dil)),rk=(prK+(Kc.ir-prK)*t.rn)*(t.rn>.99?1:ik),lx=t.ca*rk,ly=t.sa*rk,gm=Math.hypot(o[0],o[1]);
+      else{var prK=Kc.pr*(k===0?1-.55*w:(.85+.4*GZ.dil)),rk=(prK+(Kc.ir-prK)*t.rn)*(t.rn>.99?1:ik),lx=t.ca*rk,ly=t.sa*rk,gm=HY(o[0],o[1]);
         // the iris is a disc on a ball: turning toward you it slides across the socket and flattens on the side facing away
         if(gm>.001){var ux=o[0]/gm,uy=o[1]/gm,pu=(lx*ux+ly*uy)*Math.sqrt(1-gm*gm),pv=-lx*uy+ly*ux;lx=pu*ux-pv*uy;ly=pu*uy+pv*ux}
         x=cc[0]+o[0]*Kc.cr*.46+lx;y=cc[1]+(o[1]*Kc.cr*.46+ly)*sq;
@@ -4996,7 +5026,7 @@ noir:["/* Noir. Black and white, heavy grain. */","",
     if(fi===3&&gg!=='dust'){var D3=K.doc;
       if(gg[0]==='w'){var wd=D3.words[+gg.slice(1)],hp=seg(tt,.02,.5)*D3.lines,hl=Math.min(D3.lines-1,Math.floor(hp)),hx=D3.x0+(hp-hl)*D3.width,hy=D3.top+hl*D3.lh+D3.lh*.5,lift=0,
           rdd=wd.l<hl||(wd.l===hl&&x<hx)||hp>=D3.lines;a=rdd?.6:.16;
-        var bx3=x-hx,by3=(y-hy)*2.4,bd3=Math.hypot(bx3,by3),RB=D3.sp*13;if(tt<.52&&bd3<RB){var pu3=Math.pow(1-bd3/RB,2);x+=bx3/(bd3||1)*pu3*D3.sp*3.6;y+=(y-hy)/(Math.abs(y-hy)||1)*pu3*D3.sp*2.2-pu3*D3.sp*1.2;a=Math.max(a,.45+.55*pu3);s*=1+.5*pu3;if(pu3>.5&&!wd.t)c='ink'}
+        var bx3=x-hx,by3=(y-hy)*2.4,bd3=HY(bx3,by3),RB=D3.sp*13;if(tt<.52&&bd3<RB){var pu3=Math.pow(1-bd3/RB,2);x+=bx3/(bd3||1)*pu3*D3.sp*3.6;y+=(y-hy)/(Math.abs(y-hy)||1)*pu3*D3.sp*2.2-pu3*D3.sp*1.2;a=Math.max(a,.45+.55*pu3);s*=1+.5*pu3;if(pu3>.5&&!wd.t)c='ink'}
         y+=Math.sin(x*.018+now*.0011+wd.l*1.3)*D3.sp*.22;
         if(wd.t){var lk=D3.links[wd.j],on=seg(tt,lk.a,lk.a+.06),pq=P[i];
           lift=on*D3.sp*7*(1-seg(tt,lk.a+.2,lk.a+.45)*.6);
@@ -5045,12 +5075,12 @@ noir:["/* Noir. Black and white, heavy grain. */","",
       if(gg==='core'&&ptr.on){var hx=ptr.x-x,hy=ptr.y-y;if(hx*hx+hy*hy<Q.cs*Q.cs*2.6){c='hot';a=1}}}}
     if(fi===5){var S5=K.st,imp=out(seg(tt,0,.16));
       if(gg==='stamp'){var sc=1+.55*(1-imp),ra=(1-imp)*-.13,cr=Math.cos(ra),sr2=Math.sin(ra),ux=(x-S5.cx)*sc,uy=(y-S5.cy)*sc;var vx3=ux*cr-uy*sr2,vy3=ux*sr2+uy*cr,ca=Math.cos(S5.ay),sa=Math.sin(S5.ay),cb=Math.cos(S5.ax),sb=Math.sin(S5.ax),x1s=vx3*ca,z1s=-vx3*sa,y1s=vy3*cb-z1s*sb,z2s=vy3*sb+z1s*cb,pps=900/(900-z2s);x=S5.cx+x1s*pps;y=S5.cy+y1s*pps;s*=pps;var band=(vx3/S5.bw+vy3/S5.bh*.5)-clamp(S5.ay*1.6-S5.ax*.9,-.46,.46);a=.95*(.84+.16*Math.sin(now*.003+vx3*.03));if(imp>.9){var ab=Math.abs(band);if(ab<.06){c='hot';a=1}else if(ab<.15){c='hot';a=.95-(ab-.06)*4}}
-        if(tt>.35){var tw5=seg(tt,.35,.8),bt5=Math.pow(Math.max(0,Math.sin(now*.0019)),10),dx6=x-S5.cx,dy6=y-S5.cy,dr6=Math.hypot(dx6,dy6),fall=Math.max(0,1-dr6/(S5.bw*.7)),tw6=tw5*(.05+.03*Math.sin(now*.0007))*fall*fall,c6=Math.cos(tw6),s6=Math.sin(tw6),sc6=1-.03*tw5*fall+.015*bt5;x=S5.cx+(dx6*c6-dy6*s6)*sc6;y=S5.cy+(dx6*s6+dy6*c6)*sc6}
-        var pq5=P[i];if(pq5.c<.08&&tt>.45){var fe=(pq5.d+now*.00011)%1;if(fe<.4){var e5=fe/.4,dx5=x-S5.cx,dy5=y-S5.cy,r5=Math.hypot(dx5,dy5)*(1-e5*e5*.96),a5=Math.atan2(dy5,dx5)+e5*e5*4.2;x=S5.cx+Math.cos(a5)*r5;y=S5.cy+Math.sin(a5)*r5*(1-.6*e5);a*=1-e5*.9;c=e5>.5?'hot':'sig';s*=1-e5*.5}else a*=seg(fe,.4,.62)}}
+        if(tt>.35){var tw5=seg(tt,.35,.8),bt5=Math.pow(Math.max(0,Math.sin(now*.0019)),10),dx6=x-S5.cx,dy6=y-S5.cy,dr6=HY(dx6,dy6),fall=Math.max(0,1-dr6/(S5.bw*.7)),tw6=tw5*(.05+.03*Math.sin(now*.0007))*fall*fall,c6=Math.cos(tw6),s6=Math.sin(tw6),sc6=1-.03*tw5*fall+.015*bt5;x=S5.cx+(dx6*c6-dy6*s6)*sc6;y=S5.cy+(dx6*s6+dy6*c6)*sc6}
+        var pq5=P[i];if(pq5.c<.08&&tt>.45){var fe=(pq5.d+now*.00011)%1;if(fe<.4){var e5=fe/.4,dx5=x-S5.cx,dy5=y-S5.cy,r5=HY(dx5,dy5)*(1-e5*e5*.96),a5=Math.atan2(dy5,dx5)+e5*e5*4.2;x=S5.cx+Math.cos(a5)*r5;y=S5.cy+Math.sin(a5)*r5*(1-.6*e5);a*=1-e5*.9;c=e5>.5?'hot':'sig';s*=1-e5*.5}else a*=seg(fe,.4,.62)}}
       else if(gg==='spl'){var sp5=.55+.45*out(seg(tt,.1,.32));x=S5.cx+(x-S5.cx)*sp5;y=S5.cy+(y-S5.cy)*sp5;a=a*seg(tt,.1,.2)}
       else if(gg==='orb'){oa=orbXY(t,now,0,0);var rf5=.3+.7*out(seg(tt,.1,.55));x=S5.cx+(OX-S5.cx)*rf5;y=S5.cy+(OY-S5.cy)*rf5;a=oa*seg(tt,.1,.35)*(t.hot?2.3:1);c=t.hot?'sig':'soft';s=1.2+.45*(.5+.5*OB)}
       else if(gg==='dust'){var rf=.25+.75*out(seg(tt,.1,.6));x=S5.cx+(x-S5.cx)*rf;y=S5.cy+(y-S5.cy)*rf;a=tt>.1?.1+.45*(1-seg(tt,.14,.7)):.04}}
-    return [x,y,c,a,s,gg]}
+    R6[0]=x;R6[1]=y;R6[2]=c;R6[3]=a;R6[4]=s;R6[5]=gg;return R6}
 
   /* ---------- labels drawn with the dots, in the ops screen style ---------- */
   function txt(s,x,y,col,al,size,align,wt){if(al<=.005)return;g.globalAlpha=al;g.fillStyle=col;g.font=(wt||500)+' '+(size||10)+'px '+MONO;g.textAlign=align||'left';g.textBaseline='middle';g.fillText(s,x,y)}
@@ -5139,7 +5169,7 @@ noir:["/* Noir. Black and white, heavy grain. */","",
       TB.classList.remove('gone');if(st==='denied')tbHide=setTimeout(function(){TB.classList.add('gone')},4200)};
     addEventListener('mntilt',tbSet);setTimeout(tbSet,0)}
   var STIFF={flick:1,crease:1,lid:1,lash:1,iris:1,cl:1,car:1,vein:1,sc:1,ol:1,pin:1,core:1,orb3:1,tend:1,cell:1},STILL={flick:1,crease:1,lid:1,lash:1,cl:1,ol:1,pin:1,core:1,orb3:1,tend:1,cell:1},FLAT={iris:1,sc:1,vein:1,car:1};
-  var VX=[],lastNow=0,lastTk='',frameEl=document.getElementById('sk-frame');
+  var VX=[],lastNow=0,lastTk='',frameEl=document.getElementById('sk-frame'),ORDER=['dim','soft','ink','ok','sig','hot'],COLS={dim:[],soft:[],ink:[],ok:[],sig:[],hot:[]},BK=[],MV=[];
   function draw(now){var dtf=lastNow?clamp((now-lastNow)/16.67,.5,3):1;lastNow=now;var kk=1-Math.pow(.83,dtf),dmp=Math.pow(.72,dtf);
     var gm=SG||(window.mnGeo&&(SG=mnGeo(sec))),r=gm?{top:gm.top-window.MN_SY,height:gm.h}:sec.getBoundingClientRect(),vh=VH,span=Math.max(1,r.height-vh),p=-r.top/span,enter=clamp(1-r.top/(vh*.9),0,1);
     p=clamp(p,0,1);PT=p;if(PS<0||Math.abs(p-PS)>.35)PS=p;else PS+=(p-PS)*(1-Math.pow(.74,dtf));if(Math.abs(p-PS)<1e-5)PS=p;p=PS;var f=p*N,s=Math.min(N-1,Math.floor(f)),t=f-s;if(p>=1){s=N-1;t=1}
@@ -5199,10 +5229,10 @@ noir:["/* Noir. Black and white, heavy grain. */","",
       if(wv>.05&&!lowFx)for(var ly=3;ly>=0;ly--){var dd=(ly+1)*3.6;g.fillStyle=C.lay[ly];g.globalAlpha=lay[ly]*wv;for(var si=0,sn=Math.min(ST.n,n);si<sn;si++){var qq=P[si];g.fillRect(qq.x+dvx*dd-1,qq.y+dvy*dd-1,2.2,2.2)}}g.globalAlpha=1}
     // a slow 3D sway, tilted a little toward the pointer
     ptr.sx+=((ptr.tch?0:ptr.nx)+(TL.on&&!ptr.on?TL.x*1.7:0)-ptr.sx)*(1-Math.pow(.92,dtf));PH2+=((TL.on&&!ptr.on?TL.y*.22:0)-PH2)*(1-Math.pow(.92,dtf));var th=Math.sin(now*.00035)*.07+ptr.sx*.12,ct=Math.cos(th),st=Math.sin(th),cp=Math.cos(PH2),spp=Math.sin(PH2);
-    var cols={},order=['dim','soft','ink','ok','sig','hot'];order.forEach(function(k){cols[k]=[]});
-    for(var i=0;i<n;i++){var q=P[i],A=look(a,i,a===b?tt:1,now),x,y,c,al,sz;
+    var cols=COLS,order=ORDER;for(var oi=0;oi<6;oi++)cols[order[oi]].length=0;
+    for(var i=0;i<n;i++){var q=P[i],A=look(a,i,a===b?tt:1,now,LKA),x,y,c,al,sz;
       if(a===b||u<=0){x=A[0];y=A[1];c=A[2];al=A[3];sz=A[4]}
-      else{var B=look(b,i,0,now),bd=Math.min(1,Math.hypot(B[0]-ccx,B[1]-ccy)/(Math.max(R.w,R.h)*.55)),del=.3*bd+.12*q.d,e=ease(clamp((u-del)/.58,0,1)),fl=Math.sin(Math.PI*e);
+      else{var B=look(b,i,0,now,LKB),bd=Math.min(1,HY(B[0]-ccx,B[1]-ccy)/(Math.max(R.w,R.h)*.55)),del=.3*bd+.12*q.d,e=ease(clamp((u-del)/.58,0,1)),fl=Math.sin(Math.PI*e);
         var mx=(A[0]+B[0])/2-ccx,my=(A[1]+B[1])/2-ccy,ph3=(b>a?1:-1)*(.35+.45*(.5+.5*q.k)),cph=Math.cos(ph3),sph=Math.sin(ph3),cx3=ccx+(mx*cph-my*sph)*1.18,cy3=ccy+(mx*sph+my*cph)*1.18,m1=1-e;
         x=m1*m1*A[0]+2*m1*e*cx3+e*e*B[0]+Math.sin(q.j*5+e*6+now*.0015)*7*fl;y=m1*m1*A[1]+2*m1*e*cy3+e*e*B[1]+Math.cos(q.j*4+e*5+now*.0013)*7*fl;
         c=e<.5?A[2]:B[2];al=Math.min(1,(A[3]+(B[3]-A[3])*e)*(1+.5*fl)+.08*fl);sz=(A[4]+(B[4]-A[4])*e)*(1+.55*fl)}
@@ -5218,9 +5248,9 @@ noir:["/* Noir. Black and white, heavy grain. */","",
       if(al<=.004)continue;var ns=st2||inStamp&&gp==='stamp'||typeof gp==='string'&&gp.charAt(0)==='w';cols[c].push(q.x,q.y,sz,al,ns?0:q.vx,ns?0:q.vy)}
     // draw in batches: one path per color and alpha step, squares for resting dots, streaks for moving ones
     g.lineCap='round';
-    order.forEach(function(k){var L=cols[k],bk={};for(var j=0;j<L.length;j+=6){var key=Math.round(L[j+3]*10);if(!key)continue;(bk[key]||(bk[key]=[])).push(j)}
+    order.forEach(function(k){var L=cols[k],bk=BK,top=0;for(var j=0;j<bk.length;j++)if(bk[j])bk[j].length=0;for(j=0;j<L.length;j+=6){var key=Math.round(L[j+3]*10);if(!key)continue;(bk[key]||(bk[key]=[])).push(j);if(key>top)top=key}
       g.fillStyle=g.strokeStyle=C[k];
-      for(var key in bk){var idx=bk[key];g.globalAlpha=key/10;var mv=[];
+      for(var key=1;key<=top;key++){var idx=bk[key];if(!idx||!idx.length)continue;g.globalAlpha=key/10;var mv=MV;mv.length=0;
         g.beginPath();for(var m=0;m<idx.length;m++){var j=idx[m],vx=L[j+4],vy=L[j+5];if(Math.abs(vx)+Math.abs(vy)>1.4)mv.push(j);else{var r2=Math.max(1,Math.round(L[j+2]*1.75*DP))/DP;g.rect(Math.round((L[j]-r2/2)*DP)/DP,Math.round((L[j+1]-r2/2)*DP)/DP,r2,r2)}}g.fill();
         if(mv.length){g.lineWidth=k==='sig'?2.6:2.2;g.beginPath();for(m=0;m<mv.length;m++){j=mv[m];var vx2=L[j+4],vy2=L[j+5],sl=Math.min(3,10/(Math.abs(vx2)+Math.abs(vy2)));g.moveTo(L[j]-vx2*sl,L[j+1]-vy2*sl);g.lineTo(L[j],L[j+1])}g.stroke()}}});
     // sparks: a short bright streak and a small halo, twinkling out

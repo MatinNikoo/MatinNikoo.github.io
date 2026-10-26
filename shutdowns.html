@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-lab="shutdowns">
 <head>
 <meta charset="utf-8">
 <script>/* moving between pages of the site: the new page starts under the last page's colour and fades up out of it */
@@ -10,141 +10,223 @@ html.pg-in::after{animation:pgup .55s cubic-bezier(.4,0,.2,1) .04s both}
 @keyframes pgup{from{opacity:1}to{opacity:0}}
 .pg-veil{opacity:0;transition:opacity .26s cubic-bezier(.4,0,1,1)}.pg-veil.on{opacity:1}</style>
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Internet Shutdowns</title>
-<meta name="description" content="What happens to a country's coding when its government turns off the internet. Synthetic twins built from GitHub data for nine shutdowns.">
-<meta property="og:title" content="What does it cost to turn off the internet?">
-<meta property="og:description" content="Nine shutdowns, measured with GitHub data and synthetic twins.">
+<meta name="theme-color" content="#ECE9E2">
+<title>Internet shutdowns</title>
+<meta name="description" content="How much GitHub activity placed in a country falls when its internet goes dark, measured against a synthetic twin built from 106 countries.">
+<meta property="og:title" content="Internet shutdowns">
+<meta property="og:description" content="Iran 2026 came in 59% to 69% below its twin. Try the twin, the placebos and every check.">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%232F4BC4'/%3E%3Ctext x='32' y='46' font-family='Georgia,serif' font-style='italic' font-size='40' text-anchor='middle' fill='%23fff'%3EM%3C/text%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,700;12..96,800&family=Geist:wght@400;500;600&family=Geist+Mono:wght@400;500&family=Instrument+Serif:ital@0;1&family=Caveat:wght@500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600&family=Geist+Mono:wght@400;500&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
 <script>try{var t=localStorage.getItem("theme");if(t==="light"||t==="dark")document.documentElement.setAttribute("data-theme",t)}catch(e){}</script>
+<script>/* lite mode for slow devices, same rule as the homepage: no blur, lower canvas resolution */
+(function(){var n=navigator,d=document.documentElement,coarse=matchMedia('(pointer:coarse)').matches,saved=false;try{saved=sessionStorage.getItem('mn-lite2')==='1'}catch(e){}
+  var low=!!(saved||(n.connection&&n.connection.saveData)||(n.hardwareConcurrency&&n.hardwareConcurrency<=2)||(n.deviceMemory&&n.deviceMemory<=2)||(coarse&&n.deviceMemory&&n.deviceMemory<=3));
+  if(coarse)d.classList.add('touch');window.MN_LITE=low;if(low)d.classList.add('lite')})();</script>
 <style>
-:root{
-  --bg:#F3F5F8; --surface:#FFFFFF; --ink:#0E1726; --muted:#596476; --line:#DCE1E9;
-  --accent:#2F4BC4; --accent-soft:#E2E7FF; --bench:#8E97A6; --hot:#C2410C; --hot-soft:#F6E6DD;
-  --display:"Bricolage Grotesque","Avenir Next","Segoe UI",system-ui,sans-serif;
+/* the homepage palette, type and glass, shared by the three lab rooms */
+:root{--bg:#ECE9E2;--surface:#F5F3EE;--panel:#F5F3EE;--ink:#121212;--muted:#5E5A53;--line:#D2CDC2;--accent:#D9410B;--accent-soft:#F3D9CB;--bench:#A6A096;--good:#127A4A;--bad:#B3261E;--warn:#9A5B00;--hot:#D9410B;--hot-soft:#F3D9CB;--signal:#FF5A1F;
+  --display:"Instrument Serif","Iowan Old Style",Georgia,serif;--serif:var(--display);
   --body:"Geist",system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
-  --serif:"Instrument Serif","Iowan Old Style","Palatino Linotype",Georgia,serif;
-  --hand:"Caveat","Bradley Hand","Segoe Print",cursive;
   --mono:"Geist Mono",ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
-}
-@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
-  --bg:#0B1017; --surface:#121923; --ink:#E9EDF3; --muted:#97A1B0; --line:#232D3B;
-  --accent:#8FA3FF; --accent-soft:#1D2646; --bench:#6B7688; --hot:#F08A5D; --hot-soft:#2A1A14; color-scheme:dark}}
-:root[data-theme="dark"]{--bg:#0B1017; --surface:#121923; --ink:#E9EDF3; --muted:#97A1B0; --line:#232D3B;
-  --accent:#8FA3FF; --accent-soft:#1D2646; --bench:#6B7688; --hot:#F08A5D; --hot-soft:#2A1A14; color-scheme:dark}
+  --nav:3.4rem;--ease:cubic-bezier(.2,.8,.2,1);--spring:cubic-bezier(.2,.9,.25,1.12);
+  --lq-top:rgba(255,255,255,.42);--lq-hi:#fff;--lq-lo:rgba(255,255,255,.75);--lq-in:rgba(255,255,255,.16);--lq-edge:rgba(20,16,10,.07);--lq-hov:rgba(255,255,255,.52);--sh:0 18px 40px -28px rgba(10,15,30,.35)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0A0A0B;--surface:#111113;--panel:#111113;--ink:#ECECEA;--muted:#8C8C92;--line:#26262B;--accent:#FF5A1F;--accent-soft:#2A160E;--bench:#55555A;--good:#3DDC97;--bad:#FF6B5E;--warn:#E0A83C;--hot:#FF5A1F;--hot-soft:#2A160E;--signal:#FF5A1F;color-scheme:dark;
+  --lq-top:rgba(255,255,255,.1);--lq-hi:rgba(255,255,255,.62);--lq-lo:rgba(255,255,255,.22);--lq-in:rgba(255,255,255,.035);--lq-edge:rgba(255,255,255,.15);--lq-hov:rgba(255,255,255,.17);--sh:0 18px 40px -24px rgba(0,0,0,.8)}}
+:root[data-theme="dark"]{--bg:#0A0A0B;--surface:#111113;--panel:#111113;--ink:#ECECEA;--muted:#8C8C92;--line:#26262B;--accent:#FF5A1F;--accent-soft:#2A160E;--bench:#55555A;--good:#3DDC97;--bad:#FF6B5E;--warn:#E0A83C;--hot:#FF5A1F;--hot-soft:#2A160E;--signal:#FF5A1F;color-scheme:dark;
+  --lq-top:rgba(255,255,255,.1);--lq-hi:rgba(255,255,255,.62);--lq-lo:rgba(255,255,255,.22);--lq-in:rgba(255,255,255,.035);--lq-edge:rgba(255,255,255,.15);--lq-hov:rgba(255,255,255,.17);--sh:0 18px 40px -24px rgba(0,0,0,.8)}
 *,*::before,*::after{box-sizing:border-box}
-html{-webkit-text-size-adjust:100%;overflow-x:clip}
-body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--body);font-size:1.03125rem;line-height:1.6;overflow-x:clip}
-a{color:inherit;text-decoration-color:var(--line);text-underline-offset:3px}
-a:hover{color:var(--accent)}
-:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border-radius:4px}
-.wrap{max-width:62rem;margin:0 auto;padding-inline:clamp(1rem,4vw,2.5rem)}
-.mono{font-family:var(--mono);font-size:.8rem}
-.nav{position:sticky;top:0;z-index:10;background:color-mix(in srgb,var(--bg) 85%,transparent);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border-bottom:1px solid var(--line)}
-.nav .wrap{display:flex;justify-content:space-between;align-items:center;height:3.4rem;gap:1rem}
-.nav a{text-decoration:none;font-size:.92rem;color:var(--muted)}
-.nav a.mark{font-family:var(--display);font-weight:700;color:var(--ink);font-size:1rem}
-.nav .row{display:flex;gap:1.1rem}
-header{padding-block:clamp(2.5rem,7vw,4.5rem) 1.5rem}
-.note{font-family:var(--hand);font-weight:600;font-size:1.45rem;color:var(--accent);rotate:-2deg;display:inline-block;margin:0}
-h1{font-family:var(--serif);font-weight:400;font-size:clamp(2.6rem,7.5vw,4.6rem);line-height:.98;letter-spacing:-.01em;margin:.4rem 0 1rem;max-width:15ch}
-h1 em{color:var(--accent)}
-.lede{font-size:1.12rem;max-width:41rem;margin:0}
-.facts{display:grid;grid-template-columns:repeat(auto-fit,minmax(12rem,1fr));gap:1rem;margin:1.8rem 0 .4rem}
-.fact{border-top:2px solid var(--ink);padding-top:.6rem}
-.fact b{display:block;font-family:var(--serif);font-weight:400;font-size:2.3rem;line-height:1;color:var(--accent)}
-.fact span{font-size:.88rem;color:var(--muted)}
-.card{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:clamp(1rem,3vw,1.6rem);margin-bottom:1.2rem}
-.card h2{font-family:var(--display);font-weight:700;font-size:1.25rem;letter-spacing:-.01em;margin:0 0 .5rem;display:flex;gap:.6rem;align-items:baseline}
-.card h2 i{font-style:normal;font-family:var(--mono);font-size:.78rem;color:var(--accent)}
-.card p{margin:.2rem 0 .8rem;max-width:44rem}
-.small{font-size:.84rem;color:var(--muted)}
-.chips{display:flex;flex-wrap:wrap;gap:.4rem;margin:.6rem 0 .9rem}
-.chip{font:inherit;font-size:.84rem;border:1px solid var(--line);background:var(--bg);color:var(--ink);border-radius:7px;padding:.28rem .75rem;cursor:pointer}
-.chip:hover{border-color:var(--accent)}
-.chip[aria-pressed="true"]{background:var(--accent);border-color:var(--accent);color:var(--bg)}
-.chip small{opacity:.7;margin-left:.25rem}
-.seg{display:inline-flex;border:1px solid var(--line);border-radius:7px;overflow:hidden;margin:.2rem 0 .6rem}
-.seg button{font:inherit;font-size:.82rem;border:0;background:none;color:var(--muted);padding:.4rem .75rem;cursor:pointer}
-.seg button[aria-pressed="true"]{background:var(--accent-soft);color:var(--ink)}
-.read{display:flex;flex-wrap:wrap;align-items:baseline;gap:.3rem 1.2rem;margin:.2rem 0 .4rem}
-.read .big{font-family:var(--serif);font-size:clamp(2.4rem,7vw,3.3rem);line-height:1;color:var(--hot)}
-.read .big.flat{color:var(--muted)}
-canvas{display:block;width:100%;height:auto}
-#c-twin{aspect-ratio:16/7.2}
-#c-forest{aspect-ratio:16/8.6}
-#c-dose{aspect-ratio:16/9}
-#c-power{aspect-ratio:16/6.5}
-@media (max-width:600px){#c-twin{aspect-ratio:4/3}#c-forest{aspect-ratio:4/4.2}#c-dose{aspect-ratio:4/3.3}#c-power{aspect-ratio:4/2.6}}
-.what{font-size:.86rem;color:var(--muted);border-left:2px solid var(--line);padding-left:.9rem;margin:.9rem 0 0}
-.made{font-size:.84rem;color:var(--muted);margin-top:.6rem}
-.made b{color:var(--ink);font-weight:500}
-.legend{display:flex;flex-wrap:wrap;gap:.3rem 1.2rem;font-size:.78rem;color:var(--muted);margin-top:.5rem}
-.legend span::before{content:"";display:inline-block;width:.9rem;height:.55rem;border-radius:10px;margin-right:.35rem;vertical-align:middle;background:var(--c)}
-.slider{display:flex;align-items:center;gap:1rem;flex-wrap:wrap;margin:.4rem 0 .6rem}
-.slider input{flex:1;min-width:12rem;accent-color:var(--accent)}
-.slider output{font-family:var(--serif);font-size:2.2rem;line-height:1;color:var(--accent);min-width:5ch}
-.bars{display:grid;gap:.35rem;margin-top:.6rem}
-.bar{display:grid;grid-template-columns:9.5rem minmax(0,1fr) 3.5rem;align-items:center;gap:.6rem;font-size:.86rem}
-.bar .track{position:relative;height:.7rem;background:var(--bg);border-radius:4px}
-.bar .track i{position:absolute;top:0;bottom:0;right:50%;background:var(--accent);border-radius:4px 0 0 4px}
-.bar .track::after{content:"";position:absolute;left:50%;top:-.2rem;bottom:-.2rem;width:1px;background:var(--ink)}
-.bar span:last-child{font-family:var(--mono);font-size:.78rem;color:var(--muted);text-align:right}
-@media (max-width:520px){.bar{grid-template-columns:7rem minmax(0,1fr) 3.2rem}}
-.links{display:flex;flex-wrap:wrap;gap:.6rem;margin-top:.4rem}
-.btn{display:inline-flex;align-items:center;gap:.4rem;font:inherit;font-size:.92rem;font-weight:500;border-radius:7px;padding:.55rem .95rem;border:1px solid var(--line);background:var(--surface);color:var(--ink);text-decoration:none}
-.btn:hover{border-color:var(--accent);color:var(--accent)}
-.btn.primary{background:var(--accent);border-color:var(--accent);color:var(--bg)}
-.btn.primary:hover{color:var(--bg);filter:brightness(1.08)}
-footer{padding-block:2rem 3rem;color:var(--muted);font-size:.85rem}
-
-/* ===== print and console look, shared with the homepage ===== */
-:root{--bg:#ECE9E2; --surface:#F5F3EE; --panel:#F5F3EE; --ink:#121212; --muted:#5E5A53; --line:#D2CDC2; --accent:#D9410B; --accent-soft:#F3D9CB; --bench:#A6A096; --good:#127A4A; --bad:#B3261E; --hot:#D9410B; --hot-soft:#F3D9CB; --warn-bg:#F6E1D5; --ok-bg:#DDEDE3; --signal:#FF5A1F; --display:"Instrument Serif","Iowan Old Style",Georgia,serif;}
-:root[data-theme="light"]{--bg:#ECE9E2; --surface:#F5F3EE; --panel:#F5F3EE; --ink:#121212; --muted:#5E5A53; --line:#D2CDC2; --accent:#D9410B; --accent-soft:#F3D9CB; --bench:#A6A096; --good:#127A4A; --bad:#B3261E; --hot:#D9410B; --hot-soft:#F3D9CB; --warn-bg:#F6E1D5; --ok-bg:#DDEDE3; --signal:#FF5A1F;}
-@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0A0A0B; --surface:#111113; --panel:#111113; --ink:#ECECEA; --muted:#8C8C92; --line:#26262B; --accent:#FF5A1F; --accent-soft:#2A160E; --bench:#55555A; --good:#3DDC97; --bad:#FF6B5E; --hot:#FF5A1F; --hot-soft:#2A160E; --warn-bg:#2A160E; --ok-bg:#0E2A1E; --signal:#FF5A1F; color-scheme:dark;}}
-:root[data-theme="dark"]{--bg:#0A0A0B; --surface:#111113; --panel:#111113; --ink:#ECECEA; --muted:#8C8C92; --line:#26262B; --accent:#FF5A1F; --accent-soft:#2A160E; --bench:#55555A; --good:#3DDC97; --bad:#FF6B5E; --hot:#FF5A1F; --hot-soft:#2A160E; --warn-bg:#2A160E; --ok-bg:#0E2A1E; --signal:#FF5A1F; color-scheme:dark;}
-body{background-color:var(--bg);background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .07 0 0 0 0 .07 0 0 0 0 .06 0 0 0 .09 0'/%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23n)'/%3E%3C/svg%3E")}
-@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) body{background-image:radial-gradient(circle at 1px 1px,#1C1C20 1px,transparent 1.4px);background-size:18px 18px}}
-:root[data-theme="dark"] body{background-image:radial-gradient(circle at 1px 1px,#1C1C20 1px,transparent 1.4px);background-size:18px 18px}
-h1,h2,h3{font-family:var(--display)!important;font-weight:400!important;letter-spacing:-.01em}
-h1{font-size:clamp(2.6rem,6vw,4.4rem)}
-::selection{background:var(--signal,#FF5A1F);color:#121212}
-
-/* shared chrome with the homepage */
+html{-webkit-text-size-adjust:100%;overflow-x:clip;scroll-padding-top:calc(var(--nav) + 1rem)}
+body{margin:0;color:var(--ink);font-family:var(--body);font-size:1rem;line-height:1.55;overflow-x:clip;-webkit-font-smoothing:antialiased;
+  background-color:var(--bg);background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.95' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .07 0 0 0 0 .07 0 0 0 0 .06 0 0 0 .11 0'/%3E%3C/filter%3E%3Crect width='180' height='180' filter='url(%23n)'/%3E%3C/svg%3E"),url(stone.png);background-size:180px 180px,512px 512px}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) body{background-image:radial-gradient(circle at 1px 1px,#1E1E23 1px,transparent 1.4px);background-size:20px 20px}}
+:root[data-theme="dark"] body{background-image:radial-gradient(circle at 1px 1px,#1E1E23 1px,transparent 1.4px);background-size:20px 20px}
 body::before{content:"";position:fixed;inset:0;pointer-events:none;z-index:0;background:linear-gradient(90deg,var(--gridl,rgba(18,18,18,.045)) 1px,transparent 1px) calc(50% - 36rem) 0/calc(min(72rem,100vw)/12) 100%}
 @media (prefers-color-scheme:dark){:root:not([data-theme="light"]) body::before{--gridl:rgba(236,236,234,.04)}}
 :root[data-theme="dark"] body::before{--gridl:rgba(236,236,234,.04)}
-body>*{position:relative;z-index:1}
-.note{font-family:"Geist Mono",ui-monospace,monospace!important;font-size:.7rem!important;font-weight:500!important;letter-spacing:.2em;text-transform:uppercase;color:var(--ink)!important;rotate:0deg!important}
-.note::before{content:"";display:inline-block;width:.5rem;height:.5rem;background:var(--signal,#FF5A1F);margin-right:.6rem;vertical-align:.05em}
-nav,.nav,header.top{border-bottom:1px solid var(--ink)!important}
-button,.btn,a.btn{font-family:"Geist Mono",ui-monospace,monospace;text-transform:uppercase;letter-spacing:.1em;font-size:.72rem}
-nav a,.nav a,header.top a{font-family:"Geist Mono",ui-monospace,monospace;text-transform:uppercase;letter-spacing:.12em;font-size:.72rem}
-
-/* gallery style, shared with the homepage */
-body{background-color:var(--bg)!important;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.95' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .07 0 0 0 0 .07 0 0 0 0 .06 0 0 0 .11 0'/%3E%3C/filter%3E%3Crect width='180' height='180' filter='url(%23n)'/%3E%3C/svg%3E"),url(stone.png)!important;background-size:180px 180px,512px 512px!important}
-@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) body{background-image:radial-gradient(circle at 1px 1px,#1E1E23 1px,transparent 1.4px)!important;background-size:20px 20px!important}}
-:root[data-theme="dark"] body{background-image:radial-gradient(circle at 1px 1px,#1E1E23 1px,transparent 1.4px)!important;background-size:20px 20px!important}
-.roomhead{position:relative;z-index:2;display:flex;gap:1.2rem;align-items:center;max-width:72rem;margin:0 auto;padding:.9rem clamp(1rem,4vw,2.5rem);font:500 .64rem/1 "Geist Mono",ui-monospace,monospace;letter-spacing:.2em;text-transform:uppercase;color:var(--muted)}
-.roomhead i{width:.5rem;height:.5rem;background:var(--signal,#FF5A1F);display:inline-block}
-.roomhead b{font-weight:500;color:var(--ink)}
-.roomhead .ln{flex:1;height:1px;background:var(--ink);opacity:.6}
-h1{font-size:clamp(3rem,7.5vw,5.6rem)!important;line-height:.95!important;letter-spacing:-.02em!important}
-section,.card,.panel,.box,[class*="step"]{box-shadow:none!important}
 body::after{content:"";position:fixed;inset:0;pointer-events:none;z-index:0;background:radial-gradient(70vw 60vh at 78% -8%,rgba(255,252,244,.6),transparent 70%),linear-gradient(rgba(236,233,226,.35),rgba(236,233,226,.35))}
 @media (prefers-color-scheme:dark){:root:not([data-theme="light"]) body::after{background:radial-gradient(60vw 55vh at 50% -12%,rgba(255,90,31,.08),transparent 70%)}}
 :root[data-theme="dark"] body::after{background:radial-gradient(60vw 55vh at 50% -12%,rgba(255,90,31,.08),transparent 70%)}
-
-/* soft corners on objects you touch, sharp only on rules, tags and labels */
-button,.btn,select,input{border-radius:7px}
-section,.card,.panel,.box,.step,.res,.result,aside,fieldset,table,.tbl{border-radius:10px}
-
+body>*{position:relative;z-index:1}
+/* soft color behind the glass, so the panes have something to bend */
+.halo{position:fixed;inset:0;z-index:0;pointer-events:none;overflow:hidden}
+.halo i{position:absolute;border-radius:50%;filter:blur(60px);opacity:.5}
+.halo i:nth-child(1){width:38rem;height:26rem;left:-8rem;top:34vh;background:color-mix(in srgb,var(--signal) 16%,transparent)}
+.halo i:nth-child(2){width:30rem;height:30rem;right:-10rem;top:58vh;background:color-mix(in srgb,var(--signal) 11%,transparent)}
+.halo i:nth-child(3){width:24rem;height:18rem;left:42%;top:8vh;background:color-mix(in srgb,var(--ink) 5%,transparent)}
+html.lite .halo i{filter:none;opacity:.35}
+a{color:inherit;text-decoration-color:color-mix(in srgb,var(--ink) 30%,transparent);text-underline-offset:3px}
+a:hover{color:var(--accent)}
+:focus-visible{outline:2px solid var(--signal);outline-offset:3px;border-radius:4px}
+::selection{background:var(--signal);color:#121212}
+.wrap{max-width:72rem;margin:0 auto;padding-inline:clamp(1rem,4vw,2.5rem)}
+.vh{position:absolute!important;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+/* top of the room */
+.roomhead{position:relative;z-index:2;display:flex;gap:1.2rem;align-items:center;max-width:72rem;margin:0 auto;padding:.9rem clamp(1rem,4vw,2.5rem);font:500 .64rem/1 var(--mono);letter-spacing:.2em;text-transform:uppercase;color:var(--muted)}
+.roomhead i{width:.5rem;height:.5rem;background:var(--signal);display:inline-block;flex:none}
+.roomhead b{font-weight:500;color:var(--ink)}
+.roomhead .ln{flex:1;height:1px;background:var(--ink);opacity:.6}
+@media (max-width:520px){.roomhead .yr{display:none}}
+.nav{position:sticky;top:0;z-index:30;background:color-mix(in srgb,var(--bg) 85%,transparent);-webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px);border-bottom:1px solid var(--ink)}
+.nav .wrap{display:flex;justify-content:space-between;align-items:center;height:var(--nav);gap:1rem}
+.nav-r{display:flex;align-items:center;gap:clamp(.9rem,2.4vw,1.6rem)}
+.nav-r a{text-decoration:none;font:500 .7rem/1 var(--mono);letter-spacing:.12em;text-transform:uppercase;color:var(--muted);transition:color .2s}
+.nav-r a:hover{color:var(--ink)}
+.theme{display:grid;place-items:center;width:2rem;height:2rem;margin-right:-.4rem;border:0;background:none;color:var(--ink);cursor:pointer;border-radius:50%;transition:transform .4s var(--spring)}
+.theme svg{width:1rem;height:1rem}
+.theme:hover{transform:rotate(180deg)}
+::view-transition-old(root),::view-transition-new(root){animation:none;mix-blend-mode:normal}
+::view-transition-old(root){z-index:1}::view-transition-new(root){z-index:2}
+@media (max-width:400px){.nav-r .code{display:none}}
+@media (max-width:360px){.nav-r .hide-xs{display:none}}
+/* the Labs menu: every room is one click from every other */
+.labs{position:relative}
+.labs-b{display:inline-flex;align-items:center;gap:.35rem;font:500 .7rem/1 var(--mono);letter-spacing:.12em;text-transform:uppercase;color:var(--ink);background:none;border:0;padding:.5rem 0;cursor:pointer}
+.labs-b::before{content:"";width:.34rem;height:.34rem;background:var(--signal);flex:none}
+.labs-b svg{width:.6rem;height:.6rem;fill:none;stroke:currentColor;stroke-width:1.4;transition:transform .25s var(--ease)}
+.labs-b[aria-expanded="true"] svg{transform:rotate(180deg)}
+.labs-m{position:absolute;top:calc(100% + .7rem);right:-4.5rem;width:17.5rem;display:grid;gap:.15rem;padding:.4rem;z-index:40;border-radius:12px;
+  background:color-mix(in srgb,var(--surface) 92%,transparent);-webkit-backdrop-filter:blur(18px) saturate(1.6);backdrop-filter:blur(18px) saturate(1.6);border:1px solid var(--lq-edge);
+  box-shadow:inset 1.5px 1.5px 1px -1px var(--lq-hi),0 22px 44px -20px rgba(10,15,30,.4);opacity:0;transform:translateY(-6px);transition:opacity .2s ease,transform .25s var(--ease)}
+.labs-m.on{opacity:1;transform:none}
+.labs-m[hidden]{display:none}
+html.lite .labs-m{background:var(--surface);-webkit-backdrop-filter:none;backdrop-filter:none}
+.labs-m a{display:grid;grid-template-columns:1.7rem minmax(0,1fr);gap:.05rem .4rem;padding:.55rem .65rem;border-radius:9px;text-decoration:none;color:var(--ink);transition:background .2s}
+.labs-m a i{grid-row:1/3;font:500 .6rem/1.9 var(--mono);font-style:normal;letter-spacing:.08em;color:var(--signal)}
+.labs-m a b{font-weight:600;font-size:.9rem;line-height:1.3}
+.labs-m a span{font-size:.78rem;line-height:1.35;color:var(--muted)}
+.labs-m a:hover,.labs-m a:focus-visible{background:color-mix(in srgb,var(--ink) 5%,transparent);color:var(--ink)}
+.labs-m a[aria-current="page"]{background:color-mix(in srgb,var(--signal) 9%,transparent)}
+.labs-m a[aria-current="page"] b::after{content:"You are here";margin-left:.5rem;font:500 .5rem/1 var(--mono);letter-spacing:.14em;text-transform:uppercase;color:var(--signal);vertical-align:.2em}
+@media (max-width:520px){.labs{position:static}.labs-m{right:clamp(1rem,4vw,2.5rem);left:clamp(1rem,4vw,2.5rem);width:auto;top:calc(var(--nav) - .2rem)}}
+@media (prefers-reduced-motion:reduce){.labs-m,.labs-b svg{transition:none}}
+/* header */
+.hd{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:1rem 3rem;align-items:end;padding-block:clamp(1.6rem,4.5vw,3.2rem) clamp(1.1rem,2.6vw,1.8rem)}
+.note{font:500 .66rem/1.4 var(--mono);letter-spacing:.2em;text-transform:uppercase;color:var(--ink);margin:0}
+.note::before{content:"";display:inline-block;width:.5rem;height:.5rem;background:var(--signal);margin-right:.6rem;vertical-align:.05em}
+h1{font-family:var(--display);font-weight:400;font-size:clamp(2.7rem,6.4vw,4.9rem);line-height:.95;letter-spacing:-.02em;margin:.55rem 0 .8rem}
+h1 em{color:var(--accent)}
+h2,h3{font-family:var(--display);font-weight:400;letter-spacing:-.01em}
+.lede{font-size:1.04rem;max-width:40rem;margin:0;color:color-mix(in srgb,var(--ink) 86%,var(--muted))}
+.facts{display:grid;grid-template-columns:repeat(2,minmax(0,9.5rem));gap:1.1rem 1.6rem;margin:0}
+.facts div{border-top:1px solid var(--ink);padding-top:.5rem;min-width:0}
+.facts dt{font-family:var(--display);font-size:2.05rem;line-height:1;color:var(--accent);font-variant-numeric:tabular-nums;white-space:nowrap}
+.facts dd{margin:.3rem 0 0;font-size:.78rem;line-height:1.35;color:var(--muted)}
+@media (max-width:860px){.hd{grid-template-columns:minmax(0,1fr)}.facts{grid-template-columns:repeat(4,minmax(0,1fr));gap:.9rem}}
+@media (max-width:560px){.facts{grid-template-columns:repeat(2,minmax(0,1fr))}.facts dt{font-size:1.75rem}}
+/* glass panes: the same pane and cursor light as the live tool cards on the homepage */
+.gl{position:relative;isolation:isolate;min-width:0;border-radius:14px;background-color:color-mix(in srgb,var(--surface) 46%,transparent);
+  background-image:linear-gradient(180deg,var(--lq-top),transparent 3.5rem);-webkit-backdrop-filter:blur(22px) saturate(1.8);backdrop-filter:blur(22px) saturate(1.8);border:1px solid var(--lq-edge);
+  box-shadow:inset 1.5px 1.5px 1px -1px var(--lq-hi),inset -1.5px -1.5px 1px -1px var(--lq-lo),inset 0 0 18px var(--lq-in),var(--sh);transition:border-color .35s}
+.gl::after{content:"";position:absolute;inset:0;z-index:-1;border-radius:inherit;pointer-events:none;opacity:0;transition:opacity .35s ease;
+  background:radial-gradient(420px circle at var(--mx,50%) var(--my,50%),color-mix(in srgb,var(--signal) 10%,transparent),transparent 65%)}
+@media (hover:hover){.gl:hover::after{opacity:1}.gl:hover{border-color:color-mix(in srgb,var(--signal) 26%,var(--lq-edge))}}
+html.lite .gl{-webkit-backdrop-filter:none;backdrop-filter:none;background-color:var(--surface)}
+html.lite .gl::after{display:none}
+@supports not ((-webkit-backdrop-filter:blur(1px)) or (backdrop-filter:blur(1px))){.gl{background-color:var(--surface)}}
+.pad{padding:clamp(.95rem,2.2vw,1.35rem)}
+.kick{display:flex;align-items:center;gap:.55rem;font:500 .6rem/1.3 var(--mono);letter-spacing:.16em;text-transform:uppercase;color:var(--muted);margin:0 0 .7rem}
+.kick::before{content:"";width:.42rem;height:.42rem;background:var(--signal);flex:none}
+.kick b{font-weight:500;color:var(--ink)}
+/* tabs, like the Skeptic demo box: an ink pill slides to the picked one */
+.tabs{position:relative;display:grid;grid-auto-flow:column;grid-auto-columns:minmax(0,1fr);gap:3px;padding:3px;border:1px solid var(--line);border-radius:9px;background:color-mix(in srgb,var(--bg) 40%,transparent)}
+.tabs button{position:relative;z-index:1;font:500 .64rem/1.2 var(--mono);letter-spacing:.1em;text-transform:uppercase;color:var(--muted);background:transparent;border:0;border-radius:6px;padding:.62rem .3rem;cursor:pointer;white-space:nowrap;transition:color .3s ease,transform .15s ease;min-width:0;overflow:hidden;text-overflow:ellipsis}
+.tabs button i{font-style:normal;color:var(--signal);margin-right:.42rem;display:inline-block;transition:transform .4s cubic-bezier(.2,.9,.25,1.3)}
+.tabs button:hover{color:var(--ink)}
+.tabs button[aria-selected="true"]{color:var(--surface)}
+.tabs button[aria-selected="true"] i{transform:translateY(-1px) scale(1.15)}
+.tabs button:active{transform:scale(.95)}
+.tabs .ind{position:absolute;top:3px;bottom:3px;left:0;width:0;border-radius:6px;background:var(--ink);z-index:0;pointer-events:none;box-shadow:0 8px 22px -12px color-mix(in srgb,var(--signal) 80%,transparent);transition:transform .5s var(--spring),width .5s cubic-bezier(.2,.9,.25,1)}
+.tabs:not(.ready) button[aria-selected="true"]{background:var(--ink)}
+@media (max-width:560px){.tabs button{font-size:.56rem;letter-spacing:.05em;padding:.6rem .1rem}.tabs button i{display:none}}
+@media (max-width:360px){.tabs button{letter-spacing:0;padding:.55rem 0;white-space:normal;line-height:1.15}}
+.view{min-width:0}
+.view[hidden]{display:none}
+.view.enter{animation:viewin .5s var(--ease) backwards}
+@keyframes viewin{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+/* segmented choices */
+.seg{display:inline-flex;flex-wrap:wrap;gap:2px;padding:2px;border:1px solid var(--line);border-radius:9px;background:color-mix(in srgb,var(--bg) 45%,transparent);max-width:100%}
+.seg button{font:500 .6rem/1.2 var(--mono);letter-spacing:.1em;text-transform:uppercase;border:0;background:none;color:var(--muted);padding:.5rem .7rem;border-radius:7px;cursor:pointer;transition:background .2s,color .2s,box-shadow .2s;white-space:nowrap}
+.seg button:hover{color:var(--ink)}
+.seg button[aria-pressed="true"]{background:var(--surface);color:var(--ink);box-shadow:0 1px 3px rgba(10,15,30,.14),inset 0 0 0 1px var(--lq-edge)}
+/* buttons */
+.btn{position:relative;overflow:hidden;display:inline-flex;align-items:center;justify-content:center;gap:.45rem;font:500 .64rem/1.2 var(--mono);letter-spacing:.12em;text-transform:uppercase;color:var(--surface);background:var(--ink);border:1px solid var(--ink);border-radius:6px;padding:.62rem .9rem;cursor:pointer;text-decoration:none;
+  transition:transform .2s cubic-bezier(.2,.9,.25,1.3),background .2s,color .2s,border-color .2s,box-shadow .3s}
+.btn::after{content:"";position:absolute;inset:0;background:linear-gradient(105deg,transparent 35%,rgba(255,255,255,.3) 50%,transparent 65%) 100% 0/300% 100% no-repeat;transition:background-position .7s ease;pointer-events:none}
+.btn:hover{color:var(--surface);transform:translateY(-2px);box-shadow:0 10px 24px -14px color-mix(in srgb,var(--signal) 70%,transparent)}
+.btn:hover::after{background-position:0 0}
+.btn:active{transform:scale(.95)}
+.btn.ghost{background:color-mix(in srgb,var(--surface) 40%,transparent);color:var(--ink);border-color:var(--line)}
+.btn.ghost:hover{color:var(--ink);border-color:color-mix(in srgb,var(--signal) 60%,var(--line))}
+.btn svg{width:.85rem;height:.85rem;flex:none}
+@media (hover:none){.btn:hover{transform:none}}
+.acts{display:flex;flex-wrap:wrap;gap:.5rem;align-items:center}
+.lnk{font:500 .62rem/1.3 var(--mono);letter-spacing:.12em;text-transform:uppercase;color:var(--accent);text-decoration:none;border:0;background:none;padding:0;cursor:pointer}
+.lnk:hover{text-decoration:underline}
+/* fields */
+.fld{display:grid;gap:.3rem;min-width:0}
+.fld>span,.lab{font:500 .58rem/1.3 var(--mono);letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
+select,input[type=number],input[type=text],input[type=search]{font:inherit;font-size:.9rem;color:var(--ink);background:color-mix(in srgb,var(--bg) 55%,transparent);border:1px solid var(--line);border-radius:7px;padding:.48rem .55rem;width:100%;min-width:0;transition:border-color .2s,background .2s}
+select:hover,input:hover{border-color:color-mix(in srgb,var(--ink) 30%,var(--line))}
+select:focus-visible,input:focus-visible{outline:none;border-color:var(--signal);box-shadow:0 0 0 3px color-mix(in srgb,var(--signal) 22%,transparent)}
+input[type=range]{width:100%;accent-color:var(--signal);margin:0}
+input[type=checkbox]{accent-color:var(--signal)}
+.grid2{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:.7rem}
+/* rows of verdicts, like the checker on the homepage */
+.rows{list-style:none;margin:0;padding:0}
+.rows li{display:grid;grid-template-columns:3.6rem minmax(0,1fr);gap:.6rem;padding:.55rem 0;border-top:1px solid var(--line);font-size:.86rem;line-height:1.45;color:var(--muted);transition:background .25s}
+.rows li:first-child{border-top:0}
+.rows li>b{font:500 .62rem/1.9 var(--mono);letter-spacing:.12em;text-transform:uppercase}
+.rows li strong{color:var(--ink);font-weight:500}
+.ok{color:var(--good)}.warn{color:var(--warn)}.bad{color:var(--bad)}.dim{color:var(--muted)}
+.big{font-family:var(--display);font-size:clamp(2.3rem,5vw,3.1rem);line-height:.95;color:var(--accent);font-variant-numeric:tabular-nums;letter-spacing:-.01em}
+.mono{font-family:var(--mono);font-size:.78rem}
+.small{font-size:.8rem;color:var(--muted);line-height:1.5}
+.why{font-size:.82rem;line-height:1.55;color:var(--muted);border-left:1px solid var(--line);padding-left:.95rem;margin:0}
+.why p{margin:0 0 .55rem}.why p:last-child{margin:0}
+.why b{color:var(--ink);font-weight:500}
+/* tables */
+.scroll{overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:thin}
+.tbl{width:100%;border-collapse:collapse;font-size:.84rem;font-variant-numeric:tabular-nums}
+.tbl th{font:500 .56rem/1.3 var(--mono);letter-spacing:.12em;text-transform:uppercase;color:var(--muted);text-align:left;padding:.4rem .5rem;border-bottom:1px solid var(--line);white-space:nowrap}
+.tbl td{padding:.55rem .5rem;border-bottom:1px solid color-mix(in srgb,var(--line) 70%,transparent);vertical-align:middle}
+.tbl tr:last-child td{border-bottom:0}
+.tbl td.m{font-weight:500;color:var(--ink)}
+.tbl .r{text-align:right}
+@media (hover:hover){.tbl tbody tr{transition:background .2s}.tbl tbody tr:hover{background:color-mix(in srgb,var(--ink) 3.5%,transparent)}}
+/* charts */
+canvas{display:block;width:100%}
+.legend{display:flex;flex-wrap:wrap;gap:.3rem 1.1rem;font:500 .56rem/1.4 var(--mono);letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-top:.55rem}
+.legend span{display:inline-flex;align-items:center;gap:.4rem}
+.legend span::before{content:"";width:.9rem;height:.5rem;border-radius:2px;background:var(--c)}
+.tip{position:absolute;z-index:5;pointer-events:none;padding:.4rem .55rem;border-radius:7px;background:var(--ink);color:var(--surface);font:500 .62rem/1.45 var(--mono);letter-spacing:.04em;white-space:nowrap;opacity:0;transform:translateY(4px);transition:opacity .15s,transform .15s}
+.tip.on{opacity:1;transform:none}
+/* arrival: the panes rise in once, the way the homepage figures do */
+.rise{animation:rise .8s var(--ease) backwards;animation-delay:calc(var(--d,0) * 90ms + .05s)}
+@keyframes rise{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+.flash{animation:flash .7s ease}
+@keyframes flash{from{color:var(--signal)}}
+/* the other rooms, one click away at the bottom of each */
+.rooms{margin-top:clamp(2rem,5vw,3.2rem)}
+.rooms-g{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:.8rem}
+.rooms-g a{display:grid;gap:.2rem;padding:1rem 1.1rem 1.05rem;text-decoration:none;color:var(--ink);transition:border-color .35s,transform .3s var(--ease)}
+.rooms-g a i{font:500 .58rem/1.3 var(--mono);font-style:normal;letter-spacing:.16em;text-transform:uppercase;color:var(--signal)}
+.rooms-g a b{font:400 1.45rem/1.1 var(--display);margin-top:.15rem}
+.rooms-g a span{font-size:.82rem;color:var(--muted)}
+.rooms-g a b::after{content:" \2192";color:var(--signal);display:inline-block;transition:transform .3s var(--ease)}
+.rooms-g a:hover{color:var(--ink);transform:translateY(-2px)}
+.rooms-g a:hover b::after{transform:translateX(4px)}
+@media (max-width:760px){.rooms-g{grid-template-columns:minmax(0,1fr)}.rooms-g a b{font-size:1.25rem}}
+@media (prefers-reduced-motion:reduce){.rooms-g a,.rooms-g a b::after{transition:none}.rooms-g a:hover{transform:none}}
+footer{padding-block:2rem 7rem;color:var(--muted);font-size:.8rem}
+footer p{margin:0 0 .4rem;max-width:46rem}
+@media (prefers-reduced-motion:reduce){.rise,.view.enter,.flash{animation:none}.tabs .ind,.btn,.btn::after,.theme{transition:none}.btn:hover{transform:none}}
 /* big monitors and TVs: everything scales up together so the page fills the screen like it does on a laptop */
 @media (min-width:2200px) and (min-height:1250px){html{font-size:20px;--mk:1.25}}
 @media (min-width:2900px) and (min-height:1600px){html{font-size:24px;--mk:1.5}}
 @media (min-width:3400px) and (min-height:1900px){html{font-size:28px;--mk:1.75}}
+
 </style>
 <style id="ink-follow">/* every accent shade follows the one ink color, so the console reaches all of them */
 @supports (color:color-mix(in srgb,red,blue)){html:root:root{--accent:color-mix(in srgb,var(--signal) 86%,#000);--accent-soft:color-mix(in srgb,var(--accent) 17%,var(--bg))}}
@@ -161,217 +243,514 @@ html:root[data-theme="dark"]:root{--accent:var(--signal)}
 .wm .sn{display:none;margin-right:-.24em}
 @media (max-width:440px){.wm{font-size:.7rem!important;letter-spacing:.24em!important;gap:.6rem}.wm .no,.wm .fn{display:none}.wm .sn{display:inline}}
 </style>
+
+<style>
+h1{max-width:14ch}
+.bench{display:grid;grid-template-columns:minmax(0,19rem) minmax(0,1fr);gap:1rem;align-items:start}
+.list{position:sticky;top:calc(var(--nav) + 1rem);padding:clamp(.85rem,2vw,1.1rem)}
+.list .kick{margin-bottom:.4rem}
+.evs{display:grid;gap:2px;margin:0;padding:0;list-style:none}
+.ev{display:grid;grid-template-columns:minmax(0,1fr) 3.1rem;grid-template-rows:auto auto;gap:.15rem .6rem;width:100%;text-align:left;border:0;background:none;color:inherit;font:inherit;padding:.5rem .55rem;border-radius:9px;cursor:pointer;transition:background .25s,transform .2s var(--spring)}
+.ev:hover{background:color-mix(in srgb,var(--ink) 4%,transparent)}
+.ev[aria-pressed="true"]{background:color-mix(in srgb,var(--surface) 70%,transparent);box-shadow:inset 0 0 0 1px color-mix(in srgb,var(--signal) 45%,var(--line)),0 8px 20px -14px color-mix(in srgb,var(--signal) 70%,transparent)}
+.ev:active{transform:scale(.98)}
+.ev .nm{font-size:.86rem;font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ev .nm small{font:500 .52rem/1 var(--mono);letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin-left:.4rem;vertical-align:.12em}
+.ev .vl{font:500 .74rem/1.4 var(--mono);text-align:right;font-variant-numeric:tabular-nums}
+.ev .bar{grid-column:1/-1;position:relative;height:.55rem}
+.ev .bar::before{content:"";position:absolute;left:var(--z);top:-.15rem;bottom:-.15rem;width:1px;background:var(--ink);opacity:.4}
+.ev .bar i{position:absolute;top:.17rem;height:.2rem;border-radius:2px;background:var(--bench);left:var(--l);width:var(--w);transform-origin:var(--z) 50%;animation:grow .8s var(--ease) both;animation-delay:calc(var(--k) * 50ms + .3s)}
+.ev .bar b{position:absolute;top:0;width:.55rem;height:.55rem;margin-left:-.275rem;border-radius:50%;left:var(--m);background:var(--bench);animation:pop .5s var(--spring) both;animation-delay:calc(var(--k) * 50ms + .55s)}
+.ev.clear .bar i,.ev.clear .bar b{background:var(--signal)}
+.ev.part .bar b{background:none;border:1.5px solid var(--bench)}
+@keyframes grow{from{transform:scaleX(0)}}
+@keyframes pop{from{transform:scale(0)}}
+.axis{position:relative;height:.8rem;font:500 .52rem/1 var(--mono);color:var(--muted);letter-spacing:.06em;margin:.45rem .55rem 0}
+.axis span{position:absolute;top:0;transform:translateX(-50%)}.axis span:first-child{transform:none}.axis span:last-child{transform:translateX(-100%)}
+.list .legend{margin:.7rem .55rem 0}
+@media (max-width:1023px){.bench{grid-template-columns:minmax(0,1fr)}.list{position:relative;top:auto}.evs{grid-template-columns:repeat(3,minmax(0,1fr))}}
+@media (max-width:760px){.evs{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media (max-width:520px){.ev .nm small{display:none}}
+@media (max-width:520px){.ev{grid-template-columns:minmax(0,1fr) auto;padding:.5rem .45rem;column-gap:.35rem}.ev .nm{font-size:.8rem}}
+@media (max-width:380px){.ev .nm{font-size:.72rem;white-space:normal;line-height:1.25}}
+.panel{padding:clamp(.8rem,2vw,1.1rem);container-type:inline-size}
+.sum{display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:.6rem 1.4rem;padding:.2rem .2rem .9rem}
+.sum h2{font-size:clamp(1.6rem,3.4vw,2.2rem);line-height:1;margin:0}
+.sum .what{font-size:.82rem;color:var(--muted);margin:.35rem 0 0;max-width:34rem}
+.verd{font:500 .62rem/1 var(--mono);letter-spacing:.14em;text-transform:uppercase;padding:.48rem .62rem;border-radius:6px;border:1px solid currentColor;display:inline-flex;gap:.5rem;align-items:center;white-space:nowrap}
+.verd::before{content:"";width:.45rem;height:.45rem;border-radius:50%;background:currentColor}
+.panel .tabs{position:sticky;top:calc(var(--nav) + .5rem);z-index:6;background:color-mix(in srgb,var(--bg) 82%,transparent);-webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px)}
+html.lite .panel .tabs{background:var(--bg);-webkit-backdrop-filter:none;backdrop-filter:none}
+@media (max-height:520px){.panel .tabs{position:relative;top:auto}}
+.views{padding:1.05rem .2rem .2rem}
+.read{display:flex;flex-wrap:wrap;align-items:baseline;gap:.2rem 1rem;margin:.1rem 0 .7rem}
+.read .sub{font-size:.84rem;color:var(--muted)}
+.hrow{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:.6rem 1rem;margin-bottom:.6rem}
+.chart{position:relative}
+.made{display:flex;flex-wrap:wrap;gap:.3rem;margin-top:.8rem}
+.made span{font:500 .6rem/1 var(--mono);letter-spacing:.04em;padding:.38rem .5rem;border-radius:999px;border:1px solid var(--line);color:var(--muted);background:color-mix(in srgb,var(--surface) 40%,transparent)}
+.made span b{color:var(--ink);font-weight:500;margin-left:.3rem}
+.two{display:grid;grid-template-columns:minmax(0,1.2fr) minmax(0,1fr);gap:1.1rem 1.6rem;align-items:start}
+@container (max-width:42rem){.two{grid-template-columns:minmax(0,1fr)}}
+.notes{display:grid;grid-template-columns:repeat(auto-fit,minmax(13rem,1fr));gap:.7rem 1.4rem;margin-top:1.1rem}
+/* the Iran 2026 range */
+.range{margin-top:1.1rem;padding:1rem;border-radius:12px;border:1px solid color-mix(in srgb,var(--signal) 40%,var(--line));background:color-mix(in srgb,var(--signal) 5%,transparent)}
+.range[hidden]{display:none}
+.rg{position:relative;height:3.4rem;margin:1.6rem .4rem .6rem}
+.rg .ln{position:absolute;left:0;right:0;top:1.3rem;height:1px;background:var(--line)}
+.rg .sp{position:absolute;top:1.05rem;height:.5rem;border-radius:3px;background:color-mix(in srgb,var(--signal) 35%,transparent);transition:all .8s var(--ease)}
+.rg i{position:absolute;top:.95rem;width:.7rem;height:.7rem;margin-left:-.35rem;border-radius:50%;background:var(--surface);border:2px solid var(--signal)}
+.rg i.full{background:var(--signal)}
+.rg s{position:absolute;text-decoration:none;font:500 .56rem/1.25 var(--mono);letter-spacing:.04em;color:var(--ink);transform:translateX(-50%);white-space:nowrap;text-align:center}
+.rg s.up{bottom:calc(100% - .7rem)}.rg s.dn{top:1.95rem;color:var(--muted)}
+.gr{display:grid;grid-template-columns:repeat(auto-fit,minmax(6.5rem,1fr));gap:.5rem;margin-top:.8rem}
+.gr div{border-top:1px solid var(--line);padding-top:.4rem}
+.gr b{display:block;font-family:var(--display);font-size:1.45rem;line-height:1;font-weight:400;font-variant-numeric:tabular-nums}
+.gr span{font:500 .54rem/1.3 var(--mono);letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+/* checks and counts */
+.verdict{margin:0 0 .6rem;font-size:.95rem;line-height:1.5}
+.rows li>b.na{color:var(--muted)}
+.pools{display:grid;grid-template-columns:repeat(auto-fit,minmax(8.5rem,1fr));gap:.35rem .8rem;margin-top:.4rem;font:500 .62rem/1.4 var(--mono);color:var(--muted)}
+.pools b{color:var(--ink);font-weight:500}
+/* method card */
+.method{margin-top:1rem;padding:clamp(.8rem,2vw,1.1rem);container-type:inline-size}
+.method>.hrow{padding:.2rem .2rem .6rem}
+.method h2{font-size:clamp(1.7rem,3.4vw,2.3rem);line-height:1;margin:.2rem 0 0}
+.slider{display:flex;align-items:center;gap:1rem;flex-wrap:wrap;margin:.2rem 0 .8rem}
+.slider input{flex:1;min-width:11rem}
+.slider output{font-family:var(--display);font-size:2.2rem;line-height:1;color:var(--accent);min-width:4.2ch;font-variant-numeric:tabular-nums}
+.ptab td,.ptab th{text-align:right}.ptab td:first-child,.ptab th:first-child{text-align:left}
+.ptab tr.on td{background:color-mix(in srgb,var(--signal) 9%,transparent)}
+.lim{margin:0;padding:0;list-style:none}
+.lim li{padding:.6rem 0;border-top:1px solid var(--line);font-size:.88rem;line-height:1.55}
+.lim li:first-child{border-top:0}
+.lim li b{font-weight:500}
+.links{display:flex;flex-wrap:wrap;gap:.5rem;margin-top:1rem}
+</style>
 </head>
 <body>
-<div class="roomhead" aria-hidden="true"><i></i><b>Room 04</b><span>Internet shutdowns</span><span class="ln"></span><span>M. Nikoomanzar, 2026</span></div>
-<nav class="nav"><div class="wrap"><a class="mark wm" href="index.html" aria-label="Matin Nikoomanzar, home"><span class="fn">M. Nikoomanzar</span><span class="sn">M.N.</span><span class="no">N°01</span></a><div class="row"><a href="index.html#projects">Projects</a><a href="https://github.com/MatinNikoo/internet-shutdowns" target="_blank" rel="noopener">Code</a></div></div></nav>
+<div class="halo" aria-hidden="true"><i></i><i></i><i></i></div>
+<div class="roomhead" aria-hidden="true"><i></i><b>Room 04</b><span>Internet shutdowns</span><span class="ln"></span><span class="yr">M. Nikoomanzar, 2026</span></div>
+<nav class="nav"><div class="wrap"><a class="mark wm" href="index.html" aria-label="Matin Nikoomanzar, home"><span class="fn">M. Nikoomanzar</span><span class="sn">M.N.</span><span class="no">N°01</span></a><div class="nav-r">
+<div class="labs"><button class="labs-b" id="labs-b" type="button" aria-expanded="false" aria-controls="labs-m">Labs<svg viewBox="0 0 10 10" aria-hidden="true"><path d="M2 3.8 5 6.6 8 3.8"/></svg></button>
+<div class="labs-m" id="labs-m" hidden>
+<a href="lab.html" data-lab="lab"><i>03</i><b>Experiment Lab</b><span>Rerun a real 90K player A/B test</span></a>
+<a href="shutdowns.html" data-lab="shutdowns"><i>04</i><b>Internet shutdowns</b><span>Build a country's twin, see the gap</span></a>
+<a href="simulator.html" data-lab="simulator"><i>05</i><b>App simulator</b><span>A new app's odds of 10K to 1M installs</span></a>
+<a href="unchart/" data-lab="unchart"><i>06</i><b>Unchart</b><span>Paste a chart, get its numbers back</span></a>
+</div></div><a class="hide-xs" href="index.html#projects">Projects</a><a class="code" href="https://github.com/MatinNikoo/internet-shutdowns" target="_blank" rel="noopener">Code</a><button class="theme" id="theme" type="button" aria-label="Switch between light and dark" title="Light or dark"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9" fill="none" stroke="currentColor" stroke-width="2"/><path d="M12 3a9 9 0 0 1 0 18z" fill="currentColor"/></svg></button></div></div></nav>
+
 <main class="wrap">
-<header>
-  <p class="note">a test nobody would ever run</p>
-  <h1>What does it cost to <em>turn off</em> the internet?</h1>
-  <p class="lede">When a government cuts the internet, you can't compare that country to itself with the internet on. So I built each country a twin out of countries that stayed online, using GitHub's public data on how much code every country pushes each quarter.</p>
-  <div class="facts" id="facts"></div>
+<header class="hd">
+  <div>
+    <p class="note rise">a test nobody would ever run</p>
+    <h1 class="rise" style="--d:1">When a country's internet goes <em>dark</em></h1>
+    <p class="lede rise" style="--d:2">Nobody can run the same country with its internet left on, so there's no A/B test. I built each country a twin out of countries that stayed online, using GitHub's public data on where code gets pushed from each quarter, and measured the gap. Then I spent most of the time trying to break it.</p>
+  </div>
+  <dl class="facts rise" style="--d:3">
+    <div><dt>59 to 69%</dt><dd>below its twin, Iran in early 2026</dd></div>
+    <div><dt>56%</dt><dd>below its twin, Myanmar after the 2021 coup</dd></div>
+    <div><dt>106</dt><dd>donor countries with no shutdown in my registry</dd></div>
+    <div><dt>5 of 5</dt><dd>full shutdowns where OONI's daily tests match the dates</dd></div>
+  </dl>
 </header>
 
-<section class="card" aria-labelledby="h1-twin">
-  <h2 id="h1-twin"><i>01</i>Build the twin</h2>
-  <p>The twin is a weighted mix of countries that moved like this one before the shutdown. The gap after is the effect. Try the simple comparisons too, they can point the wrong way.</p>
-  <div class="chips" id="chips" role="group" aria-label="Pick a shutdown"></div>
-  <div class="seg" role="group" aria-label="Compare against">
-    <button type="button" data-mode="twin" aria-pressed="true">Synthetic twin</button>
-    <button type="button" data-mode="last">Last quarter</button>
-    <button type="button" data-mode="yoy">Same quarter last year</button>
+<section class="bench" aria-label="The nine shutdowns">
+<aside class="gl list rise" style="--d:3" aria-labelledby="list-h">
+  <p class="kick" id="list-h"><b>All nine shutdowns</b></p>
+  <ul class="evs" id="evs"></ul>
+  <div class="axis" aria-hidden="true"><span id="ax-lo"></span><span id="ax-0">0</span><span id="ax-hi"></span></div>
+  <div class="legend"><span style="--c:var(--signal)">Clear drop</span><span style="--c:var(--bench)">Not clear</span></div>
+</aside>
+
+<section class="gl panel rise" style="--d:4" aria-label="The picked shutdown">
+  <div class="sum" aria-live="polite">
+    <div><h2 id="e-name"></h2><p class="what" id="e-what"></p></div>
+    <span class="verd" id="e-verd"></span>
   </div>
-  <div class="read"><span class="big" id="r-big"></span><span class="small" id="r-sub"></span></div>
-  <canvas id="c-twin" aria-label="Pushes over time for the chosen country and what it is compared against"></canvas>
-  <div class="legend"><span style="--c:var(--accent)">Actual</span><span style="--c:var(--bench)" id="lg-cmp">Twin</span><span style="--c:var(--hot-soft)">Shutdown quarter</span></div>
-  <p class="made" id="made"></p>
-  <p class="what" id="what"></p>
+  <div class="tabs" role="tablist" id="tabs" aria-label="Views">
+    <button type="button" role="tab" id="t-twin" aria-controls="v-twin" aria-selected="true"><i>01</i>Twin</button>
+    <button type="button" role="tab" id="t-plac" aria-controls="v-plac" aria-selected="false"><i>02</i>Placebos</button>
+    <button type="button" role="tab" id="t-chk" aria-controls="v-chk" aria-selected="false"><i>03</i>Checks</button>
+    <button type="button" role="tab" id="t-ooni" aria-controls="v-ooni" aria-selected="false"><i>04</i>Daily</button>
+    <button type="button" role="tab" id="t-cnt" aria-controls="v-cnt" aria-selected="false"><i>05</i>Counts</button>
+  </div>
+  <div class="views">
+    <div class="view" role="tabpanel" id="v-twin" aria-labelledby="t-twin">
+      <div class="hrow"><div class="seg" id="mode" role="group" aria-label="Compare against"><button type="button" data-v="twin" aria-pressed="true">Synthetic twin</button><button type="button" data-v="last" aria-pressed="false">Last quarter</button><button type="button" data-v="yoy" aria-pressed="false">A year before</button></div></div>
+      <div class="read"><span class="big" id="r-big"></span><span class="sub" id="r-sub"></span></div>
+      <div class="chart"><canvas id="c-twin" role="img" aria-label="Git pushes placed in the country each quarter, against what it is compared with"></canvas><div class="tip" id="tw-tip"></div></div>
+      <div class="legend"><span style="--c:var(--ink)">Actual pushes</span><span style="--c:var(--signal)" id="lg-cmp">Twin</span><span style="--c:color-mix(in srgb,var(--signal) 18%,transparent)">Shutdown quarter</span></div>
+      <div class="made" id="made"></div>
+      <div class="range" id="range" hidden></div>
+      <p class="why" id="tw-why" style="margin-top:1rem"></p>
+    </div>
+    <div class="view" role="tabpanel" id="v-plac" aria-labelledby="t-plac" hidden>
+      <div class="chart"><canvas id="c-plac" role="img" aria-label="Fake shutdown gaps for every donor country, with the real gap marked"></canvas><div class="tip" id="pl-tip"></div></div>
+      <div class="legend"><span style="--c:var(--bench)">Fake shutdown in a donor, same quarter</span><span style="--c:color-mix(in srgb,var(--ink) 45%,transparent)">Fake shutdown in its own past</span><span style="--c:var(--signal)">The real gap</span></div>
+      <p class="rtext" id="pl-text" style="margin:.9rem 0 0;font-size:.92rem;line-height:1.55"></p>
+      <div class="notes"><p class="why"><b>How the interval is set.</b> Every donor gets the fake event, and so does the country in earlier quarters. The standard error is the larger of the two spreads, and the permutation p is the share of fake gaps at least as big as the real one.</p><p class="why"><b>The floor.</b> With 106 donors the smallest permutation p is 1 in 107. Corrected for testing nine events with Holm, that floor becomes 0.08.</p></div>
+    </div>
+    <div class="view" role="tabpanel" id="v-chk" aria-labelledby="t-chk" hidden>
+      <p class="verdict" id="ck-v"></p>
+      <ul class="rows" id="ck"></ul>
+      <div class="links"><a class="btn ghost" id="card" href="#" target="_blank" rel="noopener">Report card for this event</a><a class="btn ghost" href="https://github.com/MatinNikoo/internet-shutdowns/blob/main/paper/analysis_plan.pdf" target="_blank" rel="noopener">The analysis plan</a></div>
+    </div>
+    <div class="view" role="tabpanel" id="v-ooni" aria-labelledby="t-ooni" hidden>
+      <div class="chart"><canvas id="c-ooni" role="img" aria-label="OONI network tests per day against the usual level, around the shutdown"></canvas><div class="tip" id="oo-tip"></div></div>
+      <div class="legend" id="oo-leg"><span style="--c:var(--bench)">Tests that day vs usual</span><span style="--c:var(--signal)">Under half, counted as disrupted</span><span style="--c:color-mix(in srgb,var(--ink) 14%,transparent)">Dates in my registry</span></div>
+      <p id="oo-text" style="margin:.9rem 0 0;font-size:.92rem;line-height:1.55"></p>
+      <div class="notes"><p class="why"><b>OONI</b> volunteers run network tests every day, and the count falls toward zero when a country goes dark. It has nothing to do with GitHub, so it's an outside check on my dates.</p><p class="why" id="oo-joint"></p></div>
+    </div>
+    <div class="view" role="tabpanel" id="v-cnt" aria-labelledby="t-cnt" hidden>
+      <div class="scroll"><table class="tbl ctab" id="ct"></table></div>
+      <p class="why" id="ct-why" style="margin-top:1rem"></p>
+    </div>
+  </div>
+</section>
 </section>
 
-<section class="card" aria-labelledby="h2-all">
-  <h2 id="h2-all"><i>02</i>All nine shutdowns</h2>
-  <p>Long shutdowns show up clearly. Short ones get lost in the noise, part 05 shows why. The diamond is where the country would land if every day offline cost exactly one day of work.</p>
-  <canvas id="c-forest" aria-label="Estimated effect of each shutdown with 95 percent intervals"></canvas>
-  <div class="legend"><span style="--c:var(--accent)">Full shutdown</span><span style="--c:var(--bench)">Partial, mobile only or curfews</span><span style="--c:var(--hot)">A day offline costs a day</span></div>
-</section>
-
-<section class="card" aria-labelledby="h3-dose">
-  <h2 id="h3-dose"><i>03</i>Does a day offline cost a day?</h2>
-  <p id="dose-text"></p>
-  <canvas id="c-dose" aria-label="Measured drop against share of the quarter offline"></canvas>
-</section>
-
-<section class="card" aria-labelledby="h4-drift">
-  <h2 id="h4-drift"><i>04</i>Where did the activity go?</h2>
-  <p>GitHub places each account where its connections come from. The number of developers placed in a country almost never falls, it just keeps growing. In the two longest shutdowns it fell, which is what you'd see if people switched to VPNs or left. So some of the drop is people still coding, just showing up somewhere else on the map.</p>
-  <div class="bars" id="bars"></div>
-  <p class="small" style="margin-top:.7rem">Developers placed in the country vs the twin, in the shutdown quarter.</p>
-</section>
-
-<section class="card" aria-labelledby="h5-power">
-  <h2 id="h5-power"><i>05</i>Can quarterly data even see it?</h2>
-  <p>I planted fake shutdowns of known size in countries that never had one, 250 times per size, and checked how often each method caught them. Slide to pick a length.</p>
-  <div class="slider"><input type="range" id="days" min="0" max="45" value="10" step="1" aria-label="Days offline"><output id="pw"></output><span class="small" id="pw-sub"></span></div>
-  <canvas id="c-power" aria-label="Chance of detecting a shutdown by its length"></canvas>
-</section>
-
-<section class="card" aria-labelledby="h6-limits">
-  <h2 id="h6-limits"><i>06</i>What this can't tell you</h2>
-  <p>Shutdowns come with coups, protests and war, so these numbers are the cost of everything happening at once. Part 03 is my way around that, it checks whether the days offline explain the drop on their own. Quarterly data also hides how fast things bounced back within a quarter. And the twin assumes the country would have kept moving like its donors, which matters most for Iran in early 2026, when most of the world jumped about 30%.</p>
-  <div class="links"><a class="btn primary" href="https://github.com/MatinNikoo/internet-shutdowns" target="_blank" rel="noopener">Code and tests</a><a class="btn" href="https://github.com/MatinNikoo/internet-shutdowns/blob/main/memo/memo.pdf" target="_blank" rel="noopener">One page memo</a></div>
+<section class="gl method" aria-labelledby="m-h">
+  <div class="hrow"><div><p class="kick">Stress tests</p><h2 id="m-h">Where it holds and where it can't see</h2></div></div>
+  <div class="tabs" role="tablist" id="mtabs" aria-label="Stress tests">
+    <button type="button" role="tab" id="t-pow" aria-controls="v-pow" aria-selected="true"><i>01</i>Power</button>
+    <button type="button" role="tab" id="t-cri" aria-controls="v-cri" aria-selected="false"><i>02</i>Crises</button>
+    <button type="button" role="tab" id="t-poo" aria-controls="v-poo" aria-selected="false"><i>03</i>Pooled</button>
+    <button type="button" role="tab" id="t-lim" aria-controls="v-lim" aria-selected="false"><i>04</i>Limits</button>
+  </div>
+  <div class="views">
+    <div class="view" role="tabpanel" id="v-pow" aria-labelledby="t-pow">
+      <div class="two"><div>
+        <p style="margin:0 0 .6rem;font-size:.92rem;line-height:1.55">I planted fake shutdowns of known size into countries that never had one, at random quarters, 250 times per size, and counted how often each method flagged them.</p>
+        <div class="slider"><input type="range" id="drop" min="0" max="5" value="2" step="1" aria-label="Size of the planted drop"><output id="pw"></output><span class="small" id="pw-sub"></span></div>
+        <div class="chart"><canvas id="c-pow" role="img" aria-label="How often each method catches a planted drop, by its size"></canvas></div>
+        <div class="legend"><span style="--c:var(--signal)">Synthetic DiD</span><span style="--c:var(--bench)">Synthetic control</span></div></div>
+        <div><div class="scroll"><table class="tbl ptab" id="ptab"></table></div>
+        <p class="why" style="margin-top:.9rem">These runs use at least 8 quarters before the event, so they don't speak for Myanmar or Sudan. Smaller runs shaped like those two gave false alarms 4.0% and 4.5% of the time with the normal p value.</p></div></div>
+    </div>
+    <div class="view" role="tabpanel" id="v-cri" aria-labelledby="t-cri" hidden>
+      <div class="two"><div><div class="chart"><canvas id="c-cri" role="img" aria-label="Ten crises with no shutdown, against their twins"></canvas><div class="tip" id="cr-tip"></div></div>
+        <div class="legend"><span style="--c:var(--bench)">Crisis, no full shutdown</span><span style="--c:var(--signal)">Iran 2026 and Myanmar 2021</span></div></div>
+        <div><p style="margin:0;font-size:.92rem;line-height:1.55" id="cri-text"></p></div></div>
+    </div>
+    <div class="view" role="tabpanel" id="v-poo" aria-labelledby="t-poo" hidden>
+      <div class="two"><div><div class="chart"><canvas id="c-poo" role="img" aria-label="Average gap to the twin in the quarters around a shutdown, all nine events stacked"></canvas></div>
+        <div class="legend"><span style="--c:var(--signal)">Shutdown quarter</span><span style="--c:var(--bench)">Quarters around it, with 95% intervals</span></div></div>
+        <div id="poo-text" style="font-size:.92rem;line-height:1.55"></div></div>
+    </div>
+    <div class="view" role="tabpanel" id="v-lim" aria-labelledby="t-lim" hidden>
+      <ul class="lim">
+        <li><b>It's GitHub's map.</b> Private repos and everything off GitHub are missing, and VPN users count wherever their VPN exits. Some of each drop is activity placed in another country, and I can't say how much. None of it measures what a shutdown costs an economy.</li>
+        <li><b>Each number covers the whole quarter.</b> Iran's 2026 blackouts came with mass protests after a currency collapse and then US and Israeli strikes from 28 February. Myanmar's and Sudan's came with coups. The crises tab shows a crisis alone can move this by about 20%.</li>
+        <li><b>The twin is an assumption.</b> For Iran 2026 the answer depends on whether Iran would have joined the 2026 jump, which moves it between 59% and 69%. I don't know why the jump happened.</li>
+        <li><b>Short shutdowns are invisible one at a time.</b> Kazakhstan, Tanzania, Pakistan and Bangladesh don't show no effect. They show that quarterly data can't see it.</li>
+        <li><b>Myanmar passing every check that can run is weaker than it sounds.</b> It has four quarters before the coup, so it can't be backdated, its time placebos are empty and its conformal p sits at the floor of 0.167.</li>
+        <li><b>Nobody independent has checked this yet.</b></li>
+      </ul>
+      <div class="links"><a class="btn" href="https://github.com/MatinNikoo/internet-shutdowns" target="_blank" rel="noopener">Code and tests</a><a class="btn ghost" href="https://github.com/MatinNikoo/internet-shutdowns/blob/main/paper/paper.pdf" target="_blank" rel="noopener">Paper</a><a class="btn ghost" href="https://github.com/MatinNikoo/internet-shutdowns/blob/main/memo/memo.pdf" target="_blank" rel="noopener">One page memo</a><a class="btn ghost" href="https://github.com/MatinNikoo/internet-shutdowns/tree/main/reports" target="_blank" rel="noopener">All report cards</a></div>
+    </div>
+  </div>
 </section>
 </main>
-<footer class="wrap">Data from GitHub's Innovation Graph (CC0). Event dates from Internet Society Pulse, OONI, NetBlocks reporting and others, linked in the repo.</footer>
+<nav class="wrap rooms" aria-label="Other labs">
+<p class="kick"><b>Other rooms</b></p>
+<div class="rooms-g">
+<a class="gl" href="lab.html" data-lab="lab"><i>Room 03</i><b>Experiment Lab</b><span>Rerun a real 90K player A/B test</span></a>
+<a class="gl" href="simulator.html" data-lab="simulator"><i>Room 05</i><b>App simulator</b><span>A new app's odds of 10K to 1M installs</span></a>
+<a class="gl" href="unchart/" data-lab="unchart"><i>Room 06</i><b>Unchart</b><span>Paste a chart, get its numbers back</span></a>
+</div></nav>
+
+<footer class="wrap"><p>Data from GitHub's Innovation Graph (CC0), OONI daily measurement counts (CC BY-NC-SA 4.0) and the Access Now KeepItOn tracker (CC BY 4.0). Event dates and a source for each one are in the repo's registry.</p>
+  <div class="acts" style="margin-top:.6rem;gap:1.2rem"><a class="lnk" href="https://github.com/MatinNikoo/internet-shutdowns" target="_blank" rel="noopener">Code and tests</a><a class="lnk" href="https://github.com/MatinNikoo/internet-shutdowns/blob/main/memo/memo.pdf" target="_blank" rel="noopener">One page memo</a><a class="lnk" href="https://github.com/MatinNikoo/internet-shutdowns/blob/main/paper/paper.pdf" target="_blank" rel="noopener">Paper</a></div></footer>
 
 <script>
-var D={"labels":["2020Q1","2020Q2","2020Q3","2020Q4","2021Q1","2021Q2","2021Q3","2021Q4","2022Q1","2022Q2","2022Q3","2022Q4","2023Q1","2023Q2","2023Q3","2023Q4","2024Q1","2024Q2","2024Q3","2024Q4","2025Q1","2025Q2","2025Q3","2025Q4","2026Q1"],"n_donors":106,"events":[{"id":"KZ-2022","country":"Kazakhstan","kind":"full","quarters":["2022Q1"],"what":"Nationwide shutdown from 5 Jan 2022 to 10 Jan 2022, with short windows of access each day","source":"https://pulse.internetsociety.org/en/shutdowns/kazakhstan-cuts-off-internet-access/","pre":8,"actual":[82177,118134,104045,128691,151440,147595,119638,142696,141964,192475,171653,305750,329189,325435,262587,283066,309807,304576,247131,333940,398972,446086,408091,560275,747326],"twin":[85192,112850,101923,123703,139963,145624,120552,141333,156272,177241,165750,188058,212708,221253,198032,234136,238969,242771,217506,246470,264582,311656,300661,374940,492718],"sdid":{"pct":-0.0916,"lo":-0.3853,"hi":0.3425,"p":0.3925},"sc":-0.1474,"naive":{"vs_last_clean_quarter":-0.0051,"vs_same_quarter_last_year":-0.0626},"full_stop":-0.0583,"share":[0.05,0.0667],"days":[4.5,6.0],"made_of":[{"name":"Lebanon","w":0.104},{"name":"Puerto Rico","w":0.093},{"name":"T\u00fcrkiye","w":0.05},{"name":"Hungary","w":0.046},{"name":"Bosnia and Herzegovina","w":0.043},{"name":"Morocco","w":0.04}],"drift":{"developers":{"pct":0.0059,"lo":-0.026,"hi":0.0389},"repositories":{"pct":-0.0144,"lo":-0.0628,"hi":0.0366}}},{"id":"SD-2021","country":"Sudan","kind":"full","quarters":["2021Q4"],"what":"Fixed and mobile internet cut on 25 Oct 2021 after the coup, services began returning 18 Nov 2021","source":"https://pulse.internetsociety.org/en/shutdowns/internet-disruption-in-sudan/","pre":7,"actual":[5482,7599,7717,8964,9786,8723,9902,7191,14414,13259,19338,56701,39229,12295,88450,40485,14865,13943,13668,8831,11024,13858,19579,27156,36558],"twin":[5797,7544,7715,8555,9260,9607,9675,10648,11901,13599,13886,15149,16639,17111,16741,18012,17720,18536,17916,20247,20997,26812,26878,33324,44045],"sdid":{"pct":-0.3246,"lo":-0.474,"hi":-0.1329,"p":0.0187},"sc":-0.3843,"naive":{"vs_last_clean_quarter":-0.2738,"vs_same_quarter_last_year":-0.1978},"full_stop":-0.2609,"share":[0.25,0.2717],"days":[23.0,25.0],"made_of":[{"name":"Cyprus","w":0.065},{"name":"Puerto Rico","w":0.065},{"name":"Latvia","w":0.054},{"name":"Palestine","w":0.053},{"name":"Moldova","w":0.047},{"name":"Saudi Arabia","w":0.045}],"drift":{"developers":{"pct":-0.0226,"lo":-0.0427,"hi":-0.002},"repositories":{"pct":-0.0516,"lo":-0.0934,"hi":-0.0078}}},{"id":"BD-2024","country":"Bangladesh","kind":"full","quarters":["2024Q3"],"what":"Nationwide shutdown from 18 Jul 2024, broadband back 24 Jul, mobile back 28 Jul, second nationwide cut 4 to 5 Aug","source":"https://en.wikipedia.org/wiki/2024_Bangladesh_internet_blackouts","pre":18,"actual":[295222,390126,506514,463426,617631,617469,867496,721604,951775,841838,1170835,972713,1178079,1083550,1522648,1357990,1597239,1248660,1573666,1758248,1874593,1995526,2565398,2577601,3026760],"twin":[315995,399232,445057,445548,549225,651120,722836,690672,860932,942631,1035926,983202,1173209,1129314,1294212,1261024,1366619,1357917,1420286,1477360,1691615,2153195,2347875,2725261,3815599],"sdid":{"pct":0.108,"lo":-0.2361,"hi":0.6072,"p":0.1495},"sc":0.061,"naive":{"vs_last_clean_quarter":0.2603,"vs_same_quarter_last_year":0.0335},"full_stop":-0.0978,"share":[0.0761,0.1196],"days":[7.0,11.0],"made_of":[{"name":"Saudi Arabia","w":0.149},{"name":"Madagascar","w":0.109},{"name":"Jordan","w":0.103},{"name":"Uzbekistan","w":0.093},{"name":"India","w":0.08},{"name":"Ecuador","w":0.075}],"drift":{"developers":{"pct":-0.0279,"lo":-0.1037,"hi":0.0543},"repositories":{"pct":0.0028,"lo":-0.0792,"hi":0.0922}}},{"id":"TZ-2025","country":"Tanzania","kind":"full","quarters":["2025Q4"],"what":"Nationwide shutdown from 29 Oct 2025, general access restored 3 Nov 2025","source":"https://globalnetworkinitiative.org/wp-content/uploads/GNI-Statement-on-the-Nationwide-Internet-Shutdown-in-Tanzania-During-the-2025-Elections-3.pdf","pre":23,"actual":[17487,21415,21427,17801,23129,28023,30566,25471,35673,47828,49379,44718,51012,49685,54269,41798,54756,58218,66819,62276,78186,117144,116052,131748,225751],"twin":[17806,23462,22718,21928,25507,30759,33705,30951,40074,46692,55135,48873,57629,54926,61348,54480,62035,66030,69898,70944,84611,113959,120359,138850,196250],"sdid":{"pct":-0.0511,"lo":-0.2217,"hi":0.1568,"p":0.4299},"sc":0.041,"naive":{"vs_last_clean_quarter":0.1352,"vs_same_quarter_last_year":1.1156},"full_stop":-0.0543,"share":[0.0543,0.0543],"days":[5.0,5.0],"made_of":[{"name":"Iraq","w":0.117},{"name":"Cambodia","w":0.11},{"name":"Nepal","w":0.088},{"name":"Senegal","w":0.077},{"name":"Ecuador","w":0.069},{"name":"Palestine","w":0.067}],"drift":{"developers":{"pct":-0.0117,"lo":-0.0472,"hi":0.0251},"repositories":{"pct":-0.0158,"lo":-0.0649,"hi":0.0359}}},{"id":"IR-2025","country":"Iran","kind":"full","quarters":["2025Q2"],"what":"Connectivity fell sharply on 17 Jun 2025 and was almost completely blocked from 18 Jun, services restored 25 Jun 2025","source":"https://en.wikipedia.org/wiki/2025_Internet_blackout_in_Iran","pre":19,"actual":[148536,176080,190556,219516,227874,251212,314655,325208,335784,355711,424187,310890,432451,502595,550631,500107,538364,506752,568093,527387,565809,628498,806458,798320,331042],"twin":[146080,187519,195390,208295,230601,270306,289427,301668,333580,375461,404190,414506,464991,490649,515147,499919,500900,524457,535640,564938,584923,764417,802136,948344,1210202],"sdid":{"pct":-0.1778,"lo":-0.3536,"hi":0.0457,"p":0.0748},"sc":-0.2036,"naive":{"vs_last_clean_quarter":0.1108,"vs_same_quarter_last_year":0.2402},"full_stop":-0.0879,"share":[0.0769,0.0989],"days":[7.0,9.0],"made_of":[{"name":"Uzbekistan","w":0.084},{"name":"Azerbaijan","w":0.078},{"name":"Saudi Arabia","w":0.076},{"name":"South Korea","w":0.057},{"name":"Palestine","w":0.048},{"name":"Jordan","w":0.044}],"drift":{"developers":{"pct":-0.0116,"lo":-0.035,"hi":0.0123},"repositories":{"pct":-0.0059,"lo":-0.0408,"hi":0.0302}}},{"id":"IR-2026","country":"Iran","kind":"full","quarters":["2026Q1"],"what":"Blackout from 8 Jan 2026 with partial return in late January, then a cut of more than 99 percent from 28 Feb 2026 that lasted past the end of the quarter","source":"https://www.thenationalnews.com/future/technology/2026/05/07/iran-internet-blackout/","pre":21,"actual":[148536,176080,190556,219516,227874,251212,314655,325208,335784,355711,424187,310890,432451,502595,550631,500107,538364,506752,568093,527387,565809,628498,806458,798320,331042],"twin":[140263,179679,187150,198472,220310,259488,276356,284531,319392,362317,388041,396439,447190,467522,487656,473113,479850,501782,509359,531556,553181,694587,732687,825453,1067233],"sdid":{"pct":-0.6898,"lo":-0.7557,"hi":-0.6061,"p":0.0093},"sc":-0.7038,"naive":{"vs_last_clean_quarter":-0.5853,"vs_same_quarter_last_year":-0.4149},"full_stop":-0.5889,"share":[0.5333,0.6444],"days":[48.0,58.0],"made_of":[{"name":"Uzbekistan","w":0.091},{"name":"South Korea","w":0.078},{"name":"Sri Lanka","w":0.054},{"name":"Saudi Arabia","w":0.049},{"name":"Ukraine","w":0.047},{"name":"Azerbaijan","w":0.047}],"drift":{"developers":{"pct":-0.064,"lo":-0.0901,"hi":-0.0372},"repositories":{"pct":-0.0938,"lo":-0.129,"hi":-0.057}}},{"id":"IR-2022","country":"Iran","kind":"partial","quarters":["2022Q4"],"what":"Mobile networks cut 4pm to midnight from 21 Sep to 3 Oct 2022 and again on 8, 12 and 15 Oct, regional outages, app stores and messaging apps blocked. Fixed line mostly stayed up","source":"https://ooni.org/post/2022-iran-technical-multistakeholder-report/","pre":10,"actual":[148536,176080,190556,219516,227874,251212,314655,325208,335784,355711,424187,310890,432451,502595,550631,500107,538364,506752,568093,527387,565809,628498,806458,798320,331042],"twin":[141476,177591,183373,202724,220449,255658,280676,297981,319391,355711,373950,398736,419940,430169,441419,466166,456592,491531,490926,560157,572719,743723,777539,936557,1203080],"sdid":{"pct":-0.2203,"lo":-0.4313,"hi":0.069,"p":0.0748},"sc":-0.2381,"naive":{"vs_last_clean_quarter":-0.126,"vs_same_quarter_last_year":-0.044},"full_stop":null,"share":null,"days":null,"made_of":[{"name":"Saudi Arabia","w":0.087},{"name":"Uzbekistan","w":0.086},{"name":"Sri Lanka","w":0.063},{"name":"Indonesia","w":0.059},{"name":"Jamaica","w":0.053},{"name":"Singapore","w":0.045}],"drift":{"developers":{"pct":0.0058,"lo":-0.0296,"hi":0.0425},"repositories":{"pct":-0.0513,"lo":-0.1232,"hi":0.0266}}},{"id":"MM-2021","country":"Myanmar","kind":"partial","quarters":["2021Q1","2021Q2"],"what":"Coup on 1 Feb 2021, 30 hour nationwide cut on 6 to 7 Feb, nightly cuts from 15 Feb to 28 Apr, all mobile data off from 15 Mar, then whitelisting","source":"https://www.article19.org/resources/myanmar-must-immediately-reinstate-internet-access/","pre":4,"actual":[42148,51434,57173,60893,32835,27333,42119,41611,48639,52485,59529,69555,90299,99621,114784,113778,121804,93155,77085,75209,77745,94234,117815,122028,174641],"twin":[42362,52584,56705,60680,64064,73764,73022,76243,88187,103452,107537,112808,125438,130762,129920,132633,132781,143542,141214,153603,158684,202665,209409,246751,313380],"sdid":{"pct":-0.5642,"lo":-0.6865,"hi":-0.3941,"p":0.0187},"sc":-0.5675,"naive":{"vs_last_clean_quarter":-0.4608,"vs_same_quarter_last_year":-0.221},"full_stop":null,"share":null,"days":null,"made_of":[{"name":"Madagascar","w":0.046},{"name":"Lebanon","w":0.04},{"name":"Rwanda","w":0.038},{"name":"Jamaica","w":0.031},{"name":"Uzbekistan","w":0.029},{"name":"Palestine","w":0.029}],"drift":{"developers":{"pct":-0.1167,"lo":-0.1428,"hi":-0.0899},"repositories":{"pct":-0.1935,"lo":-0.2502,"hi":-0.1324}}},{"id":"PK-2023","country":"Pakistan","kind":"partial","quarters":["2023Q2"],"what":"Mobile internet suspended from 9 May 2023, restored 12 May 2023. Fixed line stayed up","source":"https://pulse.internetsociety.org/shutdowns/pakistan-blocks-mobile-internet-access-in-some-regions-amidst-protests","pre":13,"actual":[235987,389032,380776,389724,392588,469927,493800,517595,570533,582099,755331,732949,839263,895306,1139050,1121678,1323587,1331617,1716373,1730917,1872816,2157303,2770560,2870837,3523185],"twin":[257765,383383,377416,383138,399471,485841,497256,520734,562987,651315,745274,744388,834775,865915,911749,883751,865331,929267,973108,1029462,1078637,1469913,1599840,1889629,2471093],"sdid":{"pct":0.0339,"lo":-0.1732,"hi":0.293,"p":0.7383},"sc":0.069,"naive":{"vs_last_clean_quarter":0.0668,"vs_same_quarter_last_year":0.5381},"full_stop":null,"share":null,"days":null,"made_of":[{"name":"Saudi Arabia","w":0.074},{"name":"India","w":0.067},{"name":"Iraq","w":0.064},{"name":"Panama","w":0.048},{"name":"United Arab Emirates","w":0.042},{"name":"Morocco","w":0.04}],"drift":{"developers":{"pct":0.0033,"lo":-0.0255,"hi":0.033},"repositories":{"pct":0.0073,"lo":-0.0835,"hi":0.1071}}}],"dose":{"beta":1.3099,"se":0.1291,"lo":1.057,"hi":1.5629,"beta_days_low":1.5107,"beta_days_high":1.1357,"without":"IR-2026","beta_without":1.2561,"se_without":0.3814},"power":[{"drop":0.0,"sdid":0.016,"sc":0.028,"coverage":0.984},{"drop":0.05,"sdid":0.044,"sc":0.032,"coverage":0.976},{"drop":0.1,"sdid":0.064,"sc":0.032,"coverage":0.988},{"drop":0.2,"sdid":0.412,"sc":0.256,"coverage":0.968},{"drop":0.35,"sdid":0.88,"sc":0.808,"coverage":0.988},{"drop":0.5,"sdid":0.952,"sc":0.932,"coverage":0.976}]};
-(function(){
-  var $=function(s){return document.querySelector(s)}, root=document.documentElement;
-  var reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
-  function col(n){return getComputedStyle(root).getPropertyValue(n).trim()}
-  function pct(x,d){return (x>0?'+':x<0?'−':'')+Math.abs(x*100).toFixed(d==null?0:d)+'%'}
-  function setup(c){var r=c.getBoundingClientRect(),dpr=Math.min(devicePixelRatio||1,2);c.width=Math.round(r.width*dpr);c.height=Math.round(r.height*dpr);var g=c.getContext('2d'),zk=(parseFloat(getComputedStyle(document.documentElement).fontSize)/16||1);g.setTransform(dpr*zk,0,0,dpr*zk,0,0);return {g:g,W:r.width/zk,H:r.height/zk}}
-  var EV={};D.events.forEach(function(e){EV[e.id]=e});
-  var L=D.labels;
-  var narrow=function(){return innerWidth<600};
-  function font(px,w){return (w||400)+' '+px+'px '+col('--body')}
-  function mono(px){return '500 '+px+'px '+col('--mono')}
-
-  // facts
-  var ir=EV['IR-2026'];
-  $('#facts').innerHTML=
-    '<div class="fact"><b>'+pct(ir.sdid.pct)+'</b><span>Iran\'s coding activity in early 2026, the quarter of its two blackouts</span></div>'+
-    '<div class="fact"><b>'+D.dose.beta.toFixed(2)+'</b><span>days of work lost for every day offline</span></div>'+
-    '<div class="fact"><b>'+D.n_donors+'</b><span>countries that never had a shutdown, used to build the twins</span></div>';
-
-  // 01 twin
-  var order=['IR-2026','MM-2021','SD-2021','IR-2022','IR-2025','KZ-2022','BD-2024','TZ-2025','PK-2023'];
-  var cur='IR-2026', mode='twin', anim=1, from=null;
-  $('#chips').innerHTML=order.map(function(id){var e=EV[id];return '<button class="chip" type="button" data-id="'+id+'" aria-pressed="'+(id===cur)+'">'+e.country+' <small>'+id.slice(3)+'</small></button>'}).join('');
-  [].forEach.call(document.querySelectorAll('.chip'),function(b){b.addEventListener('click',function(){cur=b.dataset.id;[].forEach.call(document.querySelectorAll('.chip'),function(x){x.setAttribute('aria-pressed',x===b)});go()})});
-  [].forEach.call(document.querySelectorAll('.seg button'),function(b){b.addEventListener('click',function(){mode=b.dataset.mode;[].forEach.call(document.querySelectorAll('.seg button'),function(x){x.setAttribute('aria-pressed',x===b)});go()})});
-  function cmpSeries(e){
-    var t=L.indexOf(e.quarters[0]), a=e.actual, s=e.twin.slice();
-    if(mode==='twin') return s;
-    var ref=mode==='last'?(e.actual[t]/(1+e.naive.vs_last_clean_quarter)):a[t-4];
-    var refT=mode==='last'?L.indexOf(refQ(e)):t-4;
-    return a.map(function(v,i){return i<refT?null:i<=t?ref:null});
+// pieces every lab room shares: theme switch, cursor light on the glass, tabs, and redraw hooks
+var UI=(function(){
+  var root=document.documentElement,reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
+  function cur(){var t=root.getAttribute('data-theme');return t||(matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light')}
+  var meta=document.querySelector('meta[name="theme-color"]');
+  function syncMeta(){if(meta)meta.setAttribute('content',cur()==='dark'?'#0A0A0B':'#ECE9E2')}
+  syncMeta();
+  var hooks=[];function onTheme(f){hooks.push(f)}
+  function fire(){syncMeta();hooks.forEach(function(f){try{f()}catch(e){}})}
+  // anything that changes the colors (the switch, another tab, the homepage console) redraws the charts
+  new MutationObserver(function(){requestAnimationFrame(fire)}).observe(root,{attributes:true,attributeFilter:['data-theme','style']});
+  try{matchMedia('(prefers-color-scheme: dark)').addEventListener('change',fire)}catch(e){}
+  addEventListener('themechange',fire);
+  var tb=document.getElementById('theme');
+  if(tb)tb.addEventListener('click',function(){
+    var t=cur()==='dark'?'light':'dark';
+    function go(){root.setAttribute('data-theme',t);try{localStorage.setItem('theme',t)}catch(e){}dispatchEvent(new Event('mntheme'))}
+    if(!document.startViewTransition||reduce){go();return}
+    var r=tb.getBoundingClientRect(),x=r.left+r.width/2,y=r.top+r.height/2,R=Math.hypot(Math.max(x,innerWidth-x),Math.max(y,innerHeight-y));
+    document.startViewTransition(go).ready.then(function(){
+      root.animate({clipPath:['circle(0px at '+x+'px '+y+'px)','circle('+R+'px at '+x+'px '+y+'px)']},{duration:650,easing:'cubic-bezier(.65,0,.35,1)',pseudoElement:'::view-transition-new(root)'});
+    }).catch(function(){});
+  });
+  // the soft light that follows the cursor on every pane (mouse and pen only)
+  if(matchMedia('(hover:hover)').matches){
+    var pend=null,pe=null;
+    document.addEventListener('pointermove',function(e){var g=e.target.closest&&e.target.closest('.gl');if(!g)return;pe=e;pend=g;
+      if(!glow.q){glow.q=1;requestAnimationFrame(glow)}},{passive:true});
+    function glow(){glow.q=0;if(!pend||!pe)return;var b=pend.getBoundingClientRect();pend.style.setProperty('--mx',(pe.clientX-b.left)+'px');pend.style.setProperty('--my',(pe.clientY-b.top)+'px')}
   }
-  function refQ(e){var t=L.indexOf(e.quarters[0]),r=e.actual[t]/(1+e.naive.vs_last_clean_quarter),best=t-1,bd=1e18;for(var i=0;i<t;i++){var d=Math.abs(e.actual[i]-r);if(d<bd){bd=d;best=i}}return L[best]}
-  var prevCmp=null,prevAct=null;
-  function go(){
-    var e=EV[cur], t=L.indexOf(e.quarters[0]);
-    var val=mode==='twin'?e.sdid.pct:mode==='last'?e.naive.vs_last_clean_quarter:e.naive.vs_same_quarter_last_year;
-    $('#r-big').textContent=pct(val);
-    $('#r-big').className='big'+(val>-0.02?' flat':'');
-    var q=e.quarters.join(' and ');
-    $('#r-sub').innerHTML=mode==='twin'?'vs its twin in '+q+'. 95% interval '+pct(e.sdid.lo)+' to '+pct(e.sdid.hi)+'. Plain synthetic control says '+pct(e.sc)
-      :mode==='last'?'vs the last quarter before it. This ignores that most countries were growing'
-      :'vs the same quarter a year earlier. This ignores a year of growth';
-    $('#lg-cmp').textContent=mode==='twin'?'Twin':mode==='last'?'Last quarter':'A year earlier';
-    $('#made').innerHTML=mode==='twin'?'<b>The twin is made of</b> '+e.made_of.slice(0,5).map(function(d){return d.name+' '+Math.round(d.w*100)+'%'}).join(', ')+' and '+(D.n_donors-5)+' others with smaller weights.':'';
-    $('#what').innerHTML=e.what+'. <a href="'+e.source+'" target="_blank" rel="noopener">Source</a>';
-    from={c:prevCmp,a:prevAct}; anim=reduce||!prevCmp?1:0; prevCmp=cmpSeries(e); prevAct=e.actual.slice();
-    if(!reduce&&from.c) tick(); else drawTwin(1);
+  // the Labs menu in the top bar
+  var lb=document.getElementById('labs-b'),lm=document.getElementById('labs-m');
+  if(lb&&lm){
+    var here=root.getAttribute('data-lab');[].forEach.call(lm.querySelectorAll('a'),function(a){if(a.getAttribute('data-lab')===here)a.setAttribute('aria-current','page')});
+    function openM(on){lb.setAttribute('aria-expanded',on);if(on){lm.hidden=false;requestAnimationFrame(function(){lm.classList.add('on')})}else{lm.classList.remove('on');lm.hidden=true}}
+    lb.addEventListener('click',function(e){e.stopPropagation();openM(lm.hidden)});
+    document.addEventListener('click',function(e){if(!lm.hidden&&!lm.contains(e.target))openM(false)});
+    document.addEventListener('keydown',function(e){if(e.key==='Escape'&&!lm.hidden){openM(false);lb.focus()}});
   }
-  function tick(){anim=Math.min(1,anim+0.06);drawTwin(anim);if(anim<1)requestAnimationFrame(tick)}
-  function ease(x){return 1-Math.pow(1-x,3)}
-  function drawTwin(p){
-    var c=$('#c-twin'),S=setup(c),g=S.g,W=S.W,H=S.H,e=EV[cur],tq=e.quarters.map(function(q){return L.indexOf(q)});
-    var k=ease(p), A=e.actual, C=prevCmp;
-    function mix(a,b,i){if(!from||!from[a]||from[a][i]==null||b[i]==null)return b[i];return from[a][i]+(b[i]-from[a][i])*k}
-    var acts=A.map(function(v,i){return mix('a',A,i)}), cmps=C.map(function(v,i){return C[i]==null?null:mix('c',C,i)});
-    var vals=acts.concat(cmps.filter(function(v){return v!=null}));
-    var top=Math.max.apply(null,vals)*1.12;
-    var padL=narrow()?38:50,padR=12,padT=12,padB=26,w=W-padL-padR,h=H-padT-padB;
-    var X=function(i){return padL+w*i/(L.length-1)},Y=function(v){return padT+h*(1-v/top)};
-    g.clearRect(0,0,W,H);
-    g.fillStyle=col('--hot-soft');tq.forEach(function(i){g.fillRect(X(i)-w/(L.length-1)/2,padT,w/(L.length-1),h)});
-    g.strokeStyle=col('--line');g.lineWidth=1;g.fillStyle=col('--muted');g.font=mono(10.5);g.textAlign='right';g.textBaseline='middle';
-    var step=niceStep(top/4);for(var v=0;v<=top;v+=step){g.beginPath();g.moveTo(padL,Y(v));g.lineTo(W-padR,Y(v));g.stroke();g.fillText(fmtK(v),padL-6,Y(v))}
-    g.textAlign='center';g.textBaseline='top';for(var i=0;i<L.length;i+=4)g.fillText(L[i].slice(0,4),X(i),H-padB+8);
-    // comparison
-    g.setLineDash([5,4]);g.strokeStyle=col('--bench');g.lineWidth=2;g.beginPath();var on=false;
-    cmps.forEach(function(v,i){if(v==null){on=false;return}if(!on){g.moveTo(X(i),Y(v));on=true}else g.lineTo(X(i),Y(v))});g.stroke();g.setLineDash([]);
-    // actual
-    g.strokeStyle=col('--accent');g.lineWidth=2.4;g.lineJoin='round';g.beginPath();acts.forEach(function(v,i){i?g.lineTo(X(i),Y(v)):g.moveTo(X(i),Y(v))});g.stroke();
-    // gap arrow
-    var t=tq[0], a=acts[t], b=cmps[t];
-    if(b!=null){g.strokeStyle=col('--hot');g.fillStyle=col('--hot');g.lineWidth=1.6;var x=X(t)+ (t>L.length-3?-7:7);
-      g.beginPath();g.moveTo(x,Y(b));g.lineTo(x,Y(a));g.stroke();var dir=a<b?1:-1;g.beginPath();g.moveTo(x,Y(a));g.lineTo(x-4,Y(a)-6*dir);g.lineTo(x+4,Y(a)-6*dir);g.closePath();g.fill();
-      g.beginPath();g.arc(X(t),Y(b),3.5,0,7);g.fillStyle=col('--surface');g.fill();g.strokeStyle=col('--bench');g.lineWidth=2;g.stroke()}
-    g.beginPath();g.arc(X(t),Y(a),4,0,7);g.fillStyle=col('--accent');g.fill();
+  function css(n){return getComputedStyle(root).getPropertyValue(n).trim()}
+  // tabs with the sliding ink pill, arrow keys and a remembered pick per page
+  function tabs(list,onShow){
+    var bs=[].slice.call(list.querySelectorAll('[role=tab]')),ind=document.createElement('i');ind.className='ind';list.appendChild(ind);
+    function place(b){ind.style.width=b.offsetWidth+'px';ind.style.transform='translateX('+b.offsetLeft+'px)'}
+    function show(i,focus,quiet){
+      bs.forEach(function(b,k){var on=k===i,p=document.getElementById(b.getAttribute('aria-controls'));b.setAttribute('aria-selected',on);b.tabIndex=on?0:-1;
+        if(p){if(on){if(p.hidden){p.hidden=false;if(!quiet&&!reduce){p.classList.remove('enter');void p.offsetWidth;p.classList.add('enter')}}}else p.hidden=true}});
+      place(bs[i]);if(focus)bs[i].focus();if(onShow)onShow(i,bs[i]);
+    }
+    bs.forEach(function(b,i){b.addEventListener('click',function(){show(i)});
+      b.addEventListener('keydown',function(e){var k=e.key==='ArrowRight'?1:e.key==='ArrowLeft'?-1:0;if(e.key==='Home'){e.preventDefault();show(0,true)}else if(e.key==='End'){e.preventDefault();show(bs.length-1,true)}else if(k){e.preventDefault();show((i+k+bs.length)%bs.length,true)}})});
+    var start=0;bs.forEach(function(b,i){if(b.getAttribute('aria-selected')==='true')start=i});
+    show(start,false,true);requestAnimationFrame(function(){list.classList.add('ready')});
+    addEventListener('resize',function(){bs.forEach(function(b){if(b.getAttribute('aria-selected')==='true')place(b)})});
+    if(document.fonts&&document.fonts.ready)document.fonts.ready.then(function(){bs.forEach(function(b){if(b.getAttribute('aria-selected')==='true')place(b)})});
+    return{show:show,index:function(){var i=0;bs.forEach(function(b,k){if(b.getAttribute('aria-selected')==='true')i=k});return i}};
   }
-  function niceStep(x){var p=Math.pow(10,Math.floor(Math.log10(x))),n=x/p;return (n<1.5?1:n<3.5?2:n<7.5?5:10)*p}
-  function fmtK(v){return v>=1e6?(v/1e6).toFixed(v%1e6?1:0)+'M':v>=1e3?Math.round(v/1e3)+'k':Math.round(v)}
-
-  // 02 forest
-  function drawForest(){
-    var c=$('#c-forest'),S=setup(c),g=S.g,W=S.W,H=S.H;
-    var rows=D.events.slice().sort(function(a,b){return a.sdid.pct-b.sdid.pct});
-    var nm=narrow();g.font=font(nm?11.5:13,600);var padL=12+Math.max.apply(null,rows.map(function(e){return g.measureText(e.country+' '+e.id.slice(3)).width})),padR=14,padT=6,padB=28,w=W-padL-padR,h=H-padT-padB,rh=h/rows.length;
-    var lo=-0.8,hi=0.65,X=function(v){return padL+w*(v-lo)/(hi-lo)};
-    g.clearRect(0,0,W,H);g.font=mono(10.5);g.fillStyle=col('--muted');g.textAlign='center';g.textBaseline='top';
-    [-0.75,-0.5,-0.25,0,0.25,0.5].forEach(function(v){g.strokeStyle=v===0?col('--ink'):col('--line');g.lineWidth=1;g.beginPath();g.moveTo(X(v),padT);g.lineTo(X(v),padT+h);g.stroke();g.fillText(pct(v),X(v),padT+h+8)});
-    rows.forEach(function(e,i){var y=padT+rh*(i+.5),cc=e.kind==='full'?col('--accent'):col('--bench');
-      g.globalAlpha=.4;g.strokeStyle=cc;g.lineWidth=3;g.lineCap='round';g.beginPath();g.moveTo(X(Math.max(lo,e.sdid.lo)),y);g.lineTo(X(Math.min(hi,e.sdid.hi)),y);g.stroke();g.globalAlpha=1;
-      g.fillStyle=cc;g.beginPath();g.arc(X(e.sdid.pct),y,5,0,7);g.fill();
-      if(e.full_stop!=null){var x=X(e.full_stop);g.strokeStyle=col('--hot');g.lineWidth=1.8;g.fillStyle=col('--surface');g.beginPath();g.moveTo(x,y-5.5);g.lineTo(x+5.5,y);g.lineTo(x,y+5.5);g.lineTo(x-5.5,y);g.closePath();g.fill();g.stroke()}
-      g.fillStyle=e.id===cur?col('--accent'):col('--ink');g.font=font(nm?11.5:13,e.id===cur?600:400);g.textAlign='right';g.textBaseline='middle';g.fillText(e.country+' '+e.id.slice(3),padL-12,y)});
-  }
-
-  // 03 dose
-  var dr=D.dose;
-  $('#dose-text').innerHTML='If coding just pauses while the internet is off and picks back up after, a country offline for a third of a quarter should land a third below its twin. Across the six full shutdowns, each day offline cost about <b>'+dr.beta.toFixed(2)+' days</b> of work (95% interval '+dr.lo.toFixed(2)+' to '+dr.hi.toFixed(2)+'). So people didn\'t make up the lost time. Maybe it even cost a little more, but without Iran 2026 the estimate is too loose to say much beyond "about a day".';
-  function drawDose(){
-    var c=$('#c-dose'),S=setup(c),g=S.g,W=S.W,H=S.H,nm=narrow();
-    var padL=nm?40:52,padR=14,padT=12,padB=34,w=W-padL-padR,h=H-padT-padB;
-    var X=function(s){return padL+w*s/0.66},Y=function(v){return padT+h*(0.62-v)/(0.62+0.8)};
-    g.clearRect(0,0,W,H);g.font=mono(10.5);g.fillStyle=col('--muted');
-    g.textAlign='right';g.textBaseline='middle';[-0.75,-0.5,-0.25,0,0.25,0.5].forEach(function(v){g.strokeStyle=v===0?col('--ink'):col('--line');g.lineWidth=1;g.beginPath();g.moveTo(padL,Y(v));g.lineTo(W-padR,Y(v));g.stroke();g.fillText(pct(v),padL-6,Y(v))});
-    g.textAlign='center';g.textBaseline='top';[0,.1,.2,.3,.4,.5,.6].forEach(function(s){g.fillText(Math.round(s*100)+'%',X(s),padT+h+8)});
-    g.fillText('share of the quarter offline',padL+w/2,padT+h+21);
-    g.setLineDash([5,4]);g.strokeStyle=col('--hot');g.lineWidth=1.6;g.beginPath();g.moveTo(X(0),Y(0));g.lineTo(X(.66),Y(-.66));g.stroke();g.setLineDash([]);
-    g.strokeStyle=col('--accent');g.lineWidth=2.2;g.beginPath();for(var s=0;s<=.66;s+=.01){var v=Math.exp(dr.beta*Math.log(1-s))-1;s?g.lineTo(X(s),Y(v)):g.moveTo(X(s),Y(v))}g.stroke();
-    D.events.filter(function(e){return e.kind==='full'}).forEach(function(e){var m=(e.share[0]+e.share[1])/2,x=X(m),y=Y(e.sdid.pct);
-      g.globalAlpha=.35;g.strokeStyle=col('--accent');g.lineWidth=3;g.beginPath();g.moveTo(x,Y(Math.min(.6,e.sdid.hi)));g.lineTo(x,Y(e.sdid.lo));g.moveTo(X(e.share[0]),y);g.lineTo(X(e.share[1]),y);g.stroke();g.globalAlpha=1;
-      g.fillStyle=col('--accent');g.beginPath();g.arc(x,y,5,0,7);g.fill();
-      if(nm&&m<.2&&e.id!=='BD-2024')return;g.fillStyle=col('--ink');g.font=font(nm?10.5:12);g.textAlign=m>.5?'right':'left';g.textBaseline='bottom';g.fillText(e.country+' '+e.id.slice(3),x+(m>.5?-8:8),y-5)});
-    g.font=font(nm?10.5:12);g.textAlign='left';g.textBaseline='top';g.fillStyle=col('--hot');g.fillText('a day costs a day',X(.43),Y(-.36));
-    g.fillStyle=col('--accent');g.fillText('best fit',X(.36),Y(-.6));
-  }
-
-  // 04 drift bars
-  var drift=['MM-2021','IR-2026','SD-2021','BD-2024','TZ-2025','IR-2025','IR-2022','KZ-2022','PK-2023'];
-  $('#bars').innerHTML=drift.map(function(id){var d=EV[id].drift.developers,v=d.pct;var wpct=Math.min(50,Math.abs(v)/0.15*50);
-    return '<div class="bar"><span>'+EV[id].country+' '+id.slice(3)+'</span><span class="track"><i style="'+(v<0?'right:50%;width:'+wpct+'%':'left:50%;right:auto;width:'+wpct+'%;border-radius:0 4px 4px 0')+'"></i></span><span>'+pct(v,1)+'</span></div>'}).join('');
-
-  // 05 power
-  var P=D.power;
-  function powerAt(days){var d=days/91;for(var i=1;i<P.length;i++){if(d<=P[i].drop){var a=P[i-1],b=P[i],f=(d-a.drop)/(b.drop-a.drop);return a.sdid+f*(b.sdid-a.sdid)}}return P[P.length-1].sdid}
-  function drawPower(){
-    var days=+$('#days').value,pw=powerAt(days);
-    $('#pw').textContent=Math.round(pw*100)+'%';
-    $('#pw-sub').textContent=days===0?'false alarms when nothing happened':'chance a '+days+' day shutdown gets flagged';
-    var c=$('#c-power'),S=setup(c),g=S.g,W=S.W,H=S.H,padL=40,padR=12,padT=10,padB=26,w=W-padL-padR,h=H-padT-padB,maxD=46;
-    var X=function(d){return padL+w*d/maxD},Y=function(p){return padT+h*(1-p)};
-    g.clearRect(0,0,W,H);g.font=mono(10.5);g.fillStyle=col('--muted');g.textAlign='right';g.textBaseline='middle';
-    [0,.5,.8,1].forEach(function(p){g.strokeStyle=p===.8?col('--hot'):col('--line');g.setLineDash(p===.8?[4,4]:[]);g.lineWidth=1;g.beginPath();g.moveTo(padL,Y(p));g.lineTo(W-padR,Y(p));g.stroke();g.fillText(Math.round(p*100)+'%',padL-6,Y(p))});g.setLineDash([]);
-    g.textAlign='center';g.textBaseline='top';[0,10,20,30,40].forEach(function(d){g.fillText(d+'d',X(d),padT+h+8)});
-    g.strokeStyle=col('--accent');g.lineWidth=2.2;g.beginPath();for(var d=0;d<=maxD;d+=.5){var p=powerAt(d);d?g.lineTo(X(d),Y(p)):g.moveTo(X(d),Y(p))}g.stroke();
-    g.fillStyle=col('--accent');g.beginPath();g.arc(X(days),Y(pw),6,0,7);g.fill();
-  }
-  $('#days').addEventListener('input',drawPower);
-
-  function all(){drawTwin(1);drawForest();drawDose();drawPower()}
-  go();all();
-  var rt;addEventListener('resize',function(){clearTimeout(rt);rt=setTimeout(all,120)});
-  var mq=matchMedia('(prefers-color-scheme: dark)');if(mq.addEventListener)mq.addEventListener('change',all);
-  document.querySelectorAll('.chip').forEach(function(b){b.addEventListener('click',drawForest)});
-  if(document.fonts&&document.fonts.ready)document.fonts.ready.then(all);
+  function seg(el,on){[].forEach.call(el.querySelectorAll('button'),function(b){b.addEventListener('click',function(){
+    [].forEach.call(el.querySelectorAll('button'),function(x){x.setAttribute('aria-pressed',x===b?'true':'false')});on(b.getAttribute('data-v'),b)})})}
+  function segSet(el,v){[].forEach.call(el.querySelectorAll('button'),function(x){x.setAttribute('aria-pressed',x.getAttribute('data-v')===String(v)?'true':'false')})}
+  // set text and flash it when it changed
+  function put(el,txt){if(!el)return;if(el.textContent!==txt){el.textContent=txt;if(!reduce&&el.isConnected){el.classList.remove('flash');void el.offsetWidth;el.classList.add('flash')}}}
+  // a canvas sized to its box at the screen's pixel density, drawn in CSS pixels
+  function canvas(cv,ratio,maxH){
+    var w=cv.parentNode.clientWidth,h=Math.round(Math.min(w*ratio,maxH||1e9)),lite=root.classList.contains('lite'),dpr=Math.min(devicePixelRatio||1,lite?1.5:2);
+    cv.style.height=h+'px';cv.width=Math.round(w*dpr);cv.height=Math.round(h*dpr);var x=cv.getContext('2d');x.setTransform(dpr,0,0,dpr,0,0);x.clearRect(0,0,w,h);return{x:x,w:w,h:h}}
+  function count(name){if(window.goatcounter&&window.goatcounter.count){try{window.goatcounter.count({path:name,event:true})}catch(e){}}}
+  var rt;function onResize(f){var lastW=innerWidth;addEventListener('resize',function(){if(innerWidth===lastW)return;lastW=innerWidth;clearTimeout(rt);rt=setTimeout(f,120)})}
+  function esc(s){return String(s).replace(/[&<>"]/g,function(c){return{"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]})}
+  return{reduce:reduce,css:css,tabs:tabs,seg:seg,segSet:segSet,put:put,canvas:canvas,onTheme:onTheme,onResize:onResize,count:count,esc:esc,dark:function(){return cur()==='dark'}};
 })();
 </script>
+
+<script>
+var SD={"labels":["2020Q1","2020Q2","2020Q3","2020Q4","2021Q1","2021Q2","2021Q3","2021Q4","2022Q1","2022Q2","2022Q3","2022Q4","2023Q1","2023Q2","2023Q3","2023Q4","2024Q1","2024Q2","2024Q3","2024Q4","2025Q1","2025Q2","2025Q3","2025Q4","2026Q1"],"n":106,"ev":[{"id":"KZ-2022","iso":"KZ","c":"Kazakhstan","kind":"full","q":["2022Q1"],"what":"Nationwide shutdown from 5 Jan 2022 to 10 Jan 2022, with short windows of access each day","src":"https://pulse.internetsociety.org/en/shutdowns/kazakhstan-cuts-off-internet-access/","pre":8,"a":[82177,118134,104045,128691,151440,147595,119638,142696,141964,192475,171653,305750,329189,325435,262587,283066,309807,304576,247131,333940,398972,446086,408091,560275,747326],"t":[85192,112850,101923,123703,139963,145624,120552,141333,156272,177241,165750,188058,212708,221253,198032,234136,238969,242771,217506,246470,264582,311656,300661,374940,492718],"days":[4.5,6.0],"sdid":{"pct":-0.0916,"lo":-0.3853,"hi":0.3425,"p_perm":0.3925,"p_normal":0.6299,"se":0.1993},"sc":-0.1474,"ascm":-0.1431,"naive":{"vs_last_clean_quarter":-0.0051,"vs_same_quarter_last_year":-0.0626},"made":[{"name":"Lebanon","w":0.104},{"name":"Puerto Rico","w":0.093},{"name":"Türkiye","w":0.05},{"name":"Hungary","w":0.046},{"name":"Bosnia and Herzegovina","w":0.043},{"name":"Morocco","w":0.04}],"sp":[-0.0006,0.1815,-0.071,-0.0406,0.0876,-0.1382,0.0112,-0.0682,-0.0108,-0.0235,-0.1704,-0.0616,-0.1748,0.1003,0.0086,-0.0448,0.0684,-0.376,-0.1989,-0.1932,0.0385,0.1818,0.0576,0.0269,0.0142,-0.1184,0.0192,-0.0431,0.0207,0.0065,0.0855,1.8662,0.0046,0.0885,0.0774,0.0109,0.4174,0.0133,-0.0481,0.0535,-0.0341,-0.0368,0.0333,-0.0651,-0.1176,-0.0058,0.0529,-0.3147,-0.0716,0.0769,-0.1306,-0.5368,-0.0878,0.6303,0.0253,-0.0825,-0.1083,-0.0451,-0.3025,-0.0134,-0.1203,-0.0547,0.0646,-0.0483,0.2171,0.0318,0.0192,0.0232,-0.1151,0.9119,-0.0939,0.0024,-0.0305,0.1072,-0.1682,-0.0325,-0.1138,-0.0839,0.0775,0.1714,0.1868,0.1143,-0.1129,0.01,0.0328,-0.0606,0.5329,-0.2177,0.0224,-0.0802,0.1376,-0.0523,-0.029,-0.0871,-0.1753,-0.1445,0.1329,-0.0719,-0.2368,0.2262,0.0903,-0.0469,-0.0929,-0.0489,-0.1572,-0.162],"tp":[-0.1557,-0.103,-0.0279],"conf":{"p":0.3333,"min_p":0.1111,"lo_pct":-0.9179,"hi_pct":1.7183},"back":{"held":[-0.1168,-0.0914],"q":["2021Q3","2021Q4"],"inside":true},"brk":0.0,"loo":{"n":29,"min":-0.1014,"max":-0.0804},"pools":{"no_keepiton_shutdown":{"n":82,"pct":-0.1111,"pp":0.2169,"same":true},"same_continent":{"n":29,"pct":-0.0905,"pp":0.5667,"same":true},"same_income":{"n":33,"pct":-0.0683,"pp":0.5294,"same":true},"no_neighbors":{"n":102,"pct":-0.0966,"pp":0.3883,"same":true}},"holm":1.0,"holmp":1.0,"checks":{"C1_holm":false,"F2_backdate":true,"F3_donors":true,"estimators_agree":false,"breakdown_above_1":false,"F2_note":""},"clear":false,"passes":false,"oc":{"git_pushes":{"pct":-0.0916,"lo":-0.3853,"hi":0.3425,"pp":0.3925,"raw":-0.0051},"developers":{"pct":0.0059,"lo":-0.026,"hi":0.0389,"pp":0.5514,"raw":0.0879},"repositories":{"pct":-0.0144,"lo":-0.0628,"hi":0.0366,"pp":0.5234,"raw":0.0801},"organizations":{"pct":-0.0086,"lo":-0.0413,"hi":0.0253,"pp":0.4579,"raw":0.0204}},"ooni":{"base":1498.0,"dd":10,"days":90,"first":"2022-01-01","last":"2022-03-27","win":["2022-01-05","2022-01-10"],"hit":true,"start":"2021-10-02","q0":"2022-01-01","v":[889,2610,734,965,1366,1485,22,1446,1673,1284,2019,1711,1169,1581,1721,499,1609,1363,1242,2033,1548,1503,1817,1399,1393,1576,1833,2112,639,1030,1402,1635,1493,898,1341,3077,998,1298,1189,1724,1468,1505,1578,1518,1339,1894,1367,1430,1611,798,1855,1234,1405,2031,1354,1226,1678,1420,1583,1655,2018,2158,2042,3510,3723,1267,2451,2991,1335,1863,4440,2416,2411,1503,2735,331,518,1055,806,1870,1498,1177,2557,979,1143,3110,1273,2004,4210,1388,20,672,865,282,2294,1351,0,216,407,318,2201,5611,3197,7774,3106,1722,2276,2949,3896,3495,3094,3205,707,1387,1586,2437,2516,2080,2908,1771,3222,2768,2532,3031,2248,2265,1805,2615,2469,2553,2703,2042,1838,1671,2092,1850,3422,2090,1533,2055,2166,3636,2605,2853,2659,1854,1235,1521,1936,324,1210,1359,358,1828,990,1652,978,1829,3337,3074,3391,2793,2236,2514,2175,2461,2281,2607,3560,2818,2944,1774,2017,1538,1866,1923,554,2259,2268,3664,2862]}},{"id":"SD-2021","iso":"SD","c":"Sudan","kind":"full","q":["2021Q4"],"what":"Fixed and mobile internet cut on 25 Oct 2021 after the coup, services began returning 18 Nov 2021","src":"https://pulse.internetsociety.org/en/shutdowns/internet-disruption-in-sudan/","pre":7,"a":[5482,7599,7717,8964,9786,8723,9902,7191,14414,13259,19338,56701,39229,12295,88450,40485,14865,13943,13668,8831,11024,13858,19579,27156,36558],"t":[5797,7544,7715,8555,9260,9607,9675,10648,11901,13599,13886,15149,16639,17111,16741,18012,17720,18536,17916,20247,20997,26812,26878,33324,44045],"days":[23.0,25.0],"sdid":{"pct":-0.3246,"lo":-0.474,"hi":-0.1329,"p_perm":0.0187,"p_normal":0.0021,"se":0.1275},"sc":-0.3843,"ascm":-0.4188,"naive":{"vs_last_clean_quarter":-0.2738,"vs_same_quarter_last_year":-0.1978},"made":[{"name":"Cyprus","w":0.065},{"name":"Puerto Rico","w":0.065},{"name":"Latvia","w":0.054},{"name":"Palestine","w":0.053},{"name":"Moldova","w":0.047},{"name":"Saudi Arabia","w":0.045}],"sp":[-0.0563,-0.0989,0.0266,0.0876,0.0049,-0.061,0.271,-0.2281,0.014,0.0371,0.017,-0.0334,0.097,0.0155,0.0265,-0.0806,0.0791,-0.2636,0.1427,-0.0432,-0.0392,0.1962,-0.0037,-0.0316,0.1579,-0.004,-0.0339,-0.1405,0.1126,0.0004,0.0549,0.429,0.1045,-0.0272,-0.0282,-0.0106,0.1272,-0.0947,-0.2288,0.0296,-0.1273,-0.0638,0.0696,0.1597,-0.0406,0.0073,-0.1173,0.1389,0.1157,0.0076,0.2601,-0.4125,-0.0856,0.0002,0.1433,0.0321,0.0259,-0.2205,-0.1306,-0.0096,0.0026,0.0577,0.1528,0.0052,-0.0242,0.0675,0.0256,-0.0179,-0.0402,-0.0022,0.0853,0.0211,0.0439,-0.1129,-0.0676,0.0859,0.0828,0.0011,-0.0251,-0.035,-0.1951,-0.0303,-0.1487,0.0036,0.0193,0.0736,-0.1072,0.4758,0.0262,0.0805,0.083,-0.0145,0.1946,-0.0086,0.0267,0.1252,-0.0134,-0.0552,0.105,0.0773,-0.0157,0.0322,0.4392,-0.0757,0.1861,-0.0329],"tp":[-0.2449,0.2074],"conf":{"p":0.125,"min_p":0.125,"lo_pct":-0.9179,"hi_pct":1.7183},"back":{"held":[-0.2451,-0.1086],"q":["2021Q2","2021Q3"],"inside":false},"brk":1.4766,"loo":{"n":30,"min":-0.3359,"max":-0.3102},"pools":{"no_keepiton_shutdown":{"n":82,"pct":-0.3157,"pp":0.0241,"same":true},"same_continent":{"n":14,"pct":-0.2839,"pp":0.0667,"same":true},"same_income":{"n":4,"pct":-0.2656,"pp":0.4,"same":true},"no_neighbors":{"n":104,"pct":-0.3215,"pp":0.0381,"same":true}},"holm":0.0146,"holmp":0.1495,"checks":{"C1_holm":true,"F2_backdate":false,"F3_donors":true,"estimators_agree":true,"breakdown_above_1":true,"F2_note":""},"clear":false,"passes":false,"oc":{"git_pushes":{"pct":-0.3246,"lo":-0.474,"hi":-0.1329,"pp":0.0187,"raw":-0.2738},"developers":{"pct":-0.0226,"lo":-0.0427,"hi":-0.002,"pp":0.0467,"raw":0.0621},"repositories":{"pct":-0.0516,"lo":-0.0934,"hi":-0.0078,"pp":0.0467,"raw":0.0457},"organizations":{"pct":-0.038,"lo":-0.0616,"hi":-0.0138,"pp":0.028,"raw":-0.0015}},"ooni":null,"ooni_base":19.0},{"id":"BD-2024","iso":"BD","c":"Bangladesh","kind":"full","q":["2024Q3"],"what":"Nationwide shutdown from 18 Jul 2024, broadband back 24 Jul, mobile back 28 Jul, second nationwide cut 4 to 5 Aug","src":"https://en.wikipedia.org/wiki/2024_Bangladesh_internet_blackouts","pre":18,"a":[295222,390126,506514,463426,617631,617469,867496,721604,951775,841838,1170835,972713,1178079,1083550,1522648,1357990,1597239,1248660,1573666,1758248,1874593,1995526,2565398,2577601,3026760],"t":[315995,399232,445057,445548,549225,651120,722836,690672,860932,942631,1035926,983202,1173209,1129314,1294212,1261024,1366619,1357917,1420286,1477360,1691615,2153195,2347875,2725261,3815599],"days":[7.0,11.0],"sdid":{"pct":0.108,"lo":-0.2361,"hi":0.6072,"p_perm":0.1495,"p_normal":0.5889,"se":0.1898},"sc":0.061,"ascm":-0.0116,"naive":{"vs_last_clean_quarter":0.2603,"vs_same_quarter_last_year":0.0335},"made":[{"name":"Saudi Arabia","w":0.149},{"name":"Madagascar","w":0.109},{"name":"Jordan","w":0.103},{"name":"Uzbekistan","w":0.093},{"name":"India","w":0.08},{"name":"Ecuador","w":0.075}],"sp":[0.08,-0.001,-0.0715,-0.1248,-0.0107,0.0342,0.0812,-0.0158,0.0235,-0.0234,-0.0497,-0.0158,-0.1679,0.0642,0.0039,-0.0171,0.0141,-0.0292,-0.0089,-0.0049,0.027,0.014,0.019,0.0472,-0.103,0.0909,-0.023,0.0975,-0.063,0.067,-0.0516,0.0381,0.0473,0.0088,0.0331,0.0373,-0.0118,0.0517,0.024,0.0019,0.0995,-0.0912,-0.0405,0.024,0.0147,0.1708,0.1088,0.099,-0.083,-0.0057,0.0142,0.0418,0.0039,-0.0621,-0.0738,0.0669,0.0049,0.2012,0.0594,-0.0266,0.0662,-0.0985,-0.2412,-0.0239,0.0759,-0.0569,0.0117,-0.0216,0.0029,-0.032,0.147,0.0374,0.0213,0.0635,-0.0093,0.3567,0.0319,0.0261,-0.0347,-0.1139,0.0603,-0.0182,0.0641,-0.0171,0.0579,-0.0972,0.0376,0.0405,0.0108,0.065,-0.0189,-0.0427,0.1523,0.1727,0.1875,-0.079,0.0171,-0.0341,-0.1183,0.0551,0.0194,0.0607,0.0817,0.0236,-0.0538,-0.0084],"tp":[-0.1697,0.3957,-0.0989,-0.1558,-0.2562,0.3082,0.0025,0.0223,-0.0489,0.2118,0.1207,0.1162,-0.2141],"conf":{"p":0.7895,"min_p":0.0526,"lo_pct":-0.9179,"hi_pct":1.7183},"back":{"held":[0.0446,-0.1977],"q":["2024Q1","2024Q2"],"inside":true},"brk":0.0,"loo":{"n":18,"min":0.0968,"max":0.1207},"pools":{"no_keepiton_shutdown":{"n":82,"pct":0.1276,"pp":0.1084,"same":true},"same_continent":{"n":29,"pct":0.0382,"pp":0.7,"same":true},"same_income":{"n":24,"pct":0.1197,"pp":0.4,"same":true},"no_neighbors":{"n":105,"pct":0.1207,"pp":0.1226,"same":true}},"holm":1.0,"holmp":0.5981,"checks":{"C1_holm":false,"F2_backdate":true,"F3_donors":true,"estimators_agree":false,"breakdown_above_1":false,"F2_note":""},"clear":false,"passes":false,"oc":{"git_pushes":{"pct":0.108,"lo":-0.2361,"hi":0.6072,"pp":0.1495,"raw":0.2603},"developers":{"pct":-0.0279,"lo":-0.1037,"hi":0.0543,"pp":0.0187,"raw":0.0387},"repositories":{"pct":0.0028,"lo":-0.0792,"hi":0.0922,"pp":0.8505,"raw":0.0588},"organizations":{"pct":-0.1363,"lo":-0.2008,"hi":-0.0667,"pp":0.0093,"raw":-0.1045}},"ooni":{"base":8580.0,"dd":5,"days":92,"first":"2024-07-19","last":"2024-07-23","win":["2024-07-18","2024-08-05"],"hit":true,"start":"2024-04-01","q0":"2024-07-01","v":[10312,9387,10762,10533,6268,5777,12226,10716,8620,8574,9164,7508,11152,9385,15586,15759,14155,11510,7221,9385,8839,10296,12145,9564,7519,10016,7526,8144,8621,7787,6424,11983,8471,7689,8580,10313,13011,10581,11801,9618,9142,10004,11728,10629,10174,12656,15967,9151,7731,6284,8222,10146,5658,6614,7397,4542,7614,6286,8634,9119,9910,9990,8358,10722,13885,9077,9164,9177,7399,7362,7514,5989,5440,4252,4132,2343,3863,1258,3435,4769,2803,2936,3921,2563,3691,2332,4495,4882,3595,244,5871,6609,9271,6060,7606,5278,7326,10460,9320,9745,6097,8922,8425,9431,12604,10548,15831,24193,13204,0,0,0,0,876,10721,15484,13777,11047,15301,13205,12844,14418,23553,26201,22392,14610,18361,21068,19116,17750,18191,18208,14233,15661,18383,16009,22684,17139,19500,14641,17527,16301,17822,19889,12447,14275,11319,12278,11613,12691,10113,15091,11965,14417,12908,13075,11599,9136,10551,7919,8225,9282,10538,8478,10141,9067,10801,12099,8108,12993,13097,13074,11229,10870,11473,13590,12432,11946,9806,9017,9718,10924,12404]}},{"id":"TZ-2025","iso":"TZ","c":"Tanzania","kind":"full","q":["2025Q4"],"what":"Nationwide shutdown from 29 Oct 2025, general access restored 3 Nov 2025","src":"https://globalnetworkinitiative.org/wp-content/uploads/GNI-Statement-on-the-Nationwide-Internet-Shutdown-in-Tanzania-During-the-2025-Elections-3.pdf","pre":23,"a":[17487,21415,21427,17801,23129,28023,30566,25471,35673,47828,49379,44718,51012,49685,54269,41798,54756,58218,66819,62276,78186,117144,116052,131748,225751],"t":[17806,23462,22718,21928,25507,30759,33705,30951,40074,46692,55135,48873,57629,54926,61348,54480,62035,66030,69898,70944,84611,113959,120359,138850,196250],"days":[5.0,5.0],"sdid":{"pct":-0.0511,"lo":-0.2217,"hi":0.1568,"p_perm":0.4299,"p_normal":0.6036,"se":0.1011},"sc":0.041,"ascm":0.0119,"naive":{"vs_last_clean_quarter":0.1352,"vs_same_quarter_last_year":1.1156},"made":[{"name":"Iraq","w":0.117},{"name":"Cambodia","w":0.11},{"name":"Nepal","w":0.088},{"name":"Senegal","w":0.077},{"name":"Ecuador","w":0.069},{"name":"Palestine","w":0.067}],"sp":[0.0812,-0.0622,-0.0708,-0.0122,-0.0093,-0.071,0.3868,-0.0528,-0.0188,-0.1046,0.0968,-0.0977,0.0391,0.009,-0.0175,0.1173,-0.0485,-0.0517,-0.006,-0.0643,-0.1261,-0.0413,-0.048,-0.026,0.0,0.035,0.2102,0.0639,0.0709,-0.0403,0.0639,-0.0153,0.0324,0.0226,-0.0409,-0.0794,0.0217,-0.0167,-0.1151,-0.0939,-0.0786,0.0154,0.0474,-0.0024,-0.0293,-0.1107,-0.1232,0.0556,0.0814,-0.0319,0.1192,0.026,0.0368,-0.154,-0.0129,0.074,-0.165,0.0338,-0.1465,0.0152,0.0028,0.0013,0.1983,0.1411,-0.0466,-0.0527,-0.0499,0.0306,-0.0224,0.0604,-0.0328,0.0094,0.0116,-0.1577,-0.1308,0.1858,0.0205,0.0605,0.1047,-0.0536,-0.0566,-0.0132,-0.0163,-0.032,0.0054,0.0069,-0.0424,0.1793,0.0109,-0.0073,-0.0247,0.0193,0.043,-0.0755,0.021,0.0104,0.0821,0.0326,-0.1083,0.0465,0.0172,0.0538,-0.0411,-0.0459,0.0319,-0.0263],"tp":[0.0455,0.0049,-0.0618,0.0468,0.0813,-0.0825,-0.0993,-0.0389,0.0207,0.0623,-0.1113,0.2754,0.1111,0.1437,0.0502,0.0969,0.1939,-0.0341],"conf":{"p":0.4583,"min_p":0.0417,"lo_pct":-0.2134,"hi_pct":0.4623},"back":{"held":[0.2098,0.1273],"q":["2025Q2","2025Q3"],"inside":true},"brk":0.0,"loo":{"n":18,"min":-0.0683,"max":-0.0367},"pools":{"no_keepiton_shutdown":{"n":82,"pct":-0.0229,"pp":0.6988,"same":true},"same_continent":{"n":14,"pct":-0.1228,"pp":0.2,"same":true},"same_income":{"n":24,"pct":-0.0436,"pp":0.72,"same":true},"no_neighbors":{"n":103,"pct":-0.0498,"pp":0.4519,"same":true}},"holm":1.0,"holmp":1.0,"checks":{"C1_holm":false,"F2_backdate":true,"F3_donors":true,"estimators_agree":false,"breakdown_above_1":false,"F2_note":""},"clear":false,"passes":false,"oc":{"git_pushes":{"pct":-0.0511,"lo":-0.2217,"hi":0.1568,"pp":0.4299,"raw":0.1352},"developers":{"pct":-0.0117,"lo":-0.0472,"hi":0.0251,"pp":0.3364,"raw":0.0988},"repositories":{"pct":-0.0158,"lo":-0.0649,"hi":0.0359,"pp":0.2056,"raw":0.0624},"organizations":{"pct":-0.0222,"lo":-0.0594,"hi":0.0165,"pp":0.1402,"raw":0.0206}},"ooni":{"base":5809.0,"dd":7,"days":92,"first":"2025-10-11","last":"2025-11-03","win":["2025-10-29","2025-11-03"],"hit":true,"start":"2025-07-02","q0":"2025-10-01","v":[5777,4960,3398,1973,2107,3178,4785,3716,3608,4717,3034,3221,5206,4100,7520,5892,9640,3698,5809,5496,4050,4443,4475,5599,4211,6549,7330,5779,9367,9644,10040,5543,7488,9221,10418,10655,8678,8993,9789,9332,7983,7654,5606,6490,7402,5131,6368,8417,8838,8446,8018,10978,6896,7106,7260,6933,5865,4486,5622,5324,5512,8273,7128,7284,7593,3747,3685,3747,7761,4612,4658,5466,5182,6372,4867,5908,3447,7060,9069,10988,5359,3852,5451,5372,6703,6199,6080,6766,4787,5713,5639,5249,6103,4915,3170,4974,5185,5075,5282,4624,5353,2370,4287,4643,4106,6500,5573,8032,4612,3825,6270,5924,4972,4668,5214,2822,5120,6319,12881,5011,747,100,120,238,2257,10884,12896,13552,11031,6905,7704,10258,11788,12613,13192,10368,8166,7976,10331,10738,9320,11278,9806,9134,8533,11469,11232,11913,10253,11096,6295,6622,9708,10093,8659,11624,7544,6393,4037,6303,9880,7546,6324,5566,5902,6473,8490,8521,7253,9923,8795,4507,6479,7796,8680,8368,5390,5043,4938,3501,6239,6383,5522]}},{"id":"IR-2025","iso":"IR","c":"Iran","kind":"full","q":["2025Q2"],"what":"Connectivity fell sharply on 17 Jun 2025 and was almost completely blocked from 18 Jun, services restored 25 Jun 2025","src":"https://en.wikipedia.org/wiki/2025_Internet_blackout_in_Iran","pre":19,"a":[148536,176080,190556,219516,227874,251212,314655,325208,335784,355711,424187,310890,432451,502595,550631,500107,538364,506752,568093,527387,565809,628498,806458,798320,331042],"t":[146080,187519,195390,208295,230601,270306,289427,301668,333580,375461,404190,414506,464991,490649,515147,499919,500900,524457,535640,564938,584923,764417,802136,948344,1210202],"days":[7.0,9.0],"sdid":{"pct":-0.1778,"lo":-0.3536,"hi":0.0457,"p_perm":0.0748,"p_normal":0.1106,"se":0.1227},"sc":-0.2036,"ascm":-0.1751,"naive":{"vs_last_clean_quarter":0.1108,"vs_same_quarter_last_year":0.2402},"made":[{"name":"Uzbekistan","w":0.084},{"name":"Azerbaijan","w":0.078},{"name":"Saudi Arabia","w":0.076},{"name":"South Korea","w":0.057},{"name":"Palestine","w":0.048},{"name":"Jordan","w":0.044}],"sp":[0.0484,0.0709,-0.0648,0.0367,-0.0392,-0.0042,-0.0883,0.0274,0.0383,-0.0904,0.2029,0.0376,-0.0859,-0.1068,-0.0398,0.0428,0.246,-0.0869,0.0442,0.0693,0.0707,0.0558,0.0187,-0.0648,0.0596,0.0463,0.2624,-0.0032,-0.0809,0.0212,0.0379,0.0179,-0.0611,-0.0221,-0.0637,-0.1511,0.0474,-0.0104,-0.0758,-0.1321,-0.0058,-0.0222,-0.0153,0.1146,-0.012,-0.0707,-0.1183,0.3364,-0.1004,0.0054,0.1935,0.0992,0.0287,0.0313,-0.0963,0.0964,-0.1444,0.0237,-0.0666,0.0695,-0.0194,0.2126,0.0494,0.0274,0.0309,-0.0244,0.1606,0.0664,0.1114,-0.101,0.0772,0.0225,-0.0719,-0.0758,-0.0179,-0.0382,0.1075,0.0814,0.1035,-0.2018,0.4268,0.0205,-0.0402,0.0551,-0.0735,-0.0572,-0.1023,0.2218,-0.0272,-0.1768,0.0416,-0.0343,0.1927,0.0434,-0.0616,0.1975,0.0595,0.0598,-0.0214,0.046,0.0154,-0.219,-0.0898,-0.0236,-0.0157,0.0755],"tp":[-0.025,0.3103,0.07,-0.1793,-0.1051,0.0298,0.1403,0.1172,-0.0596,0.1026,-0.1156,0.0476,-0.114,-0.0721],"conf":{"p":0.1,"min_p":0.05,"lo_pct":-0.3297,"hi_pct":0.0},"back":{"held":[-0.1436,-0.1239],"q":["2024Q4","2025Q1"],"inside":true},"brk":0.0,"loo":{"n":28,"min":-0.1899,"max":-0.1635},"pools":{"no_keepiton_shutdown":{"n":82,"pct":-0.1471,"pp":0.1205,"same":true},"same_continent":{"n":29,"pct":-0.1312,"pp":0.2667,"same":true},"same_income":{"n":24,"pct":-0.1932,"pp":0.24,"same":true},"no_neighbors":{"n":102,"pct":-0.1817,"pp":0.0874,"same":true}},"holm":0.6635,"holmp":0.4486,"checks":{"C1_holm":false,"F2_backdate":true,"F3_donors":true,"estimators_agree":false,"breakdown_above_1":false,"F2_note":""},"clear":false,"passes":false,"oc":{"git_pushes":{"pct":-0.1778,"lo":-0.3536,"hi":0.0457,"pp":0.0748,"raw":0.1108},"developers":{"pct":-0.0116,"lo":-0.035,"hi":0.0123,"pp":0.2897,"raw":0.0415},"repositories":{"pct":-0.0059,"lo":-0.0408,"hi":0.0302,"pp":0.5514,"raw":0.0469},"organizations":{"pct":-0.0036,"lo":-0.0413,"hi":0.0357,"pp":0.757,"raw":0.0287}},"ooni":{"base":12006.0,"dd":15,"days":91,"first":"2025-05-02","last":"2025-06-25","win":["2025-06-17","2025-06-25"],"hit":true,"start":"2024-12-31","q0":"2025-04-01","v":[11977,14350,21229,18702,14368,13385,16329,15485,14084,13093,15497,9382,13463,14387,13360,11144,10708,12882,14656,18254,16451,18142,14887,13469,20497,17790,16988,11402,15723,16233,19269,15861,14057,13557,19315,21125,18421,20472,15014,12885,15459,9306,10445,10182,12768,12394,10296,9875,11530,14276,13559,10445,12006,10311,8495,11058,10054,9836,8249,7679,8419,9040,14454,9632,7418,11865,11023,10530,8102,8634,8378,11319,12683,9003,5628,8213,8031,7785,7521,8675,6237,12749,11723,9447,16330,18861,11349,7191,11404,6724,10395,8135,7174,8889,9796,13206,13615,15001,10618,9017,7519,7034,9282,8968,10018,13987,9417,7573,8048,7500,6022,7425,8300,13723,15629,11154,8031,8303,7325,7779,7789,6521,3913,4942,6997,7823,10869,9323,7971,7960,7549,7542,8265,9301,9129,8782,6941,11369,8558,12187,9629,8866,9512,8989,12393,7226,7977,8060,8507,15145,13043,7046,8774,8479,8254,6572,12110,10879,6207,7383,6826,7574,8338,8447,3638,1801,2403,2342,4050,1742,6,192,2317,2701,3191,4204,5315,6691,11489,11721,12814,10035]}},{"id":"IR-2026","iso":"IR","c":"Iran","kind":"full","q":["2026Q1"],"what":"Blackout from 8 Jan 2026 with partial return in late January, then a cut of more than 99 percent from 28 Feb 2026 that lasted past the end of the quarter","src":"https://www.thenationalnews.com/future/technology/2026/05/07/iran-internet-blackout/","pre":21,"a":[148536,176080,190556,219516,227874,251212,314655,325208,335784,355711,424187,310890,432451,502595,550631,500107,538364,506752,568093,527387,565809,628498,806458,798320,331042],"t":[140263,179679,187150,198472,220310,259488,276356,284531,319392,362317,388041,396439,447190,467522,487656,473113,479850,501782,509359,531556,553181,694587,732687,825453,1067233],"days":[48.0,58.0],"sdid":{"pct":-0.6898,"lo":-0.7557,"hi":-0.6061,"p_perm":0.0093,"p_normal":0.0,"se":0.1219},"sc":-0.7038,"ascm":-0.7042,"naive":{"vs_last_clean_quarter":-0.5853,"vs_same_quarter_last_year":-0.4149},"made":[{"name":"Uzbekistan","w":0.091},{"name":"South Korea","w":0.078},{"name":"Sri Lanka","w":0.054},{"name":"Saudi Arabia","w":0.049},{"name":"Ukraine","w":0.047},{"name":"Azerbaijan","w":0.047}],"sp":[0.0692,0.152,-0.0733,-0.0166,0.0088,0.0447,-0.0511,-0.0787,-0.0207,0.015,-0.1981,-0.0352,-0.1081,-0.0223,-0.0056,-0.0445,0.0172,0.1419,-0.1008,0.0061,-0.1346,0.0743,0.0497,-0.0379,-0.0687,0.1452,0.0911,-0.1032,0.004,-0.1139,0.0098,-0.0766,-0.1007,-0.0245,-0.0054,0.0094,0.0583,-0.0242,-0.0929,-0.0416,-0.1391,0.0882,-0.0322,-0.118,-0.0408,0.1444,-0.0228,0.4268,0.1348,0.0105,0.3184,0.0526,0.1177,-0.0551,-0.021,0.0027,0.0066,-0.1346,0.0173,-0.0259,0.1213,0.17,0.0343,0.0437,0.2895,0.0128,0.1565,-0.0163,0.0133,0.017,-0.133,-0.0483,-0.0189,0.0466,-0.0015,-0.0189,-0.1419,-0.0544,0.1426,0.2245,0.0348,0.0077,0.1592,0.0528,-0.0298,-0.16,-0.1737,0.0802,-0.0211,0.0982,-0.0311,0.0364,0.0133,-0.1108,0.0499,-0.1112,0.0822,0.1152,-0.1025,0.06,0.0583,-0.0942,0.0875,0.1046,-0.1129,-0.0256],"tp":[-0.025,0.3103,0.07,-0.1793,-0.1051,0.0298,0.1403,0.1172,-0.0596,0.1026,-0.1156,0.0476,-0.114,-0.0721,-0.043,-0.1466],"conf":{"p":0.0455,"min_p":0.0455,"lo_pct":-0.7899,"hi_pct":-0.6501},"back":{"held":[0.0175,-0.1481],"q":["2025Q3","2025Q4"],"inside":true},"brk":3.4472,"loo":{"n":31,"min":-0.6918,"max":-0.6871},"pools":{"no_keepiton_shutdown":{"n":82,"pct":-0.6889,"pp":0.012,"same":true},"same_continent":{"n":29,"pct":-0.7064,"pp":0.0333,"same":true},"same_income":{"n":24,"pct":-0.6776,"pp":0.04,"same":true},"no_neighbors":{"n":102,"pct":-0.6905,"pp":0.0097,"same":true}},"holm":0.0,"holmp":0.0841,"checks":{"C1_holm":true,"F2_backdate":true,"F3_donors":true,"estimators_agree":true,"breakdown_above_1":true,"F2_note":""},"clear":true,"passes":true,"oc":{"git_pushes":{"pct":-0.6898,"lo":-0.7557,"hi":-0.6061,"pp":0.0093,"raw":-0.5853},"developers":{"pct":-0.064,"lo":-0.0901,"hi":-0.0372,"pp":0.0093,"raw":0.01},"repositories":{"pct":-0.0938,"lo":-0.129,"hi":-0.057,"pp":0.0093,"raw":-0.0446},"organizations":{"pct":-0.0877,"lo":-0.1602,"hi":-0.0089,"pp":0.0374,"raw":-0.0506}},"ooni":{"base":14699.0,"dd":49,"days":90,"first":"2026-01-09","last":"2026-03-31","win":["2026-01-08","2026-03-31"],"hit":true,"start":"2025-10-02","q0":"2026-01-01","v":[16884,14283,15909,18730,17696,16460,13962,10820,14013,16776,13745,20203,17529,12022,13411,10955,11661,12419,13291,14612,12394,9515,13206,15961,16248,14180,17278,16109,12123,14352,16773,15148,16251,14866,15676,15295,15351,12852,14559,15079,16547,13788,11453,12486,12989,14247,14269,17919,14382,12555,13985,14816,13552,16159,17520,16946,16308,15271,18226,16000,12582,17550,10928,17598,14422,12731,16762,16228,18555,18349,18419,15393,14699,14036,13949,11210,13729,14710,16023,13195,13926,15137,13038,14644,14924,13133,12764,14607,17270,20424,15636,15356,17614,16716,14568,13328,14215,12595,9846,4,0,0,135,0,0,0,129,33,81,0,28,569,59,11,302,318,194,10948,14064,16975,18196,18275,21094,20337,16098,23039,20846,25490,22710,25029,24547,22259,18054,16273,24249,31348,24838,22676,20151,22020,24005,26115,29396,26524,25852,17043,22343,18118,19576,8081,1852,2806,2351,2565,1148,3585,2209,2919,2792,2119,1481,3399,2808,2989,2449,952,714,965,252,417,260,1171,1154,926,594,247,714,353,239,660,166]}},{"id":"IR-2022","iso":"IR","c":"Iran","kind":"partial","q":["2022Q4"],"what":"Mobile networks cut 4pm to midnight from 21 Sep to 3 Oct 2022 and again on 8, 12 and 15 Oct, regional outages, app stores and messaging apps blocked. Fixed line mostly stayed up","src":"https://ooni.org/post/2022-iran-technical-multistakeholder-report/","pre":10,"a":[148536,176080,190556,219516,227874,251212,314655,325208,335784,355711,424187,310890,432451,502595,550631,500107,538364,506752,568093,527387,565809,628498,806458,798320,331042],"t":[141476,177591,183373,202724,220449,255658,280676,297981,319391,355711,373950,398736,419940,430169,441419,466166,456592,491531,490926,560157,572719,743723,777539,936557,1203080],"days":null,"sdid":{"pct":-0.2203,"lo":-0.4313,"hi":0.069,"p_perm":0.0748,"p_normal":0.1222,"se":0.161},"sc":-0.2381,"ascm":-0.2301,"naive":{"vs_last_clean_quarter":-0.126,"vs_same_quarter_last_year":-0.044},"made":[{"name":"Saudi Arabia","w":0.087},{"name":"Uzbekistan","w":0.086},{"name":"Sri Lanka","w":0.063},{"name":"Indonesia","w":0.059},{"name":"Jamaica","w":0.053},{"name":"Singapore","w":0.045}],"sp":[0.1269,-0.3843,0.3533,-0.0894,-0.0218,-0.0354,0.106,-0.063,-0.027,-0.0016,0.0574,-0.0606,-0.1114,0.0168,-0.0204,-0.0178,0.0584,-0.1145,0.0377,-0.0083,-0.2042,0.288,-0.0231,-0.0064,-0.0603,-0.0365,-0.013,-0.0824,0.0992,0.0498,0.0126,-0.2061,0.1108,-0.038,0.0086,0.283,0.2781,-0.0235,-0.0882,-0.2063,0.1336,-0.083,0.0415,0.0562,0.1337,-0.0891,0.2255,-0.0927,0.0226,-0.0353,0.0491,-0.2446,-0.0413,-0.1729,0.2457,0.1738,0.0253,0.2174,0.0264,-0.0437,0.0502,-0.0625,0.1323,0.161,-0.1145,0.0426,0.1103,-0.1061,-0.0608,0.2899,-0.039,-0.0091,0.1229,-0.0086,-0.1118,0.0418,-0.0194,0.1486,0.0444,-0.3221,-0.0144,-0.0064,0.169,-0.0396,-0.016,-0.0506,-0.0819,-0.0133,0.06,0.0322,-0.0415,0.0337,-0.2131,-0.0174,0.1202,0.1819,0.0811,-0.0735,0.0508,0.2467,-0.0358,-0.15,0.2474,0.047,0.0288,-0.0533],"tp":[-0.025,0.3103,0.07,-0.1793,-0.1051],"conf":{"p":0.0909,"min_p":0.0909,"lo_pct":-0.9179,"hi_pct":1.7183},"back":{"held":[-0.18,-0.2908],"q":["2022Q1","2022Q2"],"inside":false},"brk":0.0,"loo":{"n":28,"min":-0.2293,"max":-0.2047},"pools":{"no_keepiton_shutdown":{"n":82,"pct":-0.2084,"pp":0.0843,"same":true},"same_continent":{"n":29,"pct":-0.2386,"pp":0.1,"same":true},"same_income":{"n":24,"pct":-0.2587,"pp":0.12,"same":true},"no_neighbors":{"n":102,"pct":-0.2189,"pp":0.068,"same":true}},"holm":0.6635,"holmp":0.4486,"checks":{"C1_holm":false,"F2_backdate":false,"F3_donors":true,"estimators_agree":false,"breakdown_above_1":false,"F2_note":""},"clear":false,"passes":false,"oc":{"git_pushes":{"pct":-0.2203,"lo":-0.4313,"hi":0.069,"pp":0.0748,"raw":-0.126},"developers":{"pct":0.0058,"lo":-0.0296,"hi":0.0425,"pp":0.5234,"raw":0.1239},"repositories":{"pct":-0.0513,"lo":-0.1232,"hi":0.0266,"pp":0.1028,"raw":0.1041},"organizations":{"pct":-0.0226,"lo":-0.0746,"hi":0.0322,"pp":0.1963,"raw":0.0306}},"ooni":{"base":41692.0,"dd":2,"days":92,"first":"2022-10-06","last":"2022-10-07","win":["2022-09-21","2022-10-15"],"hit":false,"start":"2022-07-02","q0":"2022-10-01","v":[23855,27013,27196,23768,24432,27269,29923,27280,26948,27101,23803,23755,28141,27161,22975,26545,26460,25630,23661,18873,20361,23588,26393,25398,23913,28264,23686,26370,24324,26814,29355,27089,26772,29162,25991,29552,27189,29734,30275,34000,29747,27201,30038,27547,98664,114609,79727,69231,62920,61716,55624,53694,52485,49749,41692,48550,46530,48624,50102,48437,43111,44659,48148,42234,44899,51956,47984,48382,39186,45167,49024,50000,45327,52345,46007,51215,51994,54380,51662,56296,61592,75504,87134,87555,85374,71390,77002,85511,65798,60119,63215,68834,65002,55769,43329,23811,15974,17703,21443,27522,22157,21542,25564,22358,21849,22057,26697,27554,29802,25757,23922,24228,28757,25889,30164,31775,35583,28862,25691,32128,29185,22368,23797,37084,63011,63206,59456,64381,56841,51291,55082,66685,75831,63029,56611,52060,46786,48131,47178,43805,45772,43920,49377,47105,52058,41950,41772,46204,53003,53687,47356,49416,49469,50132,48925,48298,53569,46859,51098,45990,49107,47594,46174,40539,41468,50931,53339,55394,53196,55107,67554,71346,60034,60476,59619,59015,57146,59838,54684,58396,54546,67450,60035]}},{"id":"MM-2021","iso":"MM","c":"Myanmar","kind":"partial","q":["2021Q1","2021Q2"],"what":"Coup on 1 Feb 2021, 30 hour nationwide cut on 6 to 7 Feb, nightly cuts from 15 Feb to 28 Apr, all mobile data off from 15 Mar, then whitelisting","src":"https://www.article19.org/resources/myanmar-must-immediately-reinstate-internet-access/","pre":4,"a":[42148,51434,57173,60893,32835,27333,42119,41611,48639,52485,59529,69555,90299,99621,114784,113778,121804,93155,77085,75209,77745,94234,117815,122028,174641],"t":[42362,52584,56705,60680,64064,73764,73022,76243,88187,103452,107537,112808,125438,130762,129920,132633,132781,143542,141214,153603,158684,202665,209409,246751,313380],"days":null,"sdid":{"pct":-0.5642,"lo":-0.6865,"hi":-0.3941,"p_perm":0.0187,"p_normal":0.0,"se":0.1681},"sc":-0.5675,"ascm":-0.5675,"naive":{"vs_last_clean_quarter":-0.4608,"vs_same_quarter_last_year":-0.221},"made":[{"name":"Madagascar","w":0.046},{"name":"Lebanon","w":0.04},{"name":"Rwanda","w":0.038},{"name":"Jamaica","w":0.031},{"name":"Uzbekistan","w":0.029},{"name":"Palestine","w":0.029}],"sp":[-0.0013,-0.0383,0.3208,-0.0994,-0.0344,-0.1359,0.1983,0.3255,-0.0943,0.0268,-0.0784,0.0583,0.0157,-0.058,-0.0927,-0.096,0.0641,-0.2896,-0.0837,-0.089,0.1072,-0.0007,-0.0695,-0.0444,-0.1249,-0.0164,-0.1192,0.0363,-0.1744,0.2052,-0.018,1.5386,-0.1212,-0.0558,-0.0762,0.1714,0.0469,-0.0501,-0.0285,0.1482,-0.0123,-0.1009,-0.1317,-0.0253,-0.026,-0.085,-0.0117,0.4587,-0.1215,0.0078,-0.2423,0.9649,-0.0864,0.1165,0.0447,-0.004,0.1098,0.0839,-0.053,-0.069,-0.015,-0.0412,0.2593,-0.1005,-0.0271,-0.0172,-0.009,-0.0248,-0.0406,-0.0719,0.0106,-0.0734,-0.1575,0.0392,-0.0834,-0.1553,-0.0338,0.0503,-0.0548,0.2816,-0.1599,0.041,-0.1446,-0.0257,-0.0445,-0.0753,-0.1975,-0.0633,-0.0972,-0.0774,-0.1366,-0.0323,0.2135,-0.2032,0.0173,0.0661,0.2178,0.0147,-0.06,-0.2142,-0.1403,-0.0494,0.4464,0.0562,-0.0674,-0.0425],"tp":[],"conf":{"p":0.1667,"min_p":0.1667,"lo_pct":-0.9179,"hi_pct":1.7183},"back":null,"brk":22.6661,"loo":{"n":42,"min":-0.5693,"max":-0.5579},"pools":{"no_keepiton_shutdown":{"n":82,"pct":-0.5518,"pp":0.012,"same":true},"same_continent":{"n":29,"pct":-0.5861,"pp":0.0333,"same":true},"same_income":{"n":24,"pct":-0.5685,"pp":0.04,"same":true},"no_neighbors":{"n":103,"pct":-0.5639,"pp":0.0192,"same":true}},"holm":0.0,"holmp":0.1495,"checks":{"C1_holm":true,"F2_backdate":null,"F3_donors":true,"estimators_agree":true,"breakdown_above_1":true,"F2_note":"not testable, too few pre quarters"},"clear":false,"passes":true,"oc":{"git_pushes":{"pct":-0.5642,"lo":-0.6865,"hi":-0.3941,"pp":0.0187,"raw":-0.4608},"developers":{"pct":-0.1167,"lo":-0.1428,"hi":-0.0899,"pp":0.0093,"raw":0.0472},"repositories":{"pct":-0.1935,"lo":-0.2502,"hi":-0.1324,"pp":0.0187,"raw":0.025},"organizations":{"pct":-0.082,"lo":-0.1143,"hi":-0.0486,"pp":0.0187,"raw":0.0038}},"ooni":null,"ooni_base":2.0},{"id":"PK-2023","iso":"PK","c":"Pakistan","kind":"partial","q":["2023Q2"],"what":"Mobile internet suspended from 9 May 2023, restored 12 May 2023. Fixed line stayed up","src":"https://pulse.internetsociety.org/shutdowns/pakistan-blocks-mobile-internet-access-in-some-regions-amidst-protests","pre":13,"a":[235987,389032,380776,389724,392588,469927,493800,517595,570533,582099,755331,732949,839263,895306,1139050,1121678,1323587,1331617,1716373,1730917,1872816,2157303,2770560,2870837,3523185],"t":[257765,383383,377416,383138,399471,485841,497256,520734,562987,651315,745274,744388,834775,865915,911749,883751,865331,929267,973108,1029462,1078637,1469913,1599840,1889629,2471093],"days":null,"sdid":{"pct":0.0339,"lo":-0.1732,"hi":0.293,"p_perm":0.7383,"p_normal":0.7699,"se":0.1141},"sc":0.069,"ascm":0.0841,"naive":{"vs_last_clean_quarter":0.0668,"vs_same_quarter_last_year":0.5381},"made":[{"name":"Saudi Arabia","w":0.074},{"name":"India","w":0.067},{"name":"Iraq","w":0.064},{"name":"Panama","w":0.048},{"name":"United Arab Emirates","w":0.042},{"name":"Morocco","w":0.04}],"sp":[-0.0277,0.1918,0.0109,0.1744,-0.0404,-0.002,0.1709,0.0305,0.0338,-0.0656,0.1548,0.0594,-0.1283,-0.0648,0.0414,0.2033,0.0341,-0.1943,0.1267,0.1203,0.0901,0.1218,-0.0109,-0.0458,0.0759,0.0136,-0.0403,-0.0014,-0.0499,0.0821,-0.0246,-0.4704,-0.0858,-0.0519,-0.0738,0.1701,0.0731,-0.0479,0.014,-0.0424,-0.0625,-0.0159,0.011,0.0775,-0.0466,0.0172,-0.0442,-0.0897,0.085,-0.0086,-0.1402,0.0513,0.008,0.067,0.0964,-0.0124,0.0207,-0.0361,0.056,-0.0805,0.0262,-0.0166,0.4875,0.039,0.0398,-0.0439,0.0477,0.0127,0.0626,-0.0569,0.2895,0.0646,-0.0536,0.0735,0.0466,-0.1112,0.1218,0.1154,0.0392,-0.0714,0.2381,0.0377,0.0983,0.0426,0.0026,-0.0216,-0.0841,-0.1232,-0.0911,-0.0454,0.0887,-0.0384,-0.2076,0.2042,-0.0957,0.0144,-0.0194,0.0369,0.033,-0.0795,-0.0253,-0.0066,0.2042,-0.005,0.096,-0.0532],"tp":[-0.0735,0.0623,0.0027,0.0368,-0.1821,0.2128,0.0804,0.0919],"conf":{"p":0.6429,"min_p":0.0714,"lo_pct":-0.9179,"hi_pct":1.7183},"back":{"held":[0.0509,0.1495],"q":["2022Q4","2023Q1"],"inside":true},"brk":0.0,"loo":{"n":32,"min":0.0236,"max":0.0557},"pools":{"no_keepiton_shutdown":{"n":82,"pct":-0.0027,"pp":0.988,"same":false},"same_continent":{"n":29,"pct":0.0544,"pp":0.5333,"same":true},"same_income":{"n":24,"pct":-0.016,"pp":0.92,"same":false},"no_neighbors":{"n":104,"pct":0.0298,"pp":0.7429,"same":true}},"holm":1.0,"holmp":1.0,"checks":{"C1_holm":false,"F2_backdate":true,"F3_donors":false,"estimators_agree":false,"breakdown_above_1":false,"F2_note":""},"clear":false,"passes":false,"oc":{"git_pushes":{"pct":0.0339,"lo":-0.1732,"hi":0.293,"pp":0.7383,"raw":0.0668},"developers":{"pct":0.0033,"lo":-0.0255,"hi":0.033,"pp":0.7103,"raw":0.0857},"repositories":{"pct":0.0073,"lo":-0.0835,"hi":0.1071,"pp":0.6168,"raw":0.0788},"organizations":{"pct":-0.0016,"lo":-0.0451,"hi":0.0439,"pp":0.8879,"raw":0.0379}},"ooni":{"base":2473.0,"dd":13,"days":91,"first":"2023-04-01","last":"2023-05-08","win":["2023-05-09","2023-05-12"],"hit":false,"start":"2022-12-31","q0":"2023-04-01","v":[2370,3241,2666,2707,2146,1287,2403,1504,1398,2054,1992,1795,1919,2005,1252,1882,1561,3708,2773,2982,2615,2154,1747,1955,1697,2221,1167,1705,943,546,2843,1243,3530,3221,3466,1735,2319,2655,2771,3982,4776,1727,3842,4408,4707,2947,4058,4230,3372,2254,7452,2473,4707,1807,2189,1653,3087,976,2652,5436,3911,2026,1427,286,2434,1752,1239,3095,4067,1020,1828,2589,3325,4123,2162,3199,3516,2565,5222,2289,2980,5267,3591,3306,3364,2228,3444,1285,8927,3854,1062,1134,13,2887,2998,613,820,972,2676,2474,2702,1757,2498,1218,1072,647,163,832,648,1874,2187,1756,1923,4053,3768,1754,2718,1343,2775,1555,2057,2662,2595,3273,1607,3441,864,1665,1105,4396,5326,10220,8682,6857,6757,5734,9757,7878,6021,5958,5837,2861,3567,1830,5365,4067,7263,5223,3908,3609,4527,4703,6396,4286,4725,5134,4855,5808,7541,6299,6102,7014,7674,5079,7169,7117,7565,5288,4829,4769,7207,3671,1700,5737,4580,4751,4178,5811,4836,4952,6095,7599]}}],"power":[{"drop":0.0,"sdid":0.016,"sc":0.028,"coverage":0.984},{"drop":0.05,"sdid":0.044,"sc":0.032,"coverage":0.976},{"drop":0.1,"sdid":0.064,"sc":0.032,"coverage":0.988},{"drop":0.2,"sdid":0.412,"sc":0.256,"coverage":0.968},{"drop":0.35,"sdid":0.88,"sc":0.808,"coverage":0.988},{"drop":0.5,"sdid":0.952,"sc":0.932,"coverage":0.976}],"jump":{"med":0.2983,"dev":0.0868,"ppd":0.2045,"over20":0.7358,"g":{"iran":-0.5853,"RU":-0.0156,"BY":0.0251,"CU":0.1217,"VE":0.4784},"flat":-0.5853,"sanc":-0.6402,"sanc_mean":0.1524},"controls":[{"id":"RU-2022","c":"Russia","q":"2022Q1","kind":"war and sanctions","pct":-0.0606,"lo":-0.3655,"hi":0.3906,"pp":0.5849,"src":"https://en.wikipedia.org/wiki/International_sanctions_during_the_Russian_invasion_of_Ukraine"},{"id":"LK-2022","c":"Sri Lanka","q":"2022Q2","kind":"economic crisis and protests","pct":-0.0127,"lo":-0.4078,"hi":0.646,"pp":0.8962,"src":"https://en.wikipedia.org/wiki/Aragalaya"},{"id":"PE-2022","c":"Peru","q":"2022Q4","kind":"political crisis and protests","pct":0.0296,"lo":-0.1836,"hi":0.2986,"pp":0.7075,"src":"https://en.wikipedia.org/wiki/Timeline_of_the_2022%E2%80%932023_Peruvian_protests"},{"id":"TR-2023","c":"Türkiye","q":"2023Q1","kind":"natural disaster","pct":-0.1323,"lo":-0.38,"hi":0.2143,"pp":0.1981,"src":"https://earthsky.org/human-world/turkey-syria-earthquake-february-6-2023/"},{"id":"IL-2023","c":"Israel","q":"2023Q4","kind":"war","pct":-0.2327,"lo":-0.4242,"hi":0.0226,"pp":0.066,"src":"https://en.wikipedia.org/wiki/October_7_attacks"},{"id":"EC-2024","c":"Ecuador","q":"2024Q1","kind":"security crisis","pct":0.0956,"lo":-0.1143,"hi":0.3551,"pp":0.3113,"src":"https://www.krgv.com/news/ecuador-declares-internal-armed-conflict-as-gunmen-take-over-live-tv-broadcast"},{"id":"LB-2024","c":"Lebanon","q":"2024Q4","kind":"war","pct":-0.0554,"lo":-0.3459,"hi":0.3641,"pp":0.4528,"src":"https://en.wikipedia.org/wiki/2024_Israeli_invasion_of_Lebanon"},{"id":"GE-2024","c":"Georgia","q":"2024Q4","kind":"protests","pct":-0.0286,"lo":-0.3243,"hi":0.3966,"pp":0.6792,"src":"https://www.aljazeera.com/news/2024/11/29/georgia-protesters-clash-with-police-after-pm-suspends-eu-membership-talks"},{"id":"RS-2024","c":"Serbia","q":"2024Q4","kind":"protests","pct":-0.0277,"lo":-0.1669,"hi":0.1347,"pp":0.6981,"src":"https://en.wikipedia.org/wiki/Novi_Sad_railway_station_canopy_collapse"},{"id":"NP-2025","c":"Nepal","q":"2025Q3","kind":"protests","pct":-0.0963,"lo":-0.2982,"hi":0.1638,"pp":0.2264,"src":"https://english.ahram.org.eg/News/552695.aspx"}],"nc":{"n":10,"rej":0,"allowed":2},"timing":{"full_events_checked":5,"hits":5,"joint_chance":0.0002463710553184728},"stack":{"k":[{"k":-2,"mean_log":-0.07538474589561092,"mean_pct":-0.07261339051213958,"se":0.053400274270939484,"p":0.13425,"n_events":8},{"k":-1,"mean_log":-0.06635129172034161,"mean_pct":-0.06419793297490305,"se":0.058044286319645755,"p":0.217,"n_events":7},{"k":0,"mean_log":-0.3671765434530569,"mean_pct":-0.3073126551666871,"se":0.07070455094033717,"p":0.0005,"n_events":9},{"k":1,"mean_log":-0.08703651346584401,"mean_pct":-0.08335637481360438,"se":0.09417763515391663,"p":0.29425,"n_events":8},{"k":2,"mean_log":-0.14589583676921208,"mean_pct":-0.13575227866887418,"se":0.11567820824524883,"p":0.15975,"n_events":7},{"k":3,"mean_log":0.01726736797195566,"mean_pct":0.01741731076613368,"se":0.1378882451527903,"p":0.877,"n_events":6},{"k":4,"mean_log":0.17292418836013043,"mean_pct":0.18877597861138143,"se":0.15021514578088682,"p":0.2005,"n_events":6}],"pool":{"pooled_pct":-0.29431703671189946,"lo_pct":-0.3655447052084923,"hi_pct":-0.21509293284608527,"p":0.0},"wo":{"pooled_pct":-0.13944127227575726,"se":0.06105299786066762,"p":0.021},"short":{"events":["KZ-2022","BD-2024","TZ-2025","IR-2025"],"max_days":14,"pooled_pct":-0.07830451554126358,"se":0.06824142221631481,"p":0.214,"lo_pct":-0.19369530521717493,"hi_pct":0.05359992515043001}}};
+(function(){
+"use strict";
+var $=function(id){return document.getElementById(id)},esc=UI.esc,MINUS="−";
+var EV=SD.ev,L=SD.labels,cur=EV.filter(function(e){return e.id==="IR-2026"})[0],mode="twin";
+function pc(x,d){return(x<0?MINUS:x>0?"+":"")+Math.abs(x*100).toFixed(d==null?0:d)+"%"}
+function pv(p){return p==null?"n/a":p<0.001?"< 0.001":p<0.1?p.toFixed(3):p.toFixed(2)}
+function year(e){return e.id.slice(3)}
+function col(n){return UI.css(n)}
+function short(v){return v>=1e6?(v/1e6).toFixed(v>=1e7?0:2)+"M":v>=1e3?Math.round(v/1e3)+"K":String(Math.round(v))}
+function status(e){return e.clear?["Passes every check","ok"]:e.passes?["Passes every check it can run","warn"]:e.id==="SD-2021"?["Not clear, fails backdating","warn"]:["Not clear","dim"]}
+// the list doubles as a forest plot of all nine
+var LO=-0.8,HI=0.7,Xp=function(v){return((Math.max(LO,Math.min(HI,v))-LO)/(HI-LO)*100).toFixed(2)+"%"};
+$("ax-lo").textContent=MINUS+"80%";$("ax-hi").textContent="+70%";$("ax-lo").style.left="0";$("ax-0").style.left=Xp(0);$("ax-hi").style.left="100%";
+var order=EV.slice().sort(function(a,b){return a.sdid.pct-b.sdid.pct});
+$("evs").innerHTML=order.map(function(e,k){var cls=(e.clear||e.passes?"clear":"")+(e.kind!=="full"?" part":"");
+  return'<li><button type="button" class="ev '+cls+'" data-id="'+e.id+'" aria-pressed="false" style="--k:'+k+';--z:'+Xp(0)+';--l:'+Xp(e.sdid.lo)+';--w:calc('+Xp(e.sdid.hi)+' - '+Xp(e.sdid.lo)+');--m:'+Xp(e.sdid.pct)+'"><span class="nm">'+esc(e.c)+' '+year(e)+'<small>'+(e.kind==="full"?"full":"partial")+'</small></span><span class="vl">'+pc(e.sdid.pct)+'</span><span class="bar"><i></i><b></b></span></button></li>'}).join("");
+[].forEach.call(document.querySelectorAll(".ev"),function(b){b.addEventListener("click",function(){pick(b.getAttribute("data-id"),true)})});
+
+function pick(id,user){
+  cur=EV.filter(function(e){return e.id===id})[0];
+  [].forEach.call(document.querySelectorAll(".ev"),function(b){b.setAttribute("aria-pressed",b.getAttribute("data-id")===id?"true":"false")});
+  UI.put($("e-name"),cur.c+" "+year(cur));$("e-what").textContent=cur.what+".";
+  var st=status(cur),v=$("e-verd");v.textContent=st[0];v.className="verd "+st[1];
+  renderTwin(true);renderPlac();renderChecks();renderOoni();renderCounts();
+  $("card").href="https://github.com/MatinNikoo/internet-shutdowns/blob/main/reports/"+cur.id+".md";
+  if(user){UI.count("shutdowns-pick");if(innerWidth<1024){var pn=document.querySelector(".panel"),top=pn.getBoundingClientRect().top;if(top>innerHeight*0.6||top<0)scrollTo({top:scrollY+top-64,behavior:UI.reduce?"auto":"smooth"})}}}
+
+// ---------------------------------------------------------------- twin
+var TW={anim:0};
+function series(){
+  var a=cur.a,ev=L.indexOf(cur.q[0]),cmp,lab,eff;
+  if(mode==="twin"){cmp=cur.t;lab="Twin";eff=cur.sdid.pct}
+  else{var base=mode==="last"?a[ev-1]:a[ev-4];cmp=a.map(function(v,i){return i>=ev-(mode==="last"?1:4)&&i<ev+cur.q.length?base:null});lab=mode==="last"?"Last quarter before":"Same quarter a year before";
+    eff=mode==="last"?cur.naive.vs_last_clean_quarter:cur.naive.vs_same_quarter_last_year}
+  return{a:a,cmp:cmp,lab:lab,eff:eff,ev:ev}}
+function renderTwin(anim){
+  var s=series();$("lg-cmp").textContent=s.lab;
+  UI.put($("r-big"),pc(s.eff));$("r-big").style.color=mode==="twin"&&!(cur.clear||cur.passes)?"var(--muted)":"";
+  $("r-sub").textContent=mode==="twin"?"vs the twin in "+cur.q.join(" and ")+", 95% interval "+pc(cur.sdid.lo)+" to "+pc(cur.sdid.hi):(mode==="last"?"vs the quarter just before":"vs the same quarter a year before")+". The twin says "+pc(cur.sdid.pct)+".";
+  $("made").innerHTML=mode==="twin"?'<span>Twin made of</span>'+cur.made.map(function(m){return'<span>'+esc(m.name)+'<b>'+Math.round(m.w*100)+'%</b></span>'}).join("")+'<span>and '+(SD.n-cur.made.length)+' others</span>':"";
+  // why text
+  var w="";
+  if(mode!=="twin")w="<b>Simple comparisons can point the wrong way.</b> Most countries grew fast over these years, so comparing with the country's own past mixes the shutdown with that growth. The twin moves with the countries that stayed online.";
+  else if(cur.id==="SD-2021")w="<b>Why Sudan isn't clear.</b> When I hold out the two quarters before the coup and refit, the twin misses them by "+pc(cur.back.held[0])+" and "+pc(cur.back.held[1])+". Access Now records exam shutdowns in exactly that stretch, so the twin may be fit to a country that was already disrupted.";
+  else if(cur.id==="MM-2021")w="<b>Myanmar has four quarters before the coup.</b> That is enough to build a twin, and too few to backdate it, so its checks are weaker than Iran's.";
+  else if(!cur.clear)w="<b>Too short to see.</b> A shutdown of a week or so is a small slice of a quarter, and the gap is within what fake shutdowns in donor countries give. That isn't evidence of no effect.";
+  else w="<b>Iran 2026 passes every check I wrote down before running them.</b> The twin tracks Iran closely for 21 quarters before the blackout.";
+  $("tw-why").innerHTML=w;
+  renderRange();drawTwin(anim&&!UI.reduce)}
+function renderRange(){
+  var r=$("range");if(cur.id!=="IR-2026"||mode!=="twin"){r.hidden=true;return}r.hidden=false;var J=SD.jump,X=function(v){return((v+0.75)/(0.75-0.5)*100).toFixed(1)+"%"};
+  r.innerHTML='<p class="kick" style="margin:0"><b>Why Iran 2026 is a range</b></p>'+
+    '<div class="rg" aria-hidden="true"><span class="ln"></span><span class="sp" style="left:'+X(cur.sdid.pct)+';width:calc('+X(J.flat)+' - '+X(cur.sdid.pct)+')"></span>'+
+    '<i class="full" style="left:'+X(cur.sdid.pct)+'"></i><s class="up" style="left:'+X(cur.sdid.pct)+'">twin '+pc(cur.sdid.pct)+'</s>'+
+    '<i style="left:'+X(J.sanc)+'"></i><s class="dn" style="left:'+X(J.sanc)+'">grew like<br>sanctioned '+pc(J.sanc)+'</s>'+
+    '<i style="left:'+X(J.flat)+'"></i><s class="up" style="left:'+X(J.flat)+'">stayed flat '+pc(J.flat)+'</s></div>'+
+    '<p style="margin:.4rem 0 0;font-size:.86rem;line-height:1.55">Most countries\' pushes jumped about '+Math.round(J.med*100)+'% in 2026Q1 (the median donor), and '+Math.round(J.over20*100)+'% of donors grew by more than 20%. Most of that was more pushes per developer ('+pc(J.ppd)+') rather than more developers ('+pc(J.dev)+'). I haven\'t found the cause. Iran\'s twin is a mix of countries that took part. Countries under broad sanctions mostly didn\'t, though Venezuela did.</p>'+
+    '<div class="gr"><div><b>'+pc(J.g.RU)+'</b><span>Russia</span></div><div><b>'+pc(J.g.BY)+'</b><span>Belarus</span></div><div><b>'+pc(J.g.CU)+'</b><span>Cuba</span></div><div><b>'+pc(J.g.VE)+'</b><span>Venezuela</span></div><div><b>'+pc(J.med)+'</b><span>Median donor</span></div></div>'+
+    '<p style="margin:.8rem 0 0;font-size:.86rem;line-height:1.55">If Iran would have stayed flat, the drop is '+Math.round(-J.flat*100)+'%. If it would have grown like those four on average, '+Math.round(-J.sanc*100)+'%. That\'s why I give 59% to 69%.</p>'}
+function drawTwin(animate){
+  if($("v-twin").hidden)return;var s=series(),cv=$("c-twin"),wide=cv.parentNode.clientWidth>560,G=UI.canvas(cv,wide?0.4:0.68,380),x=G.x,W=G.w,H=G.h,pl=wide?46:38,pr=10,pt=10,pb=22,n=L.length;
+  var vals=s.a.concat(s.cmp.filter(function(v){return v!=null})),ymax=Math.max.apply(null,vals)*1.08,X=function(i){return pl+(W-pl-pr)*i/(n-1)},Y=function(v){return pt+(H-pt-pb)*(1-v/ymax)};
+  var ink=col("--ink"),mut=col("--muted"),line=col("--line"),sig=col("--signal"),mono=col("--mono");
+  TW.geo={X:X,Y:Y,n:n,s:s};
+  function frame(f){
+    x.clearRect(0,0,W,H);
+    var e0=s.ev,e1=s.ev+cur.q.length-1,fx0=X(e0-0.5),fx1=Math.min(W-pr+4,X(e1+0.5));x.fillStyle=sig;x.globalAlpha=UI.dark()?.16:.13;x.fillRect(fx0,pt,fx1-fx0,H-pt-pb);x.globalAlpha=1;
+    x.font="500 10px "+mono;x.fillStyle=mut;x.strokeStyle=line;x.lineWidth=1;
+    var st=niceStep(ymax/4);for(var v=0;v<=ymax;v+=st){var yy=Math.round(Y(v))+.5;x.beginPath();x.moveTo(pl,yy);x.lineTo(W-pr,yy);x.stroke();x.textAlign="right";x.fillText(v?short(v):"0",pl-6,yy+3)}
+    for(var i=0;i<n;i+=4){x.textAlign=i===0?"left":i>=n-1?"right":"center";x.fillText(L[i].slice(0,4),X(i),H-6)}
+    var M=f*(n-1);
+    function path(arr,c,w,dash){x.strokeStyle=c;x.lineWidth=w;x.setLineDash(dash||[]);x.lineJoin="round";x.beginPath();var started=false;
+      for(var i=0;i<n;i++){if(arr[i]==null||i>M+1){started=false;continue}var xi=i,yi=arr[i];if(i>M){xi=M;yi=arr[i-1]+(arr[i]-arr[i-1])*(M-(i-1))}
+        if(!started){x.moveTo(X(xi),Y(yi));started=true}else x.lineTo(X(xi),Y(yi))}x.stroke();x.setLineDash([])}
+    path(s.cmp,sig,2,mode==="twin"?[5,4]:[3,3]);path(s.a,ink,2.2);
+    if(f>=1){var i0=s.ev;for(var k=0;k<cur.q.length;k++){var ix=i0+k;if(s.cmp[ix]==null)continue;x.strokeStyle=sig;x.lineWidth=1;x.beginPath();x.moveTo(X(ix),Y(s.a[ix]));x.lineTo(X(ix),Y(s.cmp[ix]));x.stroke();
+      x.fillStyle=ink;x.beginPath();x.arc(X(ix),Y(s.a[ix]),3.5,0,6.283);x.fill();x.fillStyle=sig;x.beginPath();x.arc(X(ix),Y(s.cmp[ix]),3.5,0,6.283);x.fill()}}
+  }
+  cancelAnimationFrame(TW.anim);if(!animate){frame(1);return}
+  var t0=performance.now();(function step(t){var f=Math.min(1,(t-t0)/1000);frame(1-Math.pow(1-f,3));if(f<1)TW.anim=requestAnimationFrame(step)})(t0)}
+function niceStep(raw){var m=Math.pow(10,Math.floor(Math.log10(raw))),f=raw/m;return(f<1.5?1:f<3?2:f<7?5:10)*m}
+function hoverTip(cv,tip,fn){cv.addEventListener("pointermove",function(e){var b=cv.getBoundingClientRect(),r=fn(e.clientX-b.left,e.clientY-b.top);if(!r){tip.classList.remove("on");return}
+  tip.innerHTML=r.html;tip.style.left=Math.min(Math.max(r.x+12,0),b.width-150)+"px";tip.style.top=Math.max(0,r.y-56)+"px";tip.classList.add("on")});
+  cv.addEventListener("pointerleave",function(){tip.classList.remove("on")})}
+hoverTip($("c-twin"),$("tw-tip"),function(mx){var g=TW.geo;if(!g)return null;var i=Math.round((mx-g.X(0))/(g.X(1)-g.X(0)));if(i<0||i>=g.n)return null;
+  var c=g.s.cmp[i];return{x:g.X(i),y:g.Y(g.s.a[i]),html:L[i]+"<br>actual "+short(g.s.a[i])+(c!=null?"<br>"+(mode==="twin"?"twin ":"compared with ")+short(c):"")}});
+
+// ---------------------------------------------------------------- placebos
+var PL={};
+function renderPlac(){
+  var real=cur.sdid.pct,sp=cur.sp,big=sp.filter(function(v){return Math.abs(Math.log1p(v))>=Math.abs(Math.log1p(real))}).length;
+  var t="Each of the "+sp.length+" donors gets a fake shutdown in "+cur.q[0]+(cur.tp.length?", and "+cur.c+" gets one in "+cur.tp.length+" earlier quarters":"")+". ";
+  t+=big===0?"None of the donors' fake gaps is as big as "+cur.c+"'s real one ("+pc(real)+"), so the permutation p is 1 in "+(sp.length+1)+" ("+pv(cur.sdid.p_perm)+"), the smallest it can be.":big+" of "+sp.length+" donors had a fake gap at least as big as the real "+pc(real)+", so the permutation p is "+pv(cur.sdid.p_perm)+".";
+  if(!cur.tp.length)t+=" There are too few earlier quarters for fake events in its own past, so the spread comes from the donors alone.";
+  $("pl-text").textContent=t;drawPlac()}
+function drawPlac(){
+  if($("v-plac").hidden)return;var cv=$("c-plac"),wide=cv.parentNode.clientWidth>560,G=UI.canvas(cv,wide?0.34:0.62,300),x=G.x,W=G.w,H=G.h,pl=12,pr=12;
+  var all=cur.sp.concat(cur.tp,[cur.sdid.pct]),lo=Math.min(-0.8,Math.min.apply(null,all)),hi=Math.max(0.5,Math.max.apply(null,all)),X=function(v){return pl+(W-pl-pr)*(v-lo)/(hi-lo)};
+  var ink=col("--ink"),mut=col("--muted"),line=col("--line"),sig=col("--signal"),ben=col("--bench"),mono=col("--mono"),r=wide?4.2:3.4;
+  x.font="500 10px "+mono;x.fillStyle=mut;x.textAlign="center";x.strokeStyle=line;
+  for(var v=Math.ceil(lo*5)/5;v<=hi+1e-9;v+=0.2){var xx=Math.round(X(v))+.5;x.beginPath();x.moveTo(xx,14);x.lineTo(xx,H-20);x.stroke();x.fillText(Math.abs(v)<1e-9?"0":pc(v),xx,H-6)}
+  // dot stacks: donors on the upper band, own past below
+  function stack(vals,base,dir,c,a){var bins={},pts=[];vals.forEach(function(v){var k=Math.round(X(v)/(r*2.1));bins[k]=(bins[k]||0)+1;pts.push([X(v),base-dir*(bins[k]-1)*r*2.05,v])});
+    x.fillStyle=c;x.globalAlpha=a;pts.forEach(function(p){x.beginPath();x.arc(p[0],p[1],r,0,6.283);x.fill()});x.globalAlpha=1;return pts}
+  var mid=H*0.62;PL.pts=stack(cur.sp,mid-r-2,1,ben,.9).concat(stack(cur.tp,mid+r+8,-1,ink,.45));
+  var rx=X(cur.sdid.pct);x.strokeStyle=sig;x.lineWidth=2;x.beginPath();x.moveTo(rx,10);x.lineTo(rx,H-22);x.stroke();
+  x.fillStyle=sig;x.beginPath();x.arc(rx,mid-r-2,r+2.5,0,6.283);x.fill();x.font="500 10.5px "+mono;x.textAlign=rx>W*0.6?"right":"left";x.fillStyle=ink;x.fillText(cur.c+" "+year(cur)+", "+pc(cur.sdid.pct),rx+(rx>W*0.6?-8:8),22);x.lineWidth=1}
+hoverTip($("c-plac"),$("pl-tip"),function(mx,my){if(!PL.pts)return null;var best=null,bd=100;PL.pts.forEach(function(p){var d=Math.hypot(p[0]-mx,p[1]-my);if(d<bd){bd=d;best=p}});if(!best||bd>10)return null;return{x:best[0],y:best[1],html:"fake gap "+pc(best[2],1)}});
+
+// ---------------------------------------------------------------- checks
+function renderChecks(){
+  var C=cur.checks,rows=[],P=cur.pools,PN={no_keepiton_shutdown:"No full shutdown in Access Now",same_continent:"Same continent",same_income:"Same income group",no_neighbors:"No neighbors"};
+  function row(ok,html){rows.push('<li><b class="'+(ok===null?"na":ok?"ok":"bad")+'">'+(ok===null?"Can't run":ok?"Pass":"Fail")+'</b><span>'+html+'</span></li>')}
+  row(C.C1_holm,"<strong>Holm adjusted p across the nine events</strong> is "+pv(cur.holm)+" (the plan's test), and "+pv(cur.holmp)+" on the exact permutation p, which can't go below 0.08.");
+  if(cur.back)row(C.F2_backdate,"<strong>Backdating.</strong> Refit without "+cur.back.q.join(" and ")+", and the twin misses those quarters by "+cur.back.held.map(function(v){return pc(v)}).join(" and ")+". "+(cur.back.inside?"That's inside the placebo band.":"That's outside the placebo band, so the twin may have been off before the event."));
+  else row(null,"<strong>Backdating.</strong> Only four quarters before the event, so none can be held out.");
+  row(C.F3_donors,"<strong>Other donor pools</strong> keep the same sign and move it by less than one standard error"+(C.F3_donors?".":", which this one doesn't do.")+'<span class="pools">'+Object.keys(P).map(function(k){return'<span>'+PN[k]+' ('+P[k].n+')<br><b>'+pc(P[k].pct)+'</b>, p '+pv(P[k].pp)+'</span>'}).join("")+'</span>');
+  row(C.estimators_agree,"<strong>Three estimators agree.</strong> Synthetic DiD "+pc(cur.sdid.pct)+", synthetic control "+pc(cur.sc)+", augmented synthetic control "+pc(cur.ascm)+".");
+  if(cur.brk>0)row(C.breakdown_above_1,"<strong>Breakdown.</strong> The twin's path would have to be off by "+cur.brk.toFixed(1)+" times the worst miss it ever made in "+(cur.id==="MM-2021"?"the four quarters before":cur.c+"'s own past")+" before the result goes away.");else if(cur.brk!=null)rows.push('<li><b class="dim">Info</b><span><strong>Breakdown.</strong> The interval already includes no change, so there is nothing to break.</span></li>');
+  if(cur.loo)rows.push('<li><b class="dim">Info</b><span><strong>Leave one donor out.</strong> Dropping each of the '+cur.loo.n+' donors with weight over 1% keeps it between '+pc(cur.loo.min,1)+' and '+pc(cur.loo.max,1)+'.</span></li>');
+  rows.push('<li><b class="dim">Info</b><span><strong>Conformal test</strong> p = '+pv(cur.conf.p)+' (the smallest possible here is '+pv(cur.conf.min_p)+').</span></li>');
+  $("ck").innerHTML=rows.join("");
+  $("ck-v").innerHTML=cur.clear?"<b>"+cur.c+" "+year(cur)+" passes every check I wrote down before running them.</b>":cur.passes?"<b>Myanmar passes every check that can be run on it.</b> With only four quarters before the coup, those checks are weak for it.":"<b>Not a clear drop.</b> At least one check in the plan fails.";
+}
+
+// ---------------------------------------------------------------- OONI daily
+var OO={};
+function day(s){var p=s.split("-");return Date.UTC(+p[0],+p[1]-1,+p[2])}
+function fmtDay(t){var d=new Date(t);return d.toLocaleDateString("en-US",{month:"short",day:"numeric",year:"numeric",timeZone:"UTC"})}
+function renderOoni(){
+  var o=cur.ooni,leg=$("oo-leg");
+  $("oo-joint").innerHTML="<b>All five full shutdowns</b> where OONI has enough tests show a blackout inside my registry dates. If the five were independent, that lines up by luck about 1 time in "+int(Math.round(1/SD.timing.joint_chance/1000)*1000)+".";
+  if(!o){$("c-ooni").parentNode.hidden=true;leg.hidden=true;$("oo-text").textContent="OONI runs too few tests a day in "+cur.c+" (about "+Math.round(cur.ooni_base)+" before the event) to date anything, so there's no daily check for this one.";return}
+  $("c-ooni").parentNode.hidden=false;leg.hidden=false;
+  var reg=cur.days?" My registry says "+(cur.days[0]===cur.days[1]?fmtN(cur.days[0]):fmtN(cur.days[0])+" to "+fmtN(cur.days[1]))+" days.":"";
+  $("oo-text").textContent="OONI counts "+o.dd+" of "+o.days+" days in "+cur.q.join(" and ")+" under half the usual level of about "+int(Math.round(o.base))+" tests a day."+reg+(o.hit?" There's a run of disrupted days inside the registry dates.":" The disrupted days don't fall inside the registry dates, so OONI can't confirm this one.")+(cur.id==="IR-2022"?" The evening mobile curfews don't show up in daily counts.":"")+(cur.id==="PK-2023"?" Most disrupted days are in April, before the 9 to 12 May cut.":"");
+  drawOoni()}
+function fmtN(v){return v%1?v.toFixed(1):String(v)}
+function int(n){return n.toLocaleString("en-US")}
+function drawOoni(){
+  var o=cur.ooni;if(!o||$("v-ooni").hidden)return;var cv=$("c-ooni"),wide=cv.parentNode.clientWidth>560,G=UI.canvas(cv,wide?0.34:0.6,300),x=G.x,W=G.w,H=G.h,pl=wide?40:32,pr=8,pt=10,pb=22;
+  var n=o.v.length,t0=day(o.start),q0=Math.round((day(o.q0)-t0)/864e5),ymax=1.6,bw=(W-pl-pr)/n,X=function(i){return pl+i*bw},Y=function(r){return pt+(H-pt-pb)*(1-Math.min(r,ymax)/ymax)};
+  var ink=col("--ink"),mut=col("--muted"),line=col("--line"),sig=col("--signal"),ben=col("--bench"),mono=col("--mono");
+  var w0=Math.round((day(o.win[0])-t0)/864e5),w1=Math.round((day(o.win[1])-t0)/864e5);
+  x.fillStyle=ink;x.globalAlpha=.08;x.fillRect(X(w0),pt,X(w1+1)-X(w0),H-pt-pb);x.globalAlpha=1;
+  x.font="500 10px "+mono;x.fillStyle=mut;x.strokeStyle=line;x.lineWidth=1;
+  [0,0.5,1,1.5].forEach(function(v){var yy=Math.round(Y(v))+.5;x.beginPath();x.moveTo(pl,yy);x.lineTo(W-pr,yy);x.stroke();x.textAlign="right";x.fillText(v===0.5?"half":v===1?"usual":v?v+"x":"0",pl-5,yy+3)});
+  OO.geo={X:X,bw:bw,n:n,t0:t0,o:o,Y:Y};
+  for(var i=0;i<n;i++){var r=o.v[i]/o.base,dis=i>=q0&&r<0.5;x.fillStyle=dis?sig:ben;x.globalAlpha=i<q0?.55:.95;var y=Y(r);x.fillRect(X(i)+(bw>3?.5:0),y,Math.max(1,bw-(bw>3?1:0)),Y(0)-y)}x.globalAlpha=1;
+  x.strokeStyle=ink;x.setLineDash([4,3]);x.beginPath();x.moveTo(X(q0),pt);x.lineTo(X(q0),H-pb);x.stroke();x.setLineDash([]);
+  x.fillStyle=mut;x.textAlign="left";x.fillText("91 days before, for the usual level",pl+4,pt+10);x.fillText(cur.q[0]+" starts",X(q0)+5,pt+10);
+  x.textAlign="center";for(var k=0;k<n-12;k+=30){x.fillText(fmtDay(t0+k*864e5).replace(/, \d{4}/,""),X(k)+bw/2,H-6)}}
+hoverTip($("c-ooni"),$("oo-tip"),function(mx){var g=OO.geo;if(!g||!cur.ooni)return null;var i=Math.floor((mx-g.X(0))/g.bw);if(i<0||i>=g.n)return null;
+  return{x:g.X(i),y:g.Y(g.o.v[i]/g.o.base),html:fmtDay(g.t0+i*864e5)+"<br>"+int(g.o.v[i])+" tests<br>"+(g.o.v[i]/g.o.base*100).toFixed(0)+"% of usual"}});
+
+// ---------------------------------------------------------------- the four counts
+function renderCounts(){
+  var N={git_pushes:"Git pushes",developers:"Developers",repositories:"Repositories",organizations:"Organizations"};
+  $("ct").innerHTML='<thead><tr><th>Count</th><th class="r">vs twin</th><th class="r">95% interval</th><th class="r">p, permutation</th><th class="r">vs quarter before</th></tr></thead><tbody>'+
+    Object.keys(N).map(function(k){var v=cur.oc[k];if(!v)return"";var sig=v.hi<0||v.lo>0;return'<tr><td class="m">'+N[k]+'</td><td class="r '+(sig?"bad":"")+'">'+pc(v.pct,1)+'</td><td class="r">'+pc(v.lo)+' to '+pc(v.hi)+'</td><td class="r">'+pv(v.pp)+'</td><td class="r">'+(v.raw==null?"n/a":pc(v.raw,1))+'</td></tr>'}).join("")+'</tbody>';
+  var w="<b>Repositories and organizations almost never shrink</b>, since dead projects still count. They fall more than 2% in only 0.9% of country quarters. A project doesn't stop existing when its owner goes offline, but it gets placed in another country when its members show up from other IP addresses, which is what VPN use looks like. GitHub removing projects is the other way a count falls, and I can't rule that out from outside.";
+  if(cur.id==="IR-2026")w+=" In 2026Q1 Iran's repositories fell 4.5% and its organizations 5.1%, the first time Iran's repository count ever went down. Its developer count still grew 1.0%, and I don't have a tested explanation for that.";
+  if(cur.id==="MM-2021")w+=" Myanmar's repositories fell 14.2% in 2021Q2.";
+  $("ct-why").innerHTML=w}
+
+// ---------------------------------------------------------------- stress tests
+var POW=SD.power;
+function renderPow(){var i=+$("drop").value,p=POW[i];UI.put($("pw"),Math.round(p.sdid*100)+"%");
+  $("pw-sub").textContent=i===0?"false alarms when nothing was planted":"of planted "+Math.round(p.drop*100)+"% drops caught by synthetic DiD";
+  $("ptab").innerHTML='<thead><tr><th>Planted drop</th><th>Synthetic DiD</th><th>Synthetic control</th><th>Covers truth</th></tr></thead><tbody>'+POW.map(function(r,k){return'<tr class="'+(k===i?"on":"")+'"><td>'+(r.drop?MINUS+Math.round(r.drop*100)+"%":"none")+'</td><td>'+(r.sdid*100).toFixed(1)+'%</td><td>'+(r.sc*100).toFixed(1)+'%</td><td>'+Math.round(r.coverage*100)+'%</td></tr>'}).join("")+'</tbody>';drawPow()}
+function drawPow(){if($("v-pow").hidden)return;var cv=$("c-pow"),G=UI.canvas(cv,0.5,260),x=G.x,W=G.w,H=G.h,pl=36,pr=10,pt=10,pb=22,i=+$("drop").value;
+  pr=20;var X=function(d){return pl+(W-pl-pr)*d/0.5},Y=function(p){return pt+(H-pt-pb)*(1-p)},mut=col("--muted"),line=col("--line"),sig=col("--signal"),ben=col("--bench"),ink=col("--ink"),mono=col("--mono");
+  x.font="500 10px "+mono;x.fillStyle=mut;x.strokeStyle=line;x.lineWidth=1;
+  [0,.25,.5,.75,1].forEach(function(v){var yy=Math.round(Y(v))+.5;x.beginPath();x.moveTo(pl,yy);x.lineTo(W-pr,yy);x.stroke();x.textAlign="right";x.fillText(Math.round(v*100)+"%",pl-5,yy+3)});
+  x.textAlign="center";POW.forEach(function(r){x.fillText(r.drop?MINUS+Math.round(r.drop*100)+"%":"0",X(r.drop),H-6)});
+  function ln(k,c){x.strokeStyle=c;x.lineWidth=2;x.beginPath();POW.forEach(function(r,j){j?x.lineTo(X(r.drop),Y(r[k])):x.moveTo(X(r.drop),Y(r[k]))});x.stroke();POW.forEach(function(r){x.fillStyle=c;x.beginPath();x.arc(X(r.drop),Y(r[k]),3,0,6.283);x.fill()})}
+  ln("sc",ben);ln("sdid",sig);var p=POW[i];x.strokeStyle=ink;x.globalAlpha=.5;x.setLineDash([3,3]);x.beginPath();x.moveTo(X(p.drop),pt);x.lineTo(X(p.drop),H-pb);x.stroke();x.setLineDash([]);x.globalAlpha=1;
+  x.fillStyle=sig;x.beginPath();x.arc(X(p.drop),Y(p.sdid),6,0,6.283);x.fill()}
+var CR={};
+function renderCri(){var big=SD.controls.slice().sort(function(a,b){return a.pct-b.pct})[0];
+  $("cri-text").innerHTML="I ran the same design on "+SD.nc.n+" crises that came with no full shutdown, like wars, an earthquake, protest waves and sanctions. <b>None came out significant</b>, but "+esc(big.c)+" in "+big.q+" was "+Math.round(-big.pct*100)+"% below its twin, so a drop of 20% can't be pinned on the internet. Iran 2026 and Myanmar 2021 are more than twice as big as anything in the controls. The controls are noisy, so they only rule out crisis effects that big.<br><br><span class='small'>I picked the "+SD.nc.n+" before running them, right after writing the plan. Sources for each are in the repo.</span>";drawCri()}
+function drawCri(){if($("v-cri").hidden)return;var C=SD.controls.slice().sort(function(a,b){return a.pct-b.pct}),cv=$("c-cri"),rh=24,G=UI.canvas(cv,9,C.length*rh+44),x=G.x,W=G.w,H=G.h,lab=Math.min(150,W*0.36),pr=12,lo=-0.8,hi=0.7,X=function(v){return lab+(W-lab-pr)*(v-lo)/(hi-lo)};
+  var mut=col("--muted"),line=col("--line"),sig=col("--signal"),ben=col("--bench"),ink=col("--ink"),mono=col("--mono"),body=col("--body");
+  x.font="500 10px "+mono;x.fillStyle=mut;x.textAlign="center";x.strokeStyle=line;x.lineWidth=1;
+  [-0.6,-0.3,0,0.3,0.6].forEach(function(v){var xx=Math.round(X(v))+.5;x.beginPath();x.moveTo(xx,6);x.lineTo(xx,H-22);x.stroke();x.fillText(v?pc(v):"0",xx,H-6)});
+  [["IR-2026","Iran 2026"],["MM-2021","Myanmar 2021"]].forEach(function(q,k){var e=EV.filter(function(z){return z.id===q[0]})[0],xx=X(e.sdid.pct);x.strokeStyle=sig;x.setLineDash([4,3]);x.beginPath();x.moveTo(xx,6);x.lineTo(xx,H-22);x.stroke();x.setLineDash([]);x.save();x.translate(xx-4,H-26);x.rotate(-Math.PI/2);x.fillStyle=sig;x.textAlign="left";x.fillText(q[1],0,0);x.restore()});
+  CR.rows=[];C.forEach(function(c,i){var y=14+i*rh;x.fillStyle=ink;x.textAlign="left";x.font="400 12px "+body;x.fillText(c.c+" "+c.q.slice(0,4),0,y+4);
+    x.strokeStyle=ben;x.lineWidth=3;x.lineCap="round";x.beginPath();x.moveTo(X(Math.max(lo,c.lo)),y);x.lineTo(X(Math.min(hi,c.hi)),y);x.stroke();x.lineCap="butt";x.fillStyle=ink;x.beginPath();x.arc(X(c.pct),y,4,0,6.283);x.fill();CR.rows.push([y,c])})}
+hoverTip($("c-cri"),$("cr-tip"),function(mx,my){if(!CR.rows)return null;var r=CR.rows.filter(function(r){return Math.abs(r[0]-my)<12})[0];if(!r)return null;var c=r[1];return{x:mx,y:r[0],html:esc(c.c)+", "+esc(c.kind)+"<br>"+pc(c.pct)+" ("+pc(c.lo)+" to "+pc(c.hi)+")<br>p, permutation "+pv(c.pp)}});
+function renderPoo(){var S=SD.stack;
+  $("poo-text").innerHTML="<p style='margin:0 0 .7rem'>I refit each event with its last two quarters before held out and stacked them. The drop sits right in the shutdown quarter ("+pc(S.k[2].mean_pct)+", p "+pv(S.k[2].p)+"). The two quarters before average "+pc(S.k[0].mean_pct)+" and "+pc(S.k[1].mean_pct)+", not significant, but leaning toward a slowdown before the event, which a political crisis would cause.</p>"+
+    "<p style='margin:0 0 .7rem'>The six full shutdowns average "+Math.round(-S.pool.pooled_pct*100)+"% below their twins (95% "+Math.round(-S.pool.hi_pct*100)+"% to "+Math.round(-S.pool.lo_pct*100)+"%), and "+Math.round(-S.wo.pooled_pct*100)+"% without Iran 2026 (p = "+S.wo.p+"). That "+Math.round(-S.wo.pooled_pct*100)+"% is carried by Sudan, which fails backdating.</p>"+
+    "<p style='margin:0'>The four full shutdowns of 11 days or less pool to "+pc(S.short.pooled_pct,1)+" (95% "+pc(S.short.lo_pct)+" to "+pc(S.short.hi_pct)+", p = "+S.short.p+"). So I can't see a shutdown that short in quarterly data, and I can't rule out a small effect either.</p>";drawPoo()}
+function drawPoo(){if($("v-poo").hidden)return;var K=SD.stack.k,cv=$("c-poo"),G=UI.canvas(cv,0.62,300),x=G.x,W=G.w,H=G.h,pl=40,pr=8,pt=10,pb=24,lo=-0.55,hi=0.35;
+  var X=function(i){return pl+(W-pl-pr)*(i+0.5)/K.length},Y=function(v){return pt+(H-pt-pb)*(hi-v)/(hi-lo)},mut=col("--muted"),line=col("--line"),sig=col("--signal"),ben=col("--bench"),ink=col("--ink"),mono=col("--mono");
+  x.font="500 10px "+mono;x.fillStyle=mut;x.strokeStyle=line;x.lineWidth=1;
+  [-0.4,-0.2,0,0.2].forEach(function(v){var yy=Math.round(Y(v))+.5;x.beginPath();x.moveTo(pl,yy);x.lineTo(W-pr,yy);x.stroke();x.textAlign="right";x.fillText(v?pc(v):"0",pl-5,yy+3)});
+  var bw=Math.min(34,(W-pl-pr)/K.length*0.55);K.forEach(function(k,i){var v=k.mean_pct,c=k.k===0?sig:ben,y0=Y(0),y1=Y(v);x.fillStyle=c;x.fillRect(X(i)-bw/2,Math.min(y0,y1),bw,Math.abs(y1-y0));
+    var lo2=Math.expm1(k.mean_log-1.96*k.se),hi2=Math.expm1(k.mean_log+1.96*k.se);x.strokeStyle=ink;x.globalAlpha=.6;x.beginPath();x.moveTo(X(i),Y(lo2));x.lineTo(X(i),Y(hi2));x.stroke();x.globalAlpha=1;
+    x.fillStyle=mut;x.textAlign="center";x.fillText(k.k===0?"shutdown":(k.k>0?"+":MINUS)+Math.abs(k.k),X(i),H-7)})}
+
+// ---------------------------------------------------------------- wiring
+UI.tabs($("tabs"),function(i){if(i===0)drawTwin(false);if(i===1)drawPlac();if(i===3)drawOoni()});
+UI.tabs($("mtabs"),function(i){if(i===0)drawPow();if(i===1)drawCri();if(i===2)drawPoo()});
+UI.seg($("mode"),function(v){mode=v;renderTwin(true)});
+$("drop").addEventListener("input",renderPow);
+function redraw(){drawTwin(false);drawPlac();drawOoni();drawPow();drawCri();drawPoo()}
+UI.onTheme(redraw);UI.onResize(redraw);
+pick("IR-2026",false);renderPow();renderCri();renderPoo();
+})();
+</script>
+<script data-goatcounter="https://matinnikoo.goatcounter.com/count" async src="https://gc.zgo.at/count.js"></script>
 
 <script>
 // carry the CSS written in the homepage console over to this page, and keep it in sync across open tabs
@@ -380,35 +759,45 @@ var D={"labels":["2020Q1","2020Q2","2020Q3","2020Q4","2021Q1","2021Q2","2021Q3",
   // the homepage CSS was written for the homepage, so map its pieces onto this page:
   // color variables win over this page's theme, and the contact headline becomes this page's headline
   function adapt(t){
-    // the homepage and these pages name the same things differently, so each homepage selector also reaches its twin here
-    var MAP=[
+    // the homepage and these pages name the same things differently, so each homepage selector also reaches its twin here.
+    // the console's own window (.src-box) has no twin here, so its tilt stays on the homepage
+    var MAP=window.MN_LIVE_MAP||[
       [/\.contact\s+h2\s+span|\.sk-cap\s+h3\s+em|\.proj\s+h3\s+em|\.hero\s+h1\s+\.n2|\bh[123]\s+(?:em|span|i)\b/,'h1 em, h1 i, h2 em, .note'],
-      [/\.contact\s+h2|\.sec-head\s+h2|\.sk-title|\.hero\s+h1|\.proj\s+h3|\bh[23]\b/,'h1, h2'],
-      [/\.ucx-nums\s+b|\.stats\s+b|\.sim-pct|\.cap\s+\.big|\.xp-m\s+b|\bb\b|\bstrong\b/,'.big, .fact b, .nums b, .val, .delta'],
-      [/\.btn\.primary|\.cta\s+\.btn\.primary/,'.btn.primary, .result label, .seg input:checked + label'],
-      [/\.btn\b|\.email\s+\.btn|\.ct-links\s+a|\.cta\s+\.btn/,'.btn, button.reset, button.chip, .chip, .seg label'],
-      [/\.visual|\.sim\b|\.ucx\b|\.uca\b|\.lab-cta|\.subject|\.src-box/,'.card, .result, .step, .fact'],
-      [/\.chart|\bsvg\b|\bcanvas\b|\.uca-line|\.hbars/,'svg, canvas, .bars, .bar'],
-      [/\.tags\s+li|\.feat|\.meta|\.when/,'.small, .legend, .lab'],
+      [/\.sec-head\s+h2|\.hero\s+h1(?!\s*\.)/,'h1'],
+      [/\.contact\s+h2|\.sk-title|\.proj\s+h3|\bh[23]\b/,'h1, h2'],
+      [/\.ucx-nums\s+b|\.stats\s+b|\.sim-pct|\.cap\s+\.big|\.xp-m\s+b|\bb\b|\bstrong\b/,'.big, .facts dt'],
+      [/\.btn\.primary|\.cta\s+\.btn\.primary/,'.btn:not(.ghost)'],
+      [/\.btn\b|\.email\s+\.btn|\.ct-links\s+a|\.cta\s+\.btn/,'.btn.ghost, .seg button'],
+      [/\.visual|\.sim\b|\.ucx\b|\.uca\b|\.lab-cta|\.subject/,'.gl'],
+      [/\.chart|\bsvg\b|\bcanvas\b|\.uca-line|\.hbars/,'canvas'],
+      [/\.tags\s+li|\.feat|\.meta|\.when/,'.made span, .picks label'],
       [/\.nav\b|\.wm\b|\.mark\b/,'.roomhead, .mark']];
+    // boxes keep their place: moves, turns and animations typed for the homepage are not carried onto the panes here
+    var MOVE=/^\s*(?:transform|rotate|translate|scale|perspective|transform-origin|animation[\w-]*|transition[\w-]*|position|inset|top|left|right|bottom|zoom)\s*:/i;
     t=t.replace(/([^{}]+)\{([^{}]*)\}/g,function(m,sel,body){var out=sel.split(',').map(function(s){return s.trim()}).filter(Boolean),add=[];
       out.forEach(function(s){MAP.forEach(function(p){if(p[0].test(s))add.push(p[1])})});
-      return out.concat(add).join(', ')+'{'+body+'}'});
+      if(!add.length)return m;
+      return out.concat(add).join(', ')+'{'+body.split(';').filter(function(d){return!MOVE.test(d)}).join(';')+'}'});
     return t.replace(/\{([^{}]*)\}/g,function(m,b){return '{'+b.replace(/([\w-]+\s*:\s*[^;!{}]+?)\s*(;|$)/g,'$1 !important$2')+'}'})}
   var R0=null;
-  function sync(){var t=get();st.textContent=adapt(t);chip.hidden=!t.trim();var m='';try{m=localStorage.getItem('mn-live-theme')||''}catch(e){}var R=document.documentElement;if(R0===null)R0=R.getAttribute('data-theme')||'';if(t.trim()&&m)R.setAttribute('data-theme',m);else if(R0)R.setAttribute('data-theme',R0);else R.removeAttribute('data-theme')}
+  function sync(){var t=get();st.textContent=adapt(t);chip.hidden=!t.trim();var m='';try{m=localStorage.getItem('mn-live-theme')||''}catch(e){}var R=document.documentElement;if(R0===null)R0=R.getAttribute('data-theme')||'';if(t.trim()&&m)R.setAttribute('data-theme',m);else if(R0)R.setAttribute('data-theme',R0);else R.removeAttribute('data-theme');
+    // charts are drawn on canvas, so tell them the colors may have changed
+    try{dispatchEvent(new Event('themechange'))}catch(e){}}
   chip.className='live-chip';chip.hidden=true;chip.innerHTML='<span>Your CSS from the homepage is on</span><button type="button">Reset</button>';
   chip.querySelector('button').addEventListener('click',function(){try{localStorage.removeItem(K);localStorage.removeItem('mn-live-theme')}catch(e){}sync()});
   function mount(){document.body.appendChild(st);document.body.appendChild(chip);sync()}
   if(document.body)mount();else document.addEventListener('DOMContentLoaded',mount);
-  addEventListener('storage',function(e){if(e.key===K||e.key==='mn-live-theme')sync()});addEventListener('pageshow',sync);
+  // light or dark picked here, on the homepage or in another tab becomes this page's base
+  function base(){var t='';try{t=localStorage.getItem('theme')||''}catch(e){}R0=(t==='light'||t==='dark')?t:''}
+  addEventListener('mntheme',function(){base();sync()});
+  addEventListener('storage',function(e){if(e.key==='theme'){base();sync()}else if(e.key===K||e.key==='mn-live-theme')sync()});addEventListener('pageshow',function(){base();sync()});
 })();
 </script>
 <style>
 .live-chip{position:fixed;left:1rem;bottom:calc(1rem + env(safe-area-inset-bottom,0px));z-index:50;display:flex;gap:.8rem;align-items:center;padding:.55rem .7rem;border:1px solid currentColor;border-radius:8px;background:var(--bg,#ECE9E2);color:var(--ink,#121212);font:500 .62rem/1 "Geist Mono",ui-monospace,monospace;letter-spacing:.12em;text-transform:uppercase}
 .live-chip button{font:inherit;letter-spacing:inherit;text-transform:inherit;background:none;border:0;padding:0;color:inherit;text-decoration:underline;text-underline-offset:3px;cursor:pointer}
 .live-chip[hidden]{display:none}
-@supports not (color:color-mix(in srgb,red,blue)){html .nav{background:var(--bg)}}
+@supports not (color:color-mix(in srgb,red,blue)){html .nav{background:var(--bg)}.gl{background-color:var(--surface)}}
 </style>
 <script src="player.js" defer></script>
 <script>/* leaving for another page of the site: the page dims into its own colour first, then the next one fades up */
@@ -427,3 +816,4 @@ var D={"labels":["2020Q1","2020Q2","2020Q3","2020Q4","2021Q1","2021Q2","2021Q3",
 })();</script>
 </body>
 </html>
+
